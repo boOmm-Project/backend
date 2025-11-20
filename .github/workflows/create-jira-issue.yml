@@ -111,4 +111,4 @@ jobs:
         uses: atlassian/gajira-transition@v3
         with:
           issue: ${{ steps.find.outputs.issue }}
-          transition: "Done"
+          transition: "완료"
