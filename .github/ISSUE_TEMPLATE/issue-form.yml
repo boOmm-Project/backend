@@ -6,9 +6,9 @@ body:
   - type: input
     id: parentKey
     attributes:
-      label: '🎟️ 상위 작업 (Ticket Number)'
-      description: '상위 작업의 Ticket Number를 기입해주세요'
-      placeholder: 'PRJ-00'
+      label: '🎟️ 상위 작업 (Epic Number)'
+      description: '상위 작업의 Epic Number를 기입해주세요'
+      placeholder: 'BOOMM-00'
     validations:
       required: true
       
