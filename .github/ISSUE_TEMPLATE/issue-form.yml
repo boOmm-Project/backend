@@ -8,7 +8,7 @@ body:
     attributes:
       label: '🎟️ 상위 작업 (Epic Number)'
       description: '상위 작업의 Epic Number를 기입해주세요'
-      placeholder: 'BOOMM-00'
+      placeholder: 'BOOM-00'
     validations:
       required: true
       
