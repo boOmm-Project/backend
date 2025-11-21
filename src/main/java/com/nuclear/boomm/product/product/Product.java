@@ -1,10 +1,7 @@
 package com.nuclear.boomm.product.product;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.enums.FeedbackStatus;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,9 +24,6 @@ public class Product extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
-
-    @Enumerated(EnumType.STRING)
-    private FeedbackStatus status;
 
     private String productName;
     private Long category;  // Product_Category 테이블의 id
