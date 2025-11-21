@@ -1,7 +1,6 @@
-package com.nuclear.boomm.product.feedback;
+package com.nuclear.boomm.product.notification;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.enums.FeedbackStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,20 +12,24 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
-@Table(name = "feedback")
+@Table(name = "notification")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Feedback extends BaseEntity {
+public class Notification extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long feedbackId;
+    private Long notificationId;
 
+    private Long senderId;      // user 테이블 pk 참조
+    private Long recipientId;   // user 테이블 pk 참조
     private String description;
-    private FeedbackStatus status;
-    private Long productId; // product 테이블 pk 참조
-    private Long userId;    // user 테이블 pk 참조
+    private LocalDateTime sendDate;
+    private LocalDateTime receiveDate;
+    private boolean isConfirmed;
 }
