@@ -3,6 +3,8 @@ package com.nuclear.boomm.product.feedback;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -25,8 +27,10 @@ public class Feedback extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long feedbackId;
 
-    private String description;
+    @Enumerated(EnumType.STRING)
     private FeedbackStatus status;
+
+    private String description;
     private Long productId; // product 테이블 pk 참조
     private Long userId;    // user 테이블 pk 참조
 }
