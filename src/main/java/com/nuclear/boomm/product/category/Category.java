@@ -2,7 +2,13 @@ package com.nuclear.boomm.product.category;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.ProductCategory;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
