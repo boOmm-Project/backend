@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "file")
+@Table(name = "product_file")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class File  extends BaseEntity {
+public class ProductFile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
