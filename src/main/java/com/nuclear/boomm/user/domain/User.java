@@ -1,5 +1,6 @@
 package com.nuclear.boomm.user.domain;
 
+import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.user.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -10,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name="user")
 @NoArgsConstructor
-public class User {
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
