@@ -25,6 +25,7 @@ public class RiskReport extends BaseEntity {
     private Long reportId;
 
     private Long productId; // product 테이블 pk 참조
+    private Long productFileId; // product_file 테이블 pk 참조
     private Double lossRatioForecast;
     private String competitorProductComparison;
 }
