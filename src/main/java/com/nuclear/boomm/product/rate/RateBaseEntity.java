@@ -7,5 +7,5 @@ import jakarta.persistence.MappedSuperclass;
 public class RateBaseEntity extends BaseEntity {
 
     private double basePremium;    // 기본 보험료
-    private double basicRate;
+    private double basicRate;      // 기본 요율
 }

@@ -1,20 +1,35 @@
 package com.nuclear.boomm.product.rate;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 
 @Entity
 @Getter
 @Table(name = "car_rate")
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class CarRate extends RateBaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long rateId;
 
+    @Column(nullable = false)
     private Long productId; // product 테이블의 pk 참조
+
+    @Column(nullable = false)
     private double individualRate;
+
+    @Builder
+    public CarRate(Long productId, double individualRate) {
+        this.productId = productId;
+        this.individualRate = individualRate;
+    }
 }
