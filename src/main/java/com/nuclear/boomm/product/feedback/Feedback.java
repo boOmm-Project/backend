@@ -2,6 +2,7 @@ package com.nuclear.boomm.product.feedback;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -28,9 +29,18 @@ public class Feedback extends BaseEntity {
     private Long feedbackId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private FeedbackStatus status;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @Column(nullable = false)
     private Long productId; // product 테이블 pk 참조
-    private Long userId;    // user 테이블 pk 참조
+
+    @Column(nullable = false)
+    private Long writerId;    // user 테이블 pk 참조. 피드백을 작성한 사람
+
+//    @Column(nullable = false)
+//    private Role role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
 }
