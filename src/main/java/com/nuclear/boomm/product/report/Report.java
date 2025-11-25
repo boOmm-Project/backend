@@ -1,5 +1,6 @@
-package com.nuclear.boomm.product.rate;
+package com.nuclear.boomm.product.report;
 
+import com.nuclear.boomm.product.enums.ReportCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,29 +8,28 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "car_rate")
+@Table(name = "report")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class CarRate extends RateBaseEntity{
+public class Report {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long rateId;
+    private Long reportId;
 
     @Column(nullable = false)
-    private Long productId; // product 테이블의 pk 참조
+    private ReportCategory category;
 
     @Column(nullable = false)
-    private double individualRate;
+    private String name;
 
-    @Builder
-    public CarRate(Long productId, double individualRate) {
-        this.productId = productId;
-        this.individualRate = individualRate;
-    }
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String description;
+
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    private boolean isConfirmed;    // 신고 반영 여부
 }
