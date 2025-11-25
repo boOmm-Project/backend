@@ -23,18 +23,21 @@ public class SystemAndRegulationPrep extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long prepId;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String systemDevelopmentReq;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String policyAndDescription;
 
-    @Column(nullable = true)
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String underwritingGuidelines;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isConfirmed;    // 금융감독원 인가
 
-    @Column(nullable = false)
-    private String report;
+    @Builder
+    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed) {
+        this.policyAndDescription = policyAndDescription;
+        this.isConfirmed = isConfirmed;
+    }
 }
