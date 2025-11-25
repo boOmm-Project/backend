@@ -2,6 +2,7 @@ package com.nuclear.boomm.product.category;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.ProductCategory;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -12,15 +13,12 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
 import lombok.AccessLevel;
 
 @Entity
 @Getter
 @Table(name = "category")
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Category extends BaseEntity {
 
     @Id
@@ -28,6 +26,15 @@ public class Category extends BaseEntity {
     private Long categoryId;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ProductCategory category;
+
+    @Column(nullable = false)
     private String concept;
+
+    @Builder
+    public Category(ProductCategory category, String concept) {
+        this.category = category;
+        this.concept = concept;
+    }
 }

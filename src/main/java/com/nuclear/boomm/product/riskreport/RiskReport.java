@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.riskreport;
 
 import com.nuclear.boomm.common.BaseEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,17 +16,30 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "risk_report")
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class RiskReport extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
+    @Column(nullable = false)
     private Long productId; // product 테이블 pk 참조
+
+    @Column(nullable = false, unique = true)
     private Long productFileId; // product_file 테이블 pk 참조
+
+    @Column(nullable = false)
     private Double lossRatioForecast;
+
+    @Column(nullable = false)
     private String competitorProductComparison;
+
+    @Builder
+    public RiskReport(Long productId, Long productFileId, Double lossRatioForecast, String competitorProductComparison) {
+        this.productId = productId;
+        this.productFileId = productFileId;
+        this.lossRatioForecast = lossRatioForecast;
+        this.competitorProductComparison = competitorProductComparison;
+    }
 }
