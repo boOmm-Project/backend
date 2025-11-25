@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "feedback")
-@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class Feedback extends BaseEntity {
 
     @Id
@@ -43,4 +40,12 @@ public class Feedback extends BaseEntity {
 
 //    @Column(nullable = false)
 //    private Role role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
+
+    @Builder
+    public Feedback(FeedbackStatus status, String description, Long productId, Long writerId) {
+        this.status = status;
+        this.description = description;
+        this.productId = productId;
+        this.writerId = writerId;
+    }
 }
