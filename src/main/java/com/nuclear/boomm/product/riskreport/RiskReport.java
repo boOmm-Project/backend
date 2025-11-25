@@ -31,7 +31,7 @@ public class RiskReport extends BaseEntity {
     @Column(nullable = false)
     private Double lossRatioForecast;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String competitorProductComparison;
 
     @Builder
