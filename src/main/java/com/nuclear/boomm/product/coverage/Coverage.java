@@ -33,7 +33,7 @@ public class Coverage extends BaseEntity {
     @Column(nullable = false, unique = true)
     private Long productId; // product 테이블의 productId 참조
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
@@ -45,7 +45,7 @@ public class Coverage extends BaseEntity {
     @Column(nullable = false)
     private boolean isMandatory;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String damageCalStandard;
 
     @Builder
