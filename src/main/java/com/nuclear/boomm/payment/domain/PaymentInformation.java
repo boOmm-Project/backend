@@ -22,7 +22,7 @@ public class PaymentInformation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long paymentId;
 
     @Column(nullable = false)
     private String policy_number;
