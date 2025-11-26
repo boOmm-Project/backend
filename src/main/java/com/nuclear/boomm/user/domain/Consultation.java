@@ -2,7 +2,13 @@ package com.nuclear.boomm.user.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.user.enums.ConsultStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,32 +17,30 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Table(name="consultation")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Consultation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "consultationId")
-
+    @Column(nullable = false)
     private Long consultationId;
 
-    @Column(name = "manageId", nullable = false)
+    @Column(nullable = false)
     private Long managerId;
 
-    @Column(name = "userId", nullable = false)
+    @Column(nullable = false)
     private Long userId;
 
-    @Column(name = "consultedAt", nullable = false)
+    @Column(nullable = false)
     private LocalDateTime consultedAt;
 
-    @Column(name = "consultMemo", columnDefinition = "TEXT")    //columnDfinition은 JPA를 사용하여 데이터베이스 테이블을 자동으로 생성(DDL생성)할때,
+    @Column(columnDefinition = "TEXT")    //columnDfinition은 JPA를 사용하여 데이터베이스 테이블을 자동으로 생성(DDL생성)할때,
     private String consultMemo;                                 //  해당 컬럼의 데이터 타입을 직접 명시적으로 정의하기위해 사용했음.
 
-    @Column(name = "complimentMessage", columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String complimentMessage;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "consultStatus", nullable = false)
+    @Column(nullable = false)
     private ConsultStatus consultStatus;
 
     @Builder

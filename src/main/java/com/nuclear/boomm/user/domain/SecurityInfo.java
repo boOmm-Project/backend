@@ -1,7 +1,12 @@
 package com.nuclear.boomm.user.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Column;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,7 +14,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name="securityInfo")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SecurityInfo extends BaseEntity {
 
@@ -26,9 +30,10 @@ public class SecurityInfo extends BaseEntity {
 
 
     @Builder
-    public SecurityInfo(Long userId, boolean marketingAgreement, String address, String zipCode) {
+    public SecurityInfo(Long userId, boolean marketingAgreement, String personalInfo) {
         this.userId = userId;
         this.marketingAgreement = marketingAgreement;
-        this.personalInfo = address;
+        this.personalInfo = personalInfo;
+
     }
 }
