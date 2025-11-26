@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 public class ComplaintsManager extends BaseEntity {
 
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long consultationId;
