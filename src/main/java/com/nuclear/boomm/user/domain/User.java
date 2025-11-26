@@ -4,13 +4,14 @@ import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.user.enums.Gender;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table(name="user")
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,5 +51,22 @@ public class User extends BaseEntity {
 
     private String companyName;
 
-
+    @Builder
+    public User(    int age, String name
+                    , String idNum, String address
+                    , String zipCode, String job
+                    , boolean wedding, Gender gender
+                    , String phone, String email)
+    {
+        this.age = age;
+        this.name = name;
+        this.idNum = idNum;
+        this.address = address;
+        this.zipCode = zipCode;
+        this.job = job;
+        this.wedding = wedding;
+        this.gender = gender;
+        this.phone = phone;
+        this.email = email;
+    }
 }

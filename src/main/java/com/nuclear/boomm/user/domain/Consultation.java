@@ -1,15 +1,23 @@
 package com.nuclear.boomm.user.domain;
 
+import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.user.enums.ConsultStatus;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Builder;
-
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
-public class Consultation {
+@Entity
+@Getter
+@Table(name="consultation")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Consultation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "consultationId")
+
     private Long consultationId;
 
     @Column(name = "manageId", nullable = false)
