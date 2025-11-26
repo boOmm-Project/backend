@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long userId;
 
     @Column(nullable = false)

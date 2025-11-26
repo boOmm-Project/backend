@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 public class Consultation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long consultationId;
 
     @Column(nullable = false)

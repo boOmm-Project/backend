@@ -19,7 +19,6 @@ public class ComplaintsManager extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long consultationId;
 
     @Column(nullable = false)
