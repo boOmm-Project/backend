@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.coverage;
+package com.nuclear.boomm.product.domain.coverage;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.CoverageCategory;

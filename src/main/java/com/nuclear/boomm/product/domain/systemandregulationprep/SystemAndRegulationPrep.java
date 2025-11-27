@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.systemandregulationprep;
+package com.nuclear.boomm.product.domain.systemandregulationprep;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;

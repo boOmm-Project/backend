@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.riskreport;
+package com.nuclear.boomm.product.domain.riskreport;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;

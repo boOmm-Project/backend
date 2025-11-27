@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.file;
+package com.nuclear.boomm.product.domain.file;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;

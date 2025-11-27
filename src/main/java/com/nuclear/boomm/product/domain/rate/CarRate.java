@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.rate;
+package com.nuclear.boomm.product.domain.rate;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
