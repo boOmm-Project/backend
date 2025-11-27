@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.notification;
+package com.nuclear.boomm.product.domain.notification;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
