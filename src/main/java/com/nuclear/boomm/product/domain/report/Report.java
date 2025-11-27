@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.report;
+package com.nuclear.boomm.product.domain.report;
 
 import com.nuclear.boomm.product.enums.ReportCategory;
 import jakarta.persistence.Column;
@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,4 +33,12 @@ public class Report {
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isConfirmed;    // 신고 반영 여부
+
+    @Builder
+    public Report(ReportCategory category, String name, String description, boolean isConfirmed) {
+        this.category = category;
+        this.name = name;
+        this.description = description;
+        this.isConfirmed = isConfirmed;
+    }
 }

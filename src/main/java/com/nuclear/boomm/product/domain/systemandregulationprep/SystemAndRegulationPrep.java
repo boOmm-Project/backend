@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.systemandregulationprep;
+package com.nuclear.boomm.product.domain.systemandregulationprep;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +37,20 @@ public class SystemAndRegulationPrep extends BaseEntity {
     @Builder
     public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed) {
         this.policyAndDescription = policyAndDescription;
+        this.isConfirmed = isConfirmed;
+    }
+
+    @Builder(builderMethodName = "withSystemDevelopmentReq")
+    public SystemAndRegulationPrep(String systemDevelopmentReq, String policyAndDescription, boolean isConfirmed) {
+        this.systemDevelopmentReq = systemDevelopmentReq;
+        this.policyAndDescription = policyAndDescription;
+        this.isConfirmed = isConfirmed;
+    }
+
+    @Builder(builderMethodName = "withUnderwritingGuidelines")
+    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed, String underwritingGuidelines) {
+        this.policyAndDescription = policyAndDescription;
+        this.underwritingGuidelines = underwritingGuidelines;
         this.isConfirmed = isConfirmed;
     }
 }
