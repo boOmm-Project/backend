@@ -58,4 +58,6 @@ public class Coverage extends BaseEntity {
         this.isMandatory = isMandatory;
         this.damageCalStandard = damageCalStandard;
     }
+
+
 }
