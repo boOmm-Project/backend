@@ -1,6 +1,6 @@
-package com.nuclear.boomm.product.report;
+package com.nuclear.boomm.product.domain;
 
-import com.nuclear.boomm.product.enums.ReportCategory;
+import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,28 +8,29 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "report")
+@Table(name = "stakeholder")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Report {
+public class Stakeholder extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long reportId;
+    private Long stakeholderId;
 
     @Column(nullable = false)
-    private ReportCategory category;
+    private Long userId;        // user 테이블 pk 참조
 
     @Column(nullable = false)
-    private String name;
+    private Long productId;     // product 테이블 pk 참조
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String description;
-
-    @Column(nullable = false, columnDefinition = "boolean default false")
-    private boolean isConfirmed;    // 신고 반영 여부
+    @Builder
+    public Stakeholder(Long userId, Long productId) {
+        this.userId = userId;
+        this.productId = productId;
+    }
 }
