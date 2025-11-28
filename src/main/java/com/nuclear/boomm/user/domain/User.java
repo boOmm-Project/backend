@@ -20,7 +20,6 @@ import lombok.NoArgsConstructor;
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long userId;
 
     @Column(nullable = false)
@@ -41,9 +40,6 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String job;
 
-    @Column(nullable = false)
-    private boolean wedding;
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
@@ -54,14 +50,23 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String email;
 
+    private boolean wedding;
+
     private String companyName;
+
+    @Column(nullable = false)
+    private boolean marketingAgreement;
+
+    @Column(nullable = false)
+    private String personalInfo;
+
 
     @Builder
     public User(    int age, String name
-                    , String idNum, String address
-                    , String zipCode, String job
-                    , boolean wedding, Gender gender
-                    , String phone, String email)
+            , String idNum, String address
+            , String zipCode, String job
+            , Gender gender
+            , String phone, String email)
     {
         this.age = age;
         this.name = name;
@@ -69,9 +74,24 @@ public class User extends BaseEntity {
         this.address = address;
         this.zipCode = zipCode;
         this.job = job;
-        this.wedding = wedding;
         this.gender = gender;
         this.phone = phone;
         this.email = email;
     }
+
+    public void updateWedding(boolean wedding) {
+        this.wedding = wedding;
+    }
+    public void updateCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+    public void changePersonalInfo(String personalInfo) {
+        this.personalInfo = personalInfo;
+    }
+    public void changeMarketingAgreement(boolean marketingAgreement) {
+        this.marketingAgreement = marketingAgreement;
+
+
+    }
 }
+
