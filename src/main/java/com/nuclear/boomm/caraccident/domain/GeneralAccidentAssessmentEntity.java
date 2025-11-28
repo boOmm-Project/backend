@@ -39,7 +39,6 @@ public abstract class GeneralAccidentAssessmentEntity {
     @Column
     private Long proofFileId; // 손해액을 증명하는 서류
 
-    @Builder
     public GeneralAccidentAssessmentEntity(Long intakeManagerId, Long accidentIntakeId, Long insureClaimFileId, Long proofFileId) {
         this.intakeManagerId = intakeManagerId;
         this.accidentIntakeId = accidentIntakeId;
