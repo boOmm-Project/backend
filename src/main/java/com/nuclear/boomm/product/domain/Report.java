@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.domain.report;
+package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.product.enums.ReportCategory;
 import jakarta.persistence.Column;

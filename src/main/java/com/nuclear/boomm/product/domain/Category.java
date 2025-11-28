@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.domain.category;
+package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.ProductCategory;
