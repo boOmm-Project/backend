@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.feedback;
+package com.nuclear.boomm.product.domain.feedback;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.FeedbackStatus;

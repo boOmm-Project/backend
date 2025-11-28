@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.stakeholder;
+package com.nuclear.boomm.product.domain.stakeholder;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
