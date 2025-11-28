@@ -1,4 +1,4 @@
-package com.nuclear.boomm.user.domain;
+package com.nuclear.boomm.consultation.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.user.enums.ConsultStatus;
@@ -21,7 +21,6 @@ import java.time.LocalDateTime;
 public class Consultation extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long consultationId;
 
     @Column(nullable = false)
@@ -30,10 +29,7 @@ public class Consultation extends BaseEntity {
     @Column(nullable = false)
     private Long userId;
 
-    @Column(nullable = false)
-    private LocalDateTime consultedAt;
-
-    @Column(columnDefinition = "TEXT")    //columnDfinition은 JPA를 사용하여 데이터베이스 테이블을 자동으로 생성(DDL생성)할때,
+    @Column(columnDefinition = "TEXT")    //columnDefinition은 JPA를 사용하여 데이터베이스 테이블을 자동으로 생성(DDL생성)할때,
     private String consultMemo;                                 //  해당 컬럼의 데이터 타입을 직접 명시적으로 정의하기위해 사용했음.
 
     @Column(columnDefinition = "TEXT")
@@ -44,18 +40,23 @@ public class Consultation extends BaseEntity {
     private ConsultStatus consultStatus;
 
     @Builder
-    public Consultation(Long managerId,
-                        Long userId,
-                        LocalDateTime consultedAt,
-                        String consultMemo,
-                        String complimentMessage,
-                        ConsultStatus consultStatus) {
-        this.managerId = managerId;
+    public Consultation(
+            Long userId,
+            String consultMemo,
+            Long managerId
+    ) {
         this.userId = userId;
-        this.consultedAt = consultedAt;
         this.consultMemo = consultMemo;
-        this.complimentMessage = complimentMessage;
+        this.managerId = managerId;
+    }
+    public void changeConsultStatus(ConsultStatus consultStatus) {
         this.consultStatus = consultStatus;
     }
 
+    public void changeComplimentMessage(String complimentMessage) {
+        this.complimentMessage = complimentMessage;
+    }
+
+
 }
+
