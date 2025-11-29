@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
@@ -45,8 +46,8 @@ public class InsurancePolicy extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Column(nullable=false)
-    private Double totalPremium;
+    @Column(nullable=false, precision = 10, scale = 2)
+    private BigDecimal totalPremium;
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
