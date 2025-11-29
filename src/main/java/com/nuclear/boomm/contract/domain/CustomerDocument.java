@@ -44,5 +44,7 @@ public class CustomerDocument extends BaseEntity {
     @Column(columnDefinition = "text")
     private String documentRemark;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ProcessingStatus processingStatus;
 }
