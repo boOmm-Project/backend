@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.rate;
+package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.MappedSuperclass;
