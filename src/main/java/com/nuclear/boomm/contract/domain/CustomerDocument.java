@@ -23,10 +23,10 @@ public class CustomerDocument extends BaseEntity {
     @Id
     @Column(nullable = false)
     @GeneratedValue
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
-    private long userId;   // fk
+    private Long userId;   // fk
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
