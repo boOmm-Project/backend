@@ -14,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,7 +34,7 @@ public class PaymentAttempt extends BaseEntity {
     private LocalDateTime paymentAttemptedAt;
 
     @Column(nullable = false, precision = 15, scale = 2)
-    private double paymentAmount;
+    private BigDecimal paymentAmount;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
