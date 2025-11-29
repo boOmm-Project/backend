@@ -10,6 +10,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -36,5 +37,5 @@ public class PaymentHistory extends BaseEntity {
     private LocalDateTime paidDate;
 
     @Column(nullable = false, precision = 15, scale = 2)
-    private double scheduledAmount;
+    private BigDecimal scheduledAmount;
 }
