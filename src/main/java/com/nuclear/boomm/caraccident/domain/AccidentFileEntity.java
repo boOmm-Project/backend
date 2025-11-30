@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,10 +28,18 @@ public class AccidentFileEntity {
     @Column(nullable = false)
     private String fileName;
 
-    @Column(nullable = false, columnDefinition = "LONGTEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String fileContent;
 
     @Column(nullable = false)
     private Long accidentIntakeId;
 
+    @Builder
+    public AccidentFileEntity(Long userId, String originalFileName, String fileName, String fileContent, Long accidentIntakeId) {
+        this.userId = userId;
+        this.originalFileName = originalFileName;
+        this.fileName = fileName;
+        this.fileContent = fileContent;
+        this.accidentIntakeId = accidentIntakeId;
+    }
 }
