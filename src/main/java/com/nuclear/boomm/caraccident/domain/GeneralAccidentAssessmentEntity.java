@@ -1,5 +1,6 @@
 package com.nuclear.boomm.caraccident.domain;
 
+import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -18,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "accidentType")
-public abstract class GeneralAccidentAssessmentEntity {
+public abstract class GeneralAccidentAssessmentEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
