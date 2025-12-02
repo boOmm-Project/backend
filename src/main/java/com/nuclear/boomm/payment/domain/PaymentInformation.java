@@ -2,6 +2,7 @@ package com.nuclear.boomm.payment.domain;
 
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.common.enums.BankEnum;
 import com.nuclear.boomm.payment.enums.PaymentMethod;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,10 +23,17 @@ public class PaymentInformation extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentId;
+    private Long id;
 
     @Column(nullable = false)
-    private String policy_number;
+    private Long userId;    // fk
+
+    @Column(nullable = false)
+    private String policy_number;   // fk
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private BankEnum bankName;  // 은행 명
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
@@ -35,5 +43,5 @@ public class PaymentInformation extends BaseEntity {
     private String accountNumber;
 
     @Column(nullable = false)
-    private String holderName;
+    private String holderName;      // 계좌/카드 소유자 이름
 }

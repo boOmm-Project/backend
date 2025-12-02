@@ -22,20 +22,23 @@ public class PaymentHistory extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentHistoryId;
+    private Long id;
 
     @Column(nullable = false)
-    private String policyNumber;
+    private String policyNumber;    // fk
 
     @Column(nullable = false)
-    private Long paymentAttemptId;
+    private Long paymentAttemptId;  // fk
 
     @Column(nullable = false)
-    private LocalDate scheduledDate;
+    private LocalDate scheduledDate;    // 납입 예정일
 
     @Column(nullable = false)
-    private LocalDateTime paidDate;
+    private LocalDateTime paidDate;     // 실제 납입일
 
     @Column(nullable = false, precision = 15, scale = 2)
-    private BigDecimal scheduledAmount;
+    private BigDecimal scheduledAmount; // 납입 예정액
+
+    @Column(nullable = false, precision = 15, scale = 2)
+    private BigDecimal paidAmount;      // 실제 납입액
 }
