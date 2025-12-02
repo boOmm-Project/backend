@@ -1,8 +1,6 @@
 package com.nuclear.boomm.contract.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.contract.enums.DocumentType;
-import com.nuclear.boomm.contract.enums.FileType;
 import com.nuclear.boomm.contract.enums.ProcessingStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,9 +14,9 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name="customer_document")
+@Table(name="customer_file")
 @NoArgsConstructor
-public class CustomerDocument extends BaseEntity {
+public class CustomerFile extends BaseEntity {
 
     @Id
     @Column(nullable = false)
@@ -26,23 +24,19 @@ public class CustomerDocument extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String originalName;
+
+    @Column(nullable = false)
     private Long userId;   // fk
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private DocumentType documentType;
+    private String fileName;        // 파일 이름
 
     @Column(nullable = false)
-    private String fileName;
+    private String filePath;        // 파일 경로
 
-    @Column(nullable = false)
-    private FileType fileType;
-
-    @Column(nullable = false)
-    private String filePath;
-
-    @Column(columnDefinition = "text")
-    private String documentRemark;
+    @Column(columnDefinition = "TEXT")
+    private String documentRemark;  // 비고/관리용 메모
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
