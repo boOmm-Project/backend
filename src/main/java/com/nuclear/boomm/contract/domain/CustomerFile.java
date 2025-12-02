@@ -24,6 +24,9 @@ public class CustomerFile extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
+    private String originalName;
+
+    @Column(nullable = false)
     private Long userId;   // fk
 
     @Column(nullable = false)
