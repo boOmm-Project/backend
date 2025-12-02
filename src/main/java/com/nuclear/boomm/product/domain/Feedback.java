@@ -9,7 +9,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,13 +16,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "feedback")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feedback extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long feedbackId;
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -33,19 +31,20 @@ public class Feedback extends BaseEntity {
     private String description;
 
     @Column(nullable = false)
-    private Long productId; // product 테이블 pk 참조
+    private Long productId;     // product 테이블 pk 참조
 
     @Column(nullable = false)
-    private Long writerId;    // user 테이블 pk 참조. 피드백을 작성한 사람
+    private Long writerId;      // user 테이블 pk 참조. 피드백을 작성한 사람
 
-//    @Column(nullable = false)
-//    private Role role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
+    @Column(nullable = false)
+    private String role;
 
     @Builder
-    public Feedback(FeedbackStatus status, String description, Long productId, Long writerId) {
+    public Feedback(FeedbackStatus status, String description, Long productId, Long writerId,  String role) {
         this.status = status;
         this.description = description;
         this.productId = productId;
         this.writerId = writerId;
+        this.role = role;
     }
 }

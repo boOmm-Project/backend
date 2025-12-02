@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ProductFile extends BaseEntity {
+public class RiskReportFile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,10 +41,10 @@ public class ProductFile extends BaseEntity {
     private Long uploaderId;
 
     @Column(nullable = false)
-    private Long prototypeId;
+    private Long riskReportId;
 
     @Builder
-    public ProductFile(String bucketName, String filePath, String originalFileName, String fileName, String extension, String mimeType, Long uploaderId, Long prototypeId) {
+    public RiskReportFile(String bucketName, String filePath, String originalFileName, String fileName, String extension, String mimeType, Long uploaderId, Long riskReportId) {
         this.bucketName = bucketName;
         this.filePath = filePath;
         this.originalFileName = originalFileName;
@@ -52,6 +52,6 @@ public class ProductFile extends BaseEntity {
         this.extension = extension;
         this.mimeType = mimeType;
         this.uploaderId = uploaderId;
-        this.prototypeId = prototypeId;
+        this.riskReportId = riskReportId;
     }
 }

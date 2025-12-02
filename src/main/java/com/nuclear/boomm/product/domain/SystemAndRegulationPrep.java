@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,7 +13,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "system_and_regulation_prep")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SystemAndRegulationPrep extends BaseEntity {
 
@@ -27,9 +25,6 @@ public class SystemAndRegulationPrep extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String policyAndDescription;
-
-    @Column(nullable = true, columnDefinition = "TEXT")
-    private String underwritingGuidelines;
 
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isConfirmed;    // 금융감독원 인가
@@ -44,13 +39,6 @@ public class SystemAndRegulationPrep extends BaseEntity {
     public SystemAndRegulationPrep(String systemDevelopmentReq, String policyAndDescription, boolean isConfirmed) {
         this.systemDevelopmentReq = systemDevelopmentReq;
         this.policyAndDescription = policyAndDescription;
-        this.isConfirmed = isConfirmed;
-    }
-
-    @Builder(builderMethodName = "withUnderwritingGuidelines")
-    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed, String underwritingGuidelines) {
-        this.policyAndDescription = policyAndDescription;
-        this.underwritingGuidelines = underwritingGuidelines;
         this.isConfirmed = isConfirmed;
     }
 }
