@@ -1,4 +1,4 @@
-package com.nuclear.boomm.user.enums;
+package com.nuclear.boomm.consultation.enums;
 
 public enum ConsultStatus {
     WAITING,

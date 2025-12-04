@@ -85,13 +85,13 @@ public class User extends BaseEntity {
     public void updateCompanyName(String companyName) {
         this.companyName = companyName;
     }
-    public void changePersonalInfo(String personalInfo) {
-        this.personalInfo = personalInfo;
-    }
+
     public void changeMarketingAgreement(boolean marketingAgreement) {
         this.marketingAgreement = marketingAgreement;
+    }
 
-
+    public void changePersonalInfo(String personalInfo) {
+        this.personalInfo = personalInfo;
     }
 }
 

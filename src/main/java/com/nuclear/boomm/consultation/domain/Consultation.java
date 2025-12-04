@@ -1,7 +1,7 @@
 package com.nuclear.boomm.consultation.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.user.enums.ConsultStatus;
+import com.nuclear.boomm.consultation.enums.ConsultStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -13,7 +13,6 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
