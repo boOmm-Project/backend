@@ -28,10 +28,10 @@ public class AccidentIntakeEntity extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String accidentDescription; // 사고 사항
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String damageDescription; // 피해 사항
 
     @Column(nullable = false)
@@ -41,20 +41,10 @@ public class AccidentIntakeEntity extends BaseEntity {
     private String carNumber; // 차량번호
 
     @Column(nullable = false)
-    private Long insuredPersonId; // 피보험자 아이디
+    private Long insuredPersonId; // 보험금 청구 접수자 유저 아이디
 
     @Column(nullable = false)
-    private String insuranceClaimPersonName; // 보험금청구 접수자
-
-    @Column(nullable = false)
-    private String insuranceClaimPersonEmail; // 보험금청구 접수자 이메일
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private BankEnum insurancePaymentBank; // 보험금 지금 계좌 은행
-
-    @Column(nullable = false)
-    private String insurancePaymentBankAccount; // 보험금 지급 계좌
+    private String insuranceClaimPersonName; // 보험금청구 접수자 이름
 
     @Enumerated(EnumType.STRING)
     private InsuranceClaimStatus intakeStatus; // 진행 상태
@@ -64,22 +54,6 @@ public class AccidentIntakeEntity extends BaseEntity {
 
     @Column(columnDefinition = "TEXT")
     private String supplimentText;
-
-    @Builder
-    public AccidentIntakeEntity(String accidentDescription, String damageDescription, LocalDateTime incidentDate,
-                                String carNumber, Long insuredPersonId, String insuranceClaimPersonName,
-                                String insuranceClaimPersonEmail, BankEnum insurancePaymentBank, String insurancePaymentBankAccount
-                                ) {
-        this.accidentDescription = accidentDescription;
-        this.damageDescription = damageDescription;
-        this.incidentDate = incidentDate;
-        this.carNumber = carNumber;
-        this.insuredPersonId = insuredPersonId;
-        this.insuranceClaimPersonName = insuranceClaimPersonName;
-        this.insuranceClaimPersonEmail = insuranceClaimPersonEmail;
-        this.insurancePaymentBank = insurancePaymentBank;
-        this.insurancePaymentBankAccount = insurancePaymentBankAccount;
-    }
 
     public AccidentIntakeEntity updateStatus(InsuranceClaimStatus status) {
         this.intakeStatus = status;
