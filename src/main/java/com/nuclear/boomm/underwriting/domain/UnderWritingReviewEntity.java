@@ -2,8 +2,17 @@ package com.nuclear.boomm.underwriting.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 @Entity
 @Getter
@@ -31,7 +40,7 @@ public class UnderWritingReviewEntity extends BaseEntity {
     private Long contractManagerId; //계약담당자
 
     @Column(nullable = false)
-    private boolean FSSadmission; //금감원담당자
+    private boolean fssadmission; //금감원담당자
 
     @Builder
     public UnderWritingReviewEntity(Long fileId, Long userId, Long productId, Long contractmanagerId) {
@@ -46,8 +55,8 @@ public class UnderWritingReviewEntity extends BaseEntity {
 
     }
 
-    public void FSSadmission(boolean FSSadmission) {
-        this.FSSadmission = FSSadmission;
+    public void fssadmission(boolean FSSadmission) {
+        this.fssadmission = fssadmission;
     }
 
 }
