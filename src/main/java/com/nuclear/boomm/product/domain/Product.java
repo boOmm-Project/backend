@@ -21,20 +21,20 @@ public class Product extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
-    @Column(nullable = false, unique = true)
-    private String productName;
+    @Column(unique = true)
+    private String productName = "임시 상품";
 
-    @Column(nullable = false)
-    private Long category;  // category 테이블의 id
+    @Column
+    private Long category = 1L;  // category 테이블의 id
 
-    @Column(nullable = false)
-    private String targetCustomer;
+    @Column
+    private String targetCustomer = "임시 고객";
 
-    @Column(nullable = false)
-    private int period;     // 보장 기간
+    @Column
+    private int period = 12;     // 보장 기간
 
-    @Column(nullable = false)
-    private String salesChannel;
+    @Column
+    private String salesChannel = "임시 판매 채널";
 
     @Column(nullable = false)
     private Long userId;    // User 테이블의 pk 참조. 해당 상품의 생성자
