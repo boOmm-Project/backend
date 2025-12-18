@@ -62,6 +62,9 @@ public class AccidentIntakeEntity extends BaseEntity {
     @Column
     private Long intakeManagerId; // 접수 담당자 아이디
 
+    @Column(columnDefinition = "TEXT")
+    private String supplimentText;
+
     @Builder
     public AccidentIntakeEntity(String accidentDescription, String damageDescription, LocalDateTime incidentDate,
                                 String carNumber, Long insuredPersonId, String insuranceClaimPersonName,
@@ -88,5 +91,9 @@ public class AccidentIntakeEntity extends BaseEntity {
         return this;
     }
 
+    public AccidentIntakeEntity updateSupplimentText(String supplimentText) {
+        this.supplimentText = supplimentText;
+        return this;
+    }
 
 }
