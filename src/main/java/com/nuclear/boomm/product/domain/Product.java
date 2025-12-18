@@ -39,13 +39,17 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private Long userId;    // User 테이블의 pk 참조. 해당 상품의 생성자
 
+    @Column(nullable = false)
+    private boolean isDone = false;
+
     @Builder
-    public Product(String productName, Long category, String targetCustomer, int period, String salesChannel, Long userId) {
+    public Product(String productName, Long category, String targetCustomer, int period, String salesChannel, Long userId, boolean isDone) {
         this.productName = productName;
         this.category = category;
         this.targetCustomer = targetCustomer;
         this.period = period;
         this.salesChannel = salesChannel;
         this.userId = userId;
+        this.isDone = isDone;
     }
 }
