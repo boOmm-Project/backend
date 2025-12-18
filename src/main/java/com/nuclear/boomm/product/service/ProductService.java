@@ -1,6 +1,8 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Product;
+import com.nuclear.boomm.product.dto.request.ProductRequest;
+import com.nuclear.boomm.product.dto.response.ProductResponse;
 import com.nuclear.boomm.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,5 +25,12 @@ public class ProductService {
                 .build();
 
         return productRepository.save(product).getProductId();
+    }
+
+    public ProductResponse save(UserDetails userDetails, ProductRequest request) {
+        String username = userDetails.getUsername();
+        Long userId = Long.parseLong(username);
+
+        return null;
     }
 }
