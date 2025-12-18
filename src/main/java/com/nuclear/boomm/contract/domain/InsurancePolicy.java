@@ -8,7 +8,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,32 +23,32 @@ import java.time.LocalDate;
 public class InsurancePolicy extends BaseEntity {
 
     @Id
-    private String policyNumber;
+    private String policyNumber;    // fk, pk
 
     @Column(nullable=false)
-    private String userId;
+    private String userId;      // fk
 
     @Column(nullable=false)
-    private Long productId;
+    private Long productId;     // fk
 
     @Column(nullable=false)
-    private LocalDate startDate;
+    private LocalDate startDate;    // 보험 시작일
 
     @Column(nullable=false)
-    private LocalDate endDate;
+    private LocalDate endDate;      // 보험 만기일
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    private PaymentCycle paymentCycle;
+    private PaymentCycle paymentCycle;  // 납입 주기
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @Column(nullable=false, precision = 10, scale = 2)
-    private BigDecimal totalPremium;
+    private BigDecimal totalPremium;    // 총 보험료
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    private ContractStatus contractStatus;
+    private ContractStatus contractStatus;  // 계약 상태
 }
