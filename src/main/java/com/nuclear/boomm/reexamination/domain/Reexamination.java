@@ -23,7 +23,7 @@ public class Reexamination extends BaseEntity {
     private Long customerId; //고객
 
     @Column(nullable = false)
-    private String productId; //계약상품아이디
+    private Long productId; //계약상품아이디
 
     @Column(nullable = false)
     private Long contractManagerId; //계약 담당자
@@ -31,7 +31,7 @@ public class Reexamination extends BaseEntity {
     private Long reexaminationManagerId; // 재심사 담당자
 
     @Builder
-    public Reexamination(Long fileId, Long customerId, String productId, Long contractManagerId) {
+    public Reexamination(Long fileId, Long customerId, Long productId, Long contractManagerId) {
         this.fileId = fileId;
         this.customerId = customerId;
         this.productId = productId;
