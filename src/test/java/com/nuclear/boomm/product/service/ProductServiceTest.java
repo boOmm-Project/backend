@@ -33,6 +33,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,7 +84,7 @@ class ProductServiceTest {
                 12,
                 "채널",
                 userId,
-                false,
+                true,
                 stakeholderId
         );
         request = new ProductCoverageFileRequest(
@@ -235,12 +236,56 @@ class ProductServiceTest {
 
         // then: response가 null이 아닌지
         assertNotNull(productResponse);
-
     }
 
     @Test
     @DisplayName("상품 최종 저장 시 isDone 값이 변경되는지 확인")
     void saveProduct() {
         // given
+        given(userDetails.getUsername()).willReturn(String.valueOf(userId));
+
+        // request
+        given(productRepository.findByProductIdAndUserId(productId, userId))
+                .willReturn(Optional.of(product));
+
+        given(productFileRepository.findAllByProductId(productId))
+                .willReturn(List.of(pf1, pf2));
+
+        given(coverageRepository.findAllByProductId(productId))
+                .willReturn(List.of(cov1, cov2));
+
+        Feedback feedback = Feedback.builder()
+                .productId(product.getProductId())
+                .writerId(request.stakeholderId())
+                .build();
+
+        given(feedbackRepository.save(any(Feedback.class))).willReturn(feedback);
+
+        // when
+        ProductResponse productResponse = productService.save(userDetails, request);
+
+        // then: 조회 여부
+        verify(productRepository).findByProductIdAndUserId(productId, userId);
+
+        // then: 기존 파일 delete 호출 여부
+        verify(productFileRepository).delete(pf1);
+        verify(productFileRepository).delete(pf2);
+        verify(coverageRepository).delete(cov1);
+        verify(coverageRepository).delete(cov2);
+
+        // then: saveAll
+        verify(productFileRepository).saveAll(productFilesCaptor.capture());
+        verify(coverageRepository).saveAll(coveragesCaptor.capture());
+
+        assertEquals(2, productFilesCaptor.getValue().size());
+        assertEquals(2, coveragesCaptor.getValue().size());
+
+        verify(feedbackRepository, times(1)).save(any(Feedback.class));
+
+        // then: isDone의 true
+        assertTrue(product.isDone());
+
+        // then: response가 null이 아닌지
+        assertNotNull(productResponse);
     }
 }
