@@ -1,5 +1,7 @@
 package com.nuclear.boomm.caraccident.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.common.enums.BankEnum;
 import com.nuclear.boomm.common.enums.InsuranceClaimStatus;
@@ -68,6 +70,25 @@ public class AccidentIntakeEntity extends BaseEntity {
     public AccidentIntakeEntity updateSupplimentText(String supplimentText) {
         this.supplimentText = supplimentText;
         return this;
+    }
+
+    @Builder
+    public AccidentIntakeEntity(LocalDateTime incidentDate, String carNumber, Long insuredPersonId, String insuranceClaimPersonName, InsuranceClaimStatus intakeStatus) {
+        this.incidentDate = incidentDate;
+        this.carNumber = carNumber;
+        this.insuredPersonId = insuredPersonId;
+        this.insuranceClaimPersonName = insuranceClaimPersonName;
+        this.intakeStatus = intakeStatus;
+    }
+
+    public static AccidentIntakeEntity from(AccidentIntakeDTO dto, Long userId) {
+        return AccidentIntakeEntity.builder()
+                .incidentDate(dto.incidentDate())
+                .carNumber(dto.carNumber())
+                .insuredPersonId(userId)
+                .insuranceClaimPersonName(dto.insuranceClaimPersonName())
+                .intakeStatus(InsuranceClaimStatus.RECEIVED)
+                .build();
     }
 
 }
