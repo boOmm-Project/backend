@@ -53,7 +53,7 @@ public class Coverage extends BaseEntity {
     private String damageCalStandard;
 
     @Builder
-    public Coverage(CoverageCategory category, Long productId, String description, double minCoverageLimit, double maxCoverageLimit, boolean isMandatory, String damageCalStandard) {
+    public Coverage(CoverageCategory category, Long productId, String description, double minCoverageLimit, double maxCoverageLimit, boolean isMandatory, String damageCalStandard, String title) {
         this.category = category;
         this.productId = productId;
         this.description = description;
@@ -61,16 +61,20 @@ public class Coverage extends BaseEntity {
         this.maxCoverageLimit = maxCoverageLimit;
         this.isMandatory = isMandatory;
         this.damageCalStandard = damageCalStandard;
+        this.title = title;
     }
 
 
-    public static CoverageResponse updateAll(Coverage coverage) {
-        return new CoverageResponse(
-                coverage.getTitle(),
-                coverage.getDescription(),
-                coverage.getMinCoverageLimit(),
-                coverage.getMaxCoverageLimit(),
-                coverage.isMandatory()
-        );
+    public static Coverage update(Coverage coverage) {
+        return Coverage.builder()
+                .title(coverage.getTitle())
+                .category(coverage.getCategory())
+                .description(coverage.getDescription())
+                .minCoverageLimit(coverage.getMinCoverageLimit())
+                .maxCoverageLimit(coverage.getMaxCoverageLimit())
+                .isMandatory(coverage.isMandatory())
+                .damageCalStandard(coverage.getDamageCalStandard())
+                .productId(coverage.getProductId())
+                .build();
     }
 }

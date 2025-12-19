@@ -54,15 +54,25 @@ public class ProductService {
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         product.updateProduct(request.product());
 
-        productFileRepository
+        List<ProductFile> fileList = productFileRepository
                 .findAllByProductId(request.product().productId())
                 .stream()
-                .map(ProductFile::update);
+                .map(productFile -> {
+                    productFileRepository.delete(productFile);
+                    return ProductFile.update(productFile);
+                })
+                .toList();
+        productFileRepository.saveAll(fileList);
 
-        coverageRepository
+        List<Coverage> coverageList = coverageRepository
                 .findAllByProductId(request.product().productId())
                 .stream()
-                .map(Coverage::updateAll);
+                .map(coverage -> {
+                    coverageRepository.delete(coverage);
+                    return Coverage.update(coverage);
+                })
+                .toList();
+        coverageRepository.saveAll(coverageList);
 
         if (request.product().isDone()) {
             // product의 isDone true로 변경
@@ -77,7 +87,7 @@ public class ProductService {
             feedbackRepository.save(feedback);
         }
 
-        return new ProductResponse();
+        return ProductResponse.from(product);
     }
 
     public List<ProductResponse> getReleaseProductList(ProductRequest request) {
