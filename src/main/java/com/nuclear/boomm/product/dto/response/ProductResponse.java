@@ -1,5 +1,6 @@
 package com.nuclear.boomm.product.dto.response;
 
+import com.nuclear.boomm.product.domain.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -28,4 +29,17 @@ public record ProductResponse(
 
         @NotNull
         boolean isDone
-) {}
+) {
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(
+                product.getProductId(),
+                product.getProductName(),
+                product.getCategory(),
+                product.getTargetCustomer(),
+                product.getPeriod(),
+                product.getSalesChannel(),
+                product.getUserId(),
+                product.isDone()
+        );
+    }
+}
