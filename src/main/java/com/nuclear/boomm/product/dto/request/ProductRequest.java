@@ -26,7 +26,8 @@ public record ProductRequest(
         Long userId,
 
         @NotNull
-        boolean isDone
+        boolean isDone,
 
+        Long stakeholderId
 ) {
 }

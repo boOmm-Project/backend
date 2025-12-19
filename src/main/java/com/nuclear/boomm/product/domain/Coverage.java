@@ -33,6 +33,9 @@ public class Coverage extends BaseEntity {
     @Column(nullable = false, unique = true)
     private Long productId; // product 테이블의 productId 참조
 
+    @Column(nullable = false, unique = true)
+    private String title;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 

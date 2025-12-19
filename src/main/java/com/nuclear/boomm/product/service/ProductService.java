@@ -1,10 +1,13 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.product.repository.FeedbackRepository;
 import com.nuclear.boomm.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final FeedbackRepository feedbackRepository;
 
     @Transactional
     public Long createProduct(UserDetails userDetails) {
@@ -42,6 +46,13 @@ public class ProductService {
         if (request.isDone()) {
             // 임시 저장이 아닌 최종 저장일 때만 isDone 상태 변경
             product.updateIsDone(true);
+
+            // 피드백 생성
+            Feedback feedback = Feedback.builder()
+                    .productId(request.productId())
+                    .writerId(request.stakeholderId())
+                    .build();
+            feedbackRepository.save(feedback);
         }
 
         return ProductResponse.from(product);
