@@ -79,4 +79,17 @@ public class Product extends BaseEntity {
     public void updateIsDone(boolean isDone) {
         this.isDone = isDone;
     }
+
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(
+                product.getProductId(),
+                product.getProductName(),
+                product.getCategory(),
+                product.getTargetCustomer(),
+                product.getPeriod(),
+                product.getSalesChannel(),
+                product.getUserId(),
+                product.isDone
+        );
+    }
 }

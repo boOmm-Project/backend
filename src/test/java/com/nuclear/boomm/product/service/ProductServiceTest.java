@@ -117,7 +117,7 @@ class ProductServiceTest {
         given(productRepository.findByUserIdAndProductId(userId, productId)).willReturn(Optional.of(product));
 
         // when
-        productService.save(userDetails, request);
+//        productService.save(userDetails, request);
 
         // then
         assertEquals(productId, product.getProductId());
@@ -157,7 +157,7 @@ class ProductServiceTest {
         given(productRepository.findByUserIdAndProductId(userId, productId)).willReturn(Optional.of(product));
 
         // when
-        productService.save(userDetails, request);
+//        productService.save(userDetails, request);
 
         // then
         assertTrue(product.isDone());

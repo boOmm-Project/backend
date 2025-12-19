@@ -2,7 +2,9 @@ package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
+import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,16 +41,17 @@ public class ProductController {
     @Operation(description = "개발 중인 상품 저장 또는 임시저장")
     @PutMapping("/save")
     public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(
-            @RequestBody ProductRequest request,
+            @RequestBody ProductCoverageFileRequest request,
             @AuthenticationPrincipal UserDetails userDetails
             ) {
 
         return ResponseEntity.ok(ApiResponse.success(productService.save(userDetails, request)));
     }
 
-    @Operation(description = "출시된 상품 조회")
+    @Operation(description = "출시된 상품 목록 조회")
     @GetMapping("/product")
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getReleasedProducts() {
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getReleasedProducts(@RequestBody ProductRequest request) {
 
+        return ResponseEntity.ok(ApiResponse.success(productService.getReleaseProductList(request)));
     }
 }

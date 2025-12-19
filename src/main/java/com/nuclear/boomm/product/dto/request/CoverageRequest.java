@@ -1,16 +1,16 @@
-package com.nuclear.boomm.product.dto.response;
+package com.nuclear.boomm.product.dto.request;
 
 import com.nuclear.boomm.product.domain.Coverage;
 
-public record CoverageResponse(
+public record CoverageRequest(
     String title,
     String description,
     double minCoverageLimit,
     double maxCoverageLimit,
     boolean isMandatory
 ) {
-    public static CoverageResponse from(Coverage coverage) {
-        return new CoverageResponse(
+    public static CoverageRequest from(Coverage coverage) {
+        return new CoverageRequest(
                 coverage.getTitle(),
                 coverage.getDescription(),
                 coverage.getMinCoverageLimit(),

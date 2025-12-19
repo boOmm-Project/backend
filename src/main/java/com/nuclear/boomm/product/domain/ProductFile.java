@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,18 +43,22 @@ public class ProductFile extends BaseEntity {
     @Column(nullable = false)
     private Long uploaderId;
 
+    @Column(nullable = false)
+    private Long productId;
+
     @Builder(builderMethodName = "noExtensionBuilder")
-    public ProductFile(String bucketName, String objectKey, String originalFilename, String contentType, Long fileSize, Long uploaderId) {
+    public ProductFile(String bucketName, String objectKey, String originalFilename, String contentType, Long fileSize, Long uploaderId, Long productId) {
         this.bucketName = bucketName;
         this.objectKey = objectKey;
         this.originalFilename = originalFilename;
         this.contentType = contentType;
         this.fileSize = fileSize;
         this.uploaderId = uploaderId;
+        this.productId = productId;
     }
 
     @Builder    // extension 필드 포함된 기본 builder
-    public ProductFile(String bucketName, String objectKey, String originalFilename, String extension, String contentType, Long fileSize, Long uploaderId) {
+    public ProductFile(String bucketName, String objectKey, String originalFilename, String extension, String contentType, Long fileSize, Long uploaderId, Long productId) {
         this.bucketName = bucketName;
         this.objectKey = objectKey;
         this.originalFilename = originalFilename;
@@ -61,5 +66,19 @@ public class ProductFile extends BaseEntity {
         this.contentType = contentType;
         this.fileSize = fileSize;
         this.uploaderId = uploaderId;
+        this.productId = productId;
+    }
+
+    public static ProductFile update(ProductFile productFile) {
+        return ProductFile.builder()
+                .bucketName(productFile.getBucketName())
+                .objectKey(productFile.getObjectKey())
+                .originalFilename(productFile.getOriginalFilename())
+                .extension(productFile.getExtension())
+                .contentType(productFile.getContentType())
+                .fileSize(productFile.getFileSize())
+                .uploaderId(productFile.getUploaderId())
+                .productId(productFile.getProductId())
+                .build();
     }
 }

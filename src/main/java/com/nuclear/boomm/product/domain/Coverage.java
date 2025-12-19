@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.enums.CoverageCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -63,4 +64,13 @@ public class Coverage extends BaseEntity {
     }
 
 
+    public static CoverageResponse updateAll(Coverage coverage) {
+        return new CoverageResponse(
+                coverage.getTitle(),
+                coverage.getDescription(),
+                coverage.getMinCoverageLimit(),
+                coverage.getMaxCoverageLimit(),
+                coverage.isMandatory()
+        );
+    }
 }
