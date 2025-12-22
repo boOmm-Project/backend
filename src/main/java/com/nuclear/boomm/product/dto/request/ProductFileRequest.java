@@ -7,7 +7,7 @@ public record ProductFileRequest(
 ) {
     public static ProductFileRequest from(ProductFile productFile) {
         return new ProductFileRequest(
-                productFile.getObjectKey()
+                productFile.getUrl()
         );
     }
 }

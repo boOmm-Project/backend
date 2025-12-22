@@ -5,11 +5,13 @@ import com.nuclear.boomm.product.domain.ProductFile;
 import java.util.List;
 
 public record ProductFileResponse(
-        String imageUrl
+        String imageUrl,
+        String fileName
 ) {
     public static ProductFileResponse from(ProductFile productFile) {
         return new ProductFileResponse(
-                productFile.getObjectKey()
+                productFile.getUrl(),
+                productFile.getOriginalFilename()
         );
     }
 

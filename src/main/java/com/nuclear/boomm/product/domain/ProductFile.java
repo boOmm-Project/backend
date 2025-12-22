@@ -1,7 +1,6 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +26,7 @@ public class ProductFile extends BaseEntity {
     private String bucketName;
 
     @Column(nullable = false,  unique = true)
-    private String objectKey;   // url
+    private String url;   // url
 
     @Column(nullable = false)
     private String originalFilename;
@@ -47,9 +46,9 @@ public class ProductFile extends BaseEntity {
     private Long productId;
 
     @Builder(builderMethodName = "noExtensionBuilder")
-    public ProductFile(String bucketName, String objectKey, String originalFilename, String contentType, Long fileSize, Long uploaderId, Long productId) {
+    public ProductFile(String bucketName, String url, String originalFilename, String contentType, Long fileSize, Long uploaderId, Long productId) {
         this.bucketName = bucketName;
-        this.objectKey = objectKey;
+        this.url = url;
         this.originalFilename = originalFilename;
         this.contentType = contentType;
         this.fileSize = fileSize;
@@ -58,9 +57,9 @@ public class ProductFile extends BaseEntity {
     }
 
     @Builder    // extension 필드 포함된 기본 builder
-    public ProductFile(String bucketName, String objectKey, String originalFilename, String extension, String contentType, Long fileSize, Long uploaderId, Long productId) {
+    public ProductFile(String bucketName, String url, String originalFilename, String extension, String contentType, Long fileSize, Long uploaderId, Long productId) {
         this.bucketName = bucketName;
-        this.objectKey = objectKey;
+        this.url = url;
         this.originalFilename = originalFilename;
         this.extension = extension;
         this.contentType = contentType;
@@ -72,7 +71,7 @@ public class ProductFile extends BaseEntity {
     public static ProductFile update(ProductFile productFile) {
         return ProductFile.builder()
                 .bucketName(productFile.getBucketName())
-                .objectKey(productFile.getObjectKey())
+                .url(productFile.getUrl())
                 .originalFilename(productFile.getOriginalFilename())
                 .extension(productFile.getExtension())
                 .contentType(productFile.getContentType())
