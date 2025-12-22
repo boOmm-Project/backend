@@ -9,7 +9,10 @@ import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import com.nuclear.boomm.product.dto.request.ProductFileRequest;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
+import com.nuclear.boomm.product.dto.response.CoverageResponse;
+import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.repository.CoverageRepository;
 import com.nuclear.boomm.product.repository.FeedbackRepository;
 import com.nuclear.boomm.product.repository.ProductFileRepository;
@@ -69,6 +72,8 @@ class ProductServiceTest {
     private Long productId;
     private Long stakeholderId;
     private List<Product> doneProductList;  // DB에 있는 상품 목록
+    private List<ProductFile> productFileList;
+    private List<Coverage> coverageList;
 
     @BeforeEach
     void setUp() {
@@ -129,6 +134,7 @@ class ProductServiceTest {
         pf2 = ProductFile.builder()
                 .productId(productId)
                 .build();
+        productFileList = List.of(pf1, pf2);
 
         cov1 = Coverage.builder()
                 .productId(productId)
@@ -136,6 +142,7 @@ class ProductServiceTest {
         cov2 = Coverage.builder()
                 .productId(productId)
                 .build();
+        coverageList = List.of(cov1, cov2);
 
         doneProductList = new ArrayList<>(List.of(
                 Product.builder()
@@ -325,5 +332,25 @@ class ProductServiceTest {
         verify(productRepository, times(1)).findAllByIsDoneTrue();
 
         assertTrue(responses.stream().allMatch(ProductResponse::isDone));
+    }
+
+    @Test
+    @DisplayName("상품 하나의 상세 정보 전달")
+    void selectProductDetails() {
+        // given
+        given(productRepository.findByProductId(productId)).willReturn(Optional.of(product));
+        given(productFileRepository.findAllByProductId(productId)).willReturn(productFileList);
+        given(coverageRepository.findAllByProductId(productId)).willReturn(coverageList);
+
+        // when
+        ProductCoverageFileResponse response = productService.getProductDetails(productId);
+
+        // then
+        verify(productRepository, times(1)).findByProductId(productId);
+        verify(productFileRepository, times(1)).findAllByProductId(productId);
+        verify(coverageRepository, times(1)).findAllByProductId(productId);
+
+        assertNotNull(response);
+        assertEquals(productId, response.product().productId());
     }
 }

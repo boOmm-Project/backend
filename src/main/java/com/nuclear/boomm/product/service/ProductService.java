@@ -101,11 +101,7 @@ public class ProductService {
         ProductResponse productResponse = ProductResponse.from(productRepository.findByProductId(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
 
-        List<ProductFileResponse> productFileList = productFileRepository
-                .findAllByProductId(productId)
-                .stream()
-                .map(ProductFileResponse::from)
-                .toList();
+        List<ProductFileResponse> productFileList = ProductFileResponse.from(productFileRepository.findAllByProductId(productId));
         List<CoverageResponse> coverageResponseList = CoverageResponse.from(coverageRepository.findAllByProductId(productId));
 
         return new ProductCoverageFileResponse(
