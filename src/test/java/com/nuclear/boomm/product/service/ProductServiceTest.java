@@ -4,13 +4,10 @@ import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
-import com.nuclear.boomm.product.domain.Stakeholder;
 import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import com.nuclear.boomm.product.dto.request.ProductFileRequest;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
-import com.nuclear.boomm.product.dto.response.CoverageResponse;
-import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.repository.CoverageRepository;
@@ -72,6 +69,7 @@ class ProductServiceTest {
     private Long productId;
     private Long stakeholderId;
     private List<Product> doneProductList;  // DB에 있는 상품 목록
+    private List<Product> notDoneProductList;
     private List<ProductFile> productFileList;
     private List<Coverage> coverageList;
 
@@ -158,6 +156,23 @@ class ProductServiceTest {
                 Product.builder()
                         .userId(1L)
                         .isDone(true)
+                        .build()
+        ));
+
+        notDoneProductList = new ArrayList<>(List.of(
+                Product.builder()
+                        .userId(1L)
+                        .isDone(false)
+                        .build()
+                ,
+                Product.builder()
+                        .userId(2L)
+                        .isDone(false)
+                        .build()
+                ,
+                Product.builder()
+                        .userId(1L)
+                        .isDone(false)
                         .build()
         ));
     }
@@ -326,12 +341,27 @@ class ProductServiceTest {
         given(productRepository.findAllByIsDoneTrue()).willReturn(doneProductList);
 
         // when
-        List<ProductResponse> responses = productService.getReleaseProductList();
+        List<ProductResponse> responses = productService.getReleasedProducts();
 
         // then
         verify(productRepository, times(1)).findAllByIsDoneTrue();
 
         assertTrue(responses.stream().allMatch(ProductResponse::isDone));
+    }
+
+    @Test
+    @DisplayName("미출시 상태의 모든 상품 조회")
+    void selectNotDoneProducts() {
+        // given
+        given(productRepository.findAllByIsDoneFalse()).willReturn(notDoneProductList);
+
+        // when
+        List<ProductResponse> responses = productService.getNotReleasedProducts();
+
+        // then
+        verify(productRepository, times(1)).findAllByIsDoneFalse();
+
+        assertFalse(responses.stream().allMatch(ProductResponse::isDone));
     }
 
     @Test

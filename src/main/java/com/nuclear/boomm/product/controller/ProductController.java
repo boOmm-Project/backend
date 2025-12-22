@@ -1,7 +1,6 @@
 package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
-import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Tag(name = "상품", description = "상품 생성, 상품 개발, 상품 조회에 대한 API")
+@Tag(name = "상품", description = "상품 생성, 상품 개발, 상품 조회, 상품 출시에 대한 API")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/product")
@@ -50,10 +49,17 @@ public class ProductController {
     }
 
     @Operation(description = "출시된 상품 목록 조회")
-    @PostMapping("/product")
+    @GetMapping("/released")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getReleasedProducts() {
 
-        return ResponseEntity.ok(ApiResponse.success(productService.getReleaseProductList()));
+        return ResponseEntity.ok(ApiResponse.success(productService.getReleasedProducts()));
+    }
+
+    @Operation(description = "개발 중 상품 목록 조회")
+    @GetMapping("/not-released")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getNotReleasedProducts() {
+
+        return ResponseEntity.ok(ApiResponse.success(productService.getNotReleasedProducts()));
     }
 
     @Operation(description = "출시 상품 상세 조회")

@@ -4,7 +4,6 @@ import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
-import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
 import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.dto.response.ProductFileResponse;
@@ -89,9 +88,18 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-    public List<ProductResponse> getReleaseProductList() {
+    public List<ProductResponse> getReleasedProducts() {
         return productRepository
                 .findAllByIsDoneTrue()
+                .stream()
+                .map(Product::from)
+                .toList();
+    }
+
+    public List<ProductResponse> getNotReleasedProducts() {
+
+        return productRepository
+                .findAllByIsDoneFalse()
                 .stream()
                 .map(Product::from)
                 .toList();
