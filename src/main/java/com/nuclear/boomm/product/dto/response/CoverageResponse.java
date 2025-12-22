@@ -2,6 +2,8 @@ package com.nuclear.boomm.product.dto.response;
 
 import com.nuclear.boomm.product.domain.Coverage;
 
+import java.util.List;
+
 public record CoverageResponse(
     String title,
     String description,
@@ -17,5 +19,11 @@ public record CoverageResponse(
                 coverage.getMaxCoverageLimit(),
                 coverage.isMandatory()
         );
+    }
+
+    public static List<CoverageResponse> from(List<Coverage> coverages) {
+        return coverages.stream()
+                .map(CoverageResponse::from)
+                .toList();
     }
 }

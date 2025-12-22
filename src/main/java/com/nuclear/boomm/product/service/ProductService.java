@@ -6,6 +6,7 @@ import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
+import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
@@ -97,19 +98,19 @@ public class ProductService {
     }
 
     public ProductCoverageFileResponse getProductDetails(Long productId) {
-        Product product = productRepository.findByProductId(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductId(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
 
         List<ProductFileResponse> productFileList = productFileRepository
                 .findAllByProductId(productId)
                 .stream()
                 .map(ProductFileResponse::from)
                 .toList();
-        List<Coverage> coverageList = coverageRepository.findAllByProductId(productId);
+        List<CoverageResponse> coverageResponseList = CoverageResponse.from(coverageRepository.findAllByProductId(productId));
 
         return new ProductCoverageFileResponse(
-                product,
-                coverageList,
+                productResponse,
+                coverageResponseList,
                 productFileList
         );
     }
