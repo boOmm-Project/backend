@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,13 +68,14 @@ class ProductServiceTest {
     private Long userId;
     private Long productId;
     private Long stakeholderId;
+    private List<Product> doneProductList;  // DB에 있는 상품 목록
 
     @BeforeEach
     void setUp() {
         userId = 1L;
         productId = 10L;
         stakeholderId = 99L;
-        given(userDetails.getUsername()).willReturn(String.valueOf(userId));
+//        given(userDetails.getUsername()).willReturn(String.valueOf(userId));
 
         // request
         productRequest = new ProductRequest(
@@ -134,6 +136,23 @@ class ProductServiceTest {
         cov2 = Coverage.builder()
                 .productId(productId)
                 .build();
+
+        doneProductList = new ArrayList<>(List.of(
+                Product.builder()
+                        .userId(1L)
+                        .isDone(true)
+                        .build()
+                ,
+                Product.builder()
+                        .userId(2L)
+                        .isDone(true)
+                        .build()
+                ,
+                Product.builder()
+                        .userId(1L)
+                        .isDone(true)
+                        .build()
+        ));
     }
 
     @Test
@@ -287,5 +306,24 @@ class ProductServiceTest {
 
         // then: response가 null이 아닌지
         assertNotNull(productResponse);
+    }
+
+    @Test
+    @DisplayName("출시 상태의 모든 상품 조회")
+    void selectDoneProducts() {
+        // given
+        Long productId1 = 1L;
+        Long productId2 = 2L;
+        Long productId3 = 3L;
+
+        given(productRepository.findAllByIsDoneTrue()).willReturn(doneProductList);
+
+        // when
+        List<ProductResponse> responses = productService.getReleaseProductList();
+
+        // then
+        verify(productRepository, times(1)).findAllByIsDoneTrue();
+
+        assertTrue(responses.stream().allMatch(ProductResponse::isDone));
     }
 }

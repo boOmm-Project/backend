@@ -51,9 +51,9 @@ public class ProductController {
 
     @Operation(description = "출시된 상품 목록 조회")
     @PostMapping("/product")
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> getReleasedProducts(@RequestBody ProductRequest request) {
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getReleasedProducts() {
 
-        return ResponseEntity.ok(ApiResponse.success(productService.getReleaseProductList(request)));
+        return ResponseEntity.ok(ApiResponse.success(productService.getReleaseProductList()));
     }
 
     @Operation(description = "출시 상품 상세 조회")

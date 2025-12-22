@@ -89,9 +89,9 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
-    public List<ProductResponse> getReleaseProductList(ProductRequest request) {
+    public List<ProductResponse> getReleaseProductList() {
         return productRepository
-                .findAllByProductIdAndIsDoneTrue(request.productId())
+                .findAllByIsDoneTrue()
                 .stream()
                 .map(Product::from)
                 .toList();
