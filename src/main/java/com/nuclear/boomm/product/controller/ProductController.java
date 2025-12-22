@@ -40,6 +40,7 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.success(productService.createProduct(userDetails)));
     }
 
+    // minio에 어떻게 저장하고 그 결과를 DB에 저장할 지 로직 필요
     @Operation(description = "개발 중인 상품 저장 또는 임시저장")
     @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PutMapping("/save")
