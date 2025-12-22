@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,7 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(description = "상품 생성")
+    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<Long>> createProduct(
             @AuthenticationPrincipal UserDetails userDetails
@@ -39,6 +41,7 @@ public class ProductController {
     }
 
     @Operation(description = "개발 중인 상품 저장 또는 임시저장")
+    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PutMapping("/save")
     public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(
             @RequestBody ProductCoverageFileRequest request,
@@ -56,6 +59,7 @@ public class ProductController {
     }
 
     @Operation(description = "개발 중 상품 목록 조회")
+    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER', 'PRODUCT_STAKEHOLDER', 'PRODUCT_COMPLIANCE')")
     @GetMapping("/not-released")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getNotReleasedProducts() {
 
@@ -64,7 +68,7 @@ public class ProductController {
 
     @Operation(description = "출시 상품 상세 조회")
     @GetMapping("/details/{id}")
-    public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getProductDetails(@PathVariable Long productId) {
+    public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getProductDetails(@PathVariable("id") Long productId) {
 
         return ResponseEntity.ok(ApiResponse.success(productService.getProductDetails(productId)));
     }
