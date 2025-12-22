@@ -2,6 +2,7 @@ package com.nuclear.boomm.user.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.user.enums.Gender;
+import com.nuclear.boomm.user.enums.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User extends BaseEntity {
+public class User extends BaseEntity {      // user는 DB예약어일 수 있어서 안돌아가면 users로 바꿔보자!
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -40,8 +41,9 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String providerId; // 네이버 고유 식별값
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     // 네이버가 줄 수도 있고 안 줄 수도 있는 정보 (Nullable = true 처리)
     // 네이버는 출생연도(YYYY)와 생일(MM-DD)을 따로 줍니다.
@@ -67,7 +69,7 @@ public class User extends BaseEntity {
     private String job;
 
     @Column(nullable = true)
-    private int age; // 연령대 [ 네이버는 "20-29" 같은 범위를 문자열로 준다. int로 바로 못 받음 ]
+    private String age; // 연령대 [ 네이버는 "20-29" 같은 범위를 문자열로 준다. int로 바로 못 받음 ]
 
     // 기타 선택 약관 정보
     private boolean wedding;
@@ -77,7 +79,7 @@ public class User extends BaseEntity {
 
     @Builder
     public User(String name, String email, String phone,
-                String provider, String providerId, String role,
+                String provider, String providerId, Role role,
                 Gender gender, String birthYear) {
         this.name = name;
         this.email = email;
@@ -96,89 +98,10 @@ public class User extends BaseEntity {
         this.job = job;
         this.idNum = idNum;
     }
+
+    // 시큐리티가 이해할 수 있게 "ROLE_" 을 붙여서 리턴해줌.(호환성)
+    public String getRoleKey() {
+        return "ROLE_" + this.role.name();
+    }
 }
-
-
-
-
-//@Entity
-//@Getter
-//@NoArgsConstructor(access = AccessLevel.PROTECTED)
-//public class User extends BaseEntity {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Long userId;
-//
-//    @Column(nullable = false)
-//    private int age;
-//
-//    @Column(nullable = false)
-//    private String name;
-//
-//    @Column(nullable = false)
-//    private String idNum;
-//
-//    @Column(nullable = false)
-//    private String address;
-//
-//    @Column(nullable = false)
-//    private String zipCode;
-//
-//    @Column(nullable = false)
-//    private String job;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(nullable = false)
-//    private Gender gender;
-//
-//    @Column(nullable = false)
-//    private String phone;
-//
-//    @Column(nullable = false)
-//    private String email;
-//
-//    private boolean wedding;
-//
-//    private String companyName;
-//
-//    @Column(nullable = false)
-//    private boolean marketingAgreement;
-//
-//    @Column(nullable = false)
-//    private String personalInfo;
-//
-//
-//    @Builder
-//    public User(    int age, String name
-//            , String idNum, String address
-//            , String zipCode, String job
-//            , Gender gender
-//            , String phone, String email)
-//    {
-//        this.age = age;
-//        this.name = name;
-//        this.idNum = idNum;
-//        this.address = address;
-//        this.zipCode = zipCode;
-//        this.job = job;
-//        this.gender = gender;
-//        this.phone = phone;
-//        this.email = email;
-//    }
-//
-//    public void updateWedding(boolean wedding) {
-//        this.wedding = wedding;
-//    }
-//    public void updateCompanyName(String companyName) {
-//        this.companyName = companyName;
-//    }
-//    public void changePersonalInfo(String personalInfo) {
-//        this.personalInfo = personalInfo;
-//    }
-//    public void changeMarketingAgreement(boolean marketingAgreement) {
-//        this.marketingAgreement = marketingAgreement;
-//
-//
-//    }
-//}
 
