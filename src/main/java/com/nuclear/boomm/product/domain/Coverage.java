@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.enums.CoverageCategory;
 import jakarta.persistence.Column;
@@ -67,17 +68,11 @@ public class Coverage extends BaseEntity {
         this.title = title;
     }
 
-
-    public static Coverage update(Coverage coverage) {
-        return Coverage.builder()
-                .title(coverage.getTitle())
-                .category(coverage.getCategory())
-                .description(coverage.getDescription())
-                .minCoverageLimit(coverage.getMinCoverageLimit())
-                .maxCoverageLimit(coverage.getMaxCoverageLimit())
-                .isMandatory(coverage.isMandatory())
-                .damageCalStandard(coverage.getDamageCalStandard())
-                .productId(coverage.getProductId())
-                .build();
+    public void update(CoverageRequest request) {
+        this.title = request.title();
+        this.description = request.description();
+        this.minCoverageLimit = request.minCoverageLimit();
+        this.maxCoverageLimit = request.maxCoverageLimit();
+        this.isMandatory = request.isMandatory();
     }
 }

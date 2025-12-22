@@ -1,6 +1,8 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.product.dto.request.ProductFileRequest;
+import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -25,7 +29,7 @@ public class ProductFile extends BaseEntity {
     @Column(nullable = false)
     private String bucketName;
 
-    @Column(nullable = false,  unique = true)
+    @Column(nullable = false, unique = true)
     private String url;   // url
 
     @Column(nullable = false)
@@ -68,16 +72,21 @@ public class ProductFile extends BaseEntity {
         this.productId = productId;
     }
 
-    public static ProductFile update(ProductFile productFile) {
-        return ProductFile.builder()
-                .bucketName(productFile.getBucketName())
-                .url(productFile.getUrl())
-                .originalFilename(productFile.getOriginalFilename())
-                .extension(productFile.getExtension())
-                .contentType(productFile.getContentType())
-                .fileSize(productFile.getFileSize())
-                .uploaderId(productFile.getUploaderId())
-                .productId(productFile.getProductId())
-                .build();
+    public void update(ProductFileRequest request) {
+        this.url = request.imageUrl();
+        this.originalFilename = request.origianlFileName();
+    }
+
+    public static ProductFileResponse from(ProductFile productFile) {
+        return new ProductFileResponse(
+                productFile.getUrl(),
+                productFile.getOriginalFilename()
+        );
+    }
+
+    public static List<ProductFileResponse> from(List<ProductFile> productFile) {
+        return productFile.stream()
+                .map(ProductFile::from)
+                .toList();
     }
 }

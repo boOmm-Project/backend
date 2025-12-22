@@ -64,7 +64,7 @@ public class Product extends BaseEntity {
         this.isDone = isDone;
     }
 
-    public Product updateProduct(ProductRequest request) {
+    public void update(ProductRequest request) {
         this.productName = request.productName();
         this.category = request.category();
         this.targetCustomer = request.targetCustomer();
@@ -72,8 +72,6 @@ public class Product extends BaseEntity {
         this.salesChannel = request.salesChannel();
         this.userId = request.userId();
         this.isDone = request.isDone();
-
-        return this;
     }
 
     public void updateIsDone(boolean isDone) {

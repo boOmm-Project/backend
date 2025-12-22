@@ -1,9 +1,7 @@
 package com.nuclear.boomm.product.service;
 
-import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
-import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageFileRequest;
 import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.dto.response.ProductFileResponse;
@@ -50,27 +48,14 @@ public class ProductService {
 
         Product product = productRepository.findByProductIdAndUserId(request.product().productId(), userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-        product.updateProduct(request.product());
+        product.update(request.product());
 
-        List<ProductFile> fileList = productFileRepository
-                .findAllByProductId(request.product().productId())
-                .stream()
-                .map(productFile -> {
-                    productFileRepository.delete(productFile);
-                    return ProductFile.update(productFile);
-                })
-                .toList();
-        productFileRepository.saveAll(fileList);
+        // update에 내용을 수정해 minio에 올리고 변경사항을 db에 저장하는 로직 필요
+        productFileRepository.findAllByProductId(request.product().productId())
+                .forEach(file -> request.file().forEach(file::update));
 
-        List<Coverage> coverageList = coverageRepository
-                .findAllByProductId(request.product().productId())
-                .stream()
-                .map(coverage -> {
-                    coverageRepository.delete(coverage);
-                    return Coverage.update(coverage);
-                })
-                .toList();
-        coverageRepository.saveAll(coverageList);
+        coverageRepository.findAllByProductId(request.product().productId())
+                .forEach(coverage -> request.coverage().forEach(coverage::update));
 
         if (request.product().isDone()) {
             // product의 isDone true로 변경
