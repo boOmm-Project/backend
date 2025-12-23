@@ -18,16 +18,19 @@ import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "product_file")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductFile extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fileId;
 
+    @Builder.Default
     @Column(nullable = false)
-    private String bucketName;
+    private String bucketName = "product-file";
 
     @Column(nullable = false, unique = true)
     private String url;   // url
