@@ -23,7 +23,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.userdetails.UserDetails;
+//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.util.ArrayList;
@@ -51,12 +51,12 @@ class ProductServiceTest {
     private CoverageRepository coverageRepository;
     @Mock
     private FeedbackRepository feedbackRepository;
-    @Mock
-    private UserDetails userDetails;
-    @Captor
-    private ArgumentCaptor<List<ProductFile>> productFilesCaptor;
-    @Captor
-    private ArgumentCaptor<List<Coverage>> coveragesCaptor;
+//    @Mock
+//    private UserDetails userDetails;
+//    @Captor
+//    private ArgumentCaptor<List<ProductFile>> productFilesCaptor;
+//    @Captor
+//    private ArgumentCaptor<List<Coverage>> coveragesCaptor;
 
     private ProductRequest productRequest;
     private ProductCoverageFileRequest request;

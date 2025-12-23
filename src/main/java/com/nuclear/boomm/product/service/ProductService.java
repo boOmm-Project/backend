@@ -14,7 +14,6 @@ import com.nuclear.boomm.product.repository.FeedbackRepository;
 import com.nuclear.boomm.product.repository.ProductFileRepository;
 import com.nuclear.boomm.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
