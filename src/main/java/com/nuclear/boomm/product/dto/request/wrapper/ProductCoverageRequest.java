@@ -10,7 +10,6 @@ import com.nuclear.boomm.product.dto.response.ProductResponse;
 import java.util.List;
 
 public record ProductCoverageFileRequest(
-        Long stakeholderId,
         ProductRequest product,
         List<CoverageRequest> coverage,
         List<ProductFileRequest> file
