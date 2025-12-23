@@ -19,13 +19,21 @@ public class AccidentIntakeService {
     private final AccidentIntakeRepository accidentIntakeRepository;
 
     @Transactional
-    public ApiResponse<AccidentIntakeIdDTO> acceptIntake(AccidentIntakeDTO dto, Long userId){
-
-        if(dto.incidentDate().isAfter(LocalDateTime.now())){
+    public ApiResponse<AccidentIntakeIdDTO> acceptIntake(AccidentIntakeDTO dto, Long userId, String username) {
+        if (dto.incidentDate().isAfter(LocalDateTime.now())) {
             throw new RuntimeException("사고 일자가 미래일 수는 없습니다.");
         }
+        LocalDateTime interval = dto.incidentDate().minusMinutes(5);
+        boolean isDuplicated = accidentIntakeRepository.existsByUserIdAndIncidentDateBetween(userId,interval,dto.incidentDate());
 
-        AccidentIntakeEntity entity = AccidentIntakeEntity.from(dto, userId);
+        if(isDuplicated) {
+            throw new RuntimeException("5분 이내의 접수한 건이 존재합니다.");
+        }
+
+        AccidentIntakeEntity entity = AccidentIntakeEntity.from(dto, userId, username);
+
+
+
         return ApiResponse.success(AccidentIntakeIdDTO.from(accidentIntakeRepository.save(entity).getId()));
     }
 }

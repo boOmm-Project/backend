@@ -81,12 +81,12 @@ public class AccidentIntakeEntity extends BaseEntity {
         this.intakeStatus = intakeStatus;
     }
 
-    public static AccidentIntakeEntity from(AccidentIntakeDTO dto, Long userId) {
+    public static AccidentIntakeEntity from(AccidentIntakeDTO dto, Long userId, String name) {
         return AccidentIntakeEntity.builder()
                 .incidentDate(dto.incidentDate())
                 .carNumber(dto.carNumber())
                 .insuredPersonId(userId)
-                .insuranceClaimPersonName(dto.insuranceClaimPersonName())
+                .insuranceClaimPersonName(name)
                 .intakeStatus(InsuranceClaimStatus.RECEIVED)
                 .build();
     }
