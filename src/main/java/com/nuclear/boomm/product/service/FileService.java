@@ -47,6 +47,48 @@ public class FileService {
         return uuidFileName;
     }
 
+    // 다중 파일 업로드
+    public List<ProductFile> uploadFiles (
+            Long userId,
+            Long productId,
+            List<MultipartFile> files
+    ) throws IOException {
+        List<ProductFile> responses = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            String originalName = file.getOriginalFilename();
+            String extension = "";
+            if (originalName != null && originalName.lastIndexOf(".") != -1) {
+                extension = originalName.substring(originalName.lastIndexOf("."));
+            }
+
+            String uuidFileName = UUID.randomUUID() + extension;
+
+            PutObjectRequest request = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(uuidFileName)
+                    .contentType(file.getContentType())
+                    .build();
+
+            ProductFile productFile = ProductFile.builder()
+                    .bucketName(bucket)
+                    .url("http://dev.macacolabs.site:9000/" + bucket + "/" + uuidFileName)
+                    .originalFilename(originalName)
+                    .extension(extension)
+                    .contentType(file.getContentType())
+                    .fileSize(file.getSize())
+                    .uploaderId(userId)
+                    .productId(productId)
+                    .build();
+
+            s3Client.putObject(request, software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes()));
+
+            responses.add(productFile);
+        }
+
+        return responses;
+    }
+
     // ✅ 파일 목록 조회
     public List<String> listFiles() {
         ListObjectsV2Response response = s3Client.listObjectsV2(
