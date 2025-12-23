@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ProductFileRepository extends JpaRepository<ProductFile, Long> {
     List<ProductFile> findAllByProductId(@NotNull Long productId);
+
+    void deleteByProductId(@NotNull Long productId);
 }

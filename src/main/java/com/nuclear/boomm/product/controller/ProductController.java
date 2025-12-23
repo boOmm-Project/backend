@@ -48,14 +48,16 @@ public class ProductController {
     // minio에 어떻게 저장하고 그 결과를 DB에 저장할 지 로직 필요
     @Operation(description = "개발 중인 상품 저장 또는 임시저장")
 //    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
-    @PutMapping("/save")
+    @PostMapping(value = "/save", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(
-            @RequestBody ProductCoverageFileRequest request
+            @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
+            @RequestPart("request") ProductCoverageRequest request,
+            @RequestPart("file") List<MultipartFile> files
 //            @AuthenticationPrincipal UserDetails userDetails
             ) {
         Long userId = 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(productService.save(userId, request)));
+        return ResponseEntity.ok(ApiResponse.success(productService.save(userId, request, files)));
     }
 
     @Operation(description = "출시된 상품 목록 조회")
