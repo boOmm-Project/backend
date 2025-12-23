@@ -55,7 +55,7 @@ class ProductServiceTest {
 //    private ArgumentCaptor<List<Coverage>> coveragesCaptor;
 
     private ProductRequest productRequest;
-    private ProductCoverageFileRequest request;
+    private ProductCoverageRequest request;
     private Product product;
     private ProductFile pf1;
     private ProductFile pf2;
@@ -91,8 +91,7 @@ class ProductServiceTest {
                 true,
                 stakeholderId
         );
-        request = new ProductCoverageFileRequest(
-                stakeholderId,
+        request = new ProductCoverageRequest(
                 productRequest,
                 List.of(
                         new CoverageRequest(
