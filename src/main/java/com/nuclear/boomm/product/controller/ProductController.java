@@ -31,25 +31,27 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(description = "상품 생성")
-    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
+//    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<Long>> createProduct(
-            @AuthenticationPrincipal UserDetails userDetails
+//            @AuthenticationPrincipal UserDetails userDetails
             ) {
+        Long userId = 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(productService.createProduct(userDetails)));
+        return ResponseEntity.ok(ApiResponse.success(productService.createProduct(userId)));
     }
 
     // minio에 어떻게 저장하고 그 결과를 DB에 저장할 지 로직 필요
     @Operation(description = "개발 중인 상품 저장 또는 임시저장")
-    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
+//    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PutMapping("/save")
     public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(
-            @RequestBody ProductCoverageFileRequest request,
-            @AuthenticationPrincipal UserDetails userDetails
+            @RequestBody ProductCoverageFileRequest request
+//            @AuthenticationPrincipal UserDetails userDetails
             ) {
+        Long userId = 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(productService.save(userDetails, request)));
+        return ResponseEntity.ok(ApiResponse.success(productService.save(userId, request)));
     }
 
     @Operation(description = "출시된 상품 목록 조회")
@@ -60,7 +62,7 @@ public class ProductController {
     }
 
     @Operation(description = "개발 중 상품 목록 조회")
-    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER', 'PRODUCT_STAKEHOLDER', 'PRODUCT_COMPLIANCE')")
+//    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER', 'PRODUCT_STAKEHOLDER', 'PRODUCT_COMPLIANCE')")
     @GetMapping("/not-released")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getNotReleasedProducts() {
 

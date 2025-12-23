@@ -29,10 +29,7 @@ public class ProductService {
     private final ProductFileRepository productFileRepository;
 
     @Transactional
-    public Long createProduct(UserDetails userDetails) {
-        String username = userDetails.getUsername();
-        Long userId = Long.parseLong(username);
-
+    public Long createProduct(Long userId) {
         Product product = Product.builder()
                 .userId(userId)
                 .build();
@@ -41,10 +38,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse save(UserDetails userDetails, ProductCoverageFileRequest request) {
-        String username = userDetails.getUsername();
-        Long userId = Long.parseLong(username);
-
+    public ProductResponse save(Long userId, ProductCoverageFileRequest request) {
         Product product = productRepository.findByProductIdAndUserId(request.product().productId(), userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         product.update(request.product());
