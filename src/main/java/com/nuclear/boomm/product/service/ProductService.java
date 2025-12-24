@@ -14,6 +14,7 @@ import com.nuclear.boomm.product.repository.CoverageRepository;
 import com.nuclear.boomm.product.repository.FeedbackRepository;
 import com.nuclear.boomm.product.repository.ProductFileRepository;
 import com.nuclear.boomm.product.repository.ProductRepository;
+import com.nuclear.boomm.product.repository.RiskReportRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,7 @@ public class ProductService {
     private final FeedbackRepository feedbackRepository;
     private final CoverageRepository coverageRepository;
     private final ProductFileRepository productFileRepository;
+    private final RiskReportRepository riskReportRepository;
 
     private final FileService fileService;
 
@@ -125,6 +127,11 @@ public class ProductService {
     public ProductResponse deleteUnReleasedProduct(Long productId) {
         Product product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        productFileRepository.deleteAllByProductId(productId);
+        coverageRepository.deleteAllByProductId(productId);
+        feedbackRepository.deleteAllByProductId(productId);
+        riskReportRepository.deleteAllByProductId(productId);
 
         if (product.isReleased()) {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
