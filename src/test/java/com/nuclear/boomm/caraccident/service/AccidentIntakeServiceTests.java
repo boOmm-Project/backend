@@ -48,7 +48,7 @@ class AccidentIntakeServiceTests {
         AccidentIntakeEntity entity = AccidentIntakeEntity.from(dto, userId,name);
         ReflectionTestUtils.setField(entity,"id", accidentId);
 
-        given(accidentIntakeRepository.existsByUserIdAndIncidentDateBetween(userId, incidientDate.minusMinutes(5), incidientDate)).willReturn(false);
+        given(accidentIntakeRepository.existsByInsuredPersonIdAndIncidentDateBetween(userId, incidientDate.minusMinutes(5), incidientDate)).willReturn(false);
 
         given(accidentIntakeRepository.save(any(AccidentIntakeEntity.class)))
                 .willReturn(entity);
@@ -69,12 +69,11 @@ class AccidentIntakeServiceTests {
     }
 
     @Test
-    @DisplayName("자동차 사고 접수 성공 테스트 - 모든 값이 정상 일 경우")
+    @DisplayName("자동차 사고 접수 실패 - 5분이내의 값이 있을 경우")
     public void failAcceptAccidentIntakeByDuplicated(){
 
         //given
         Long userId = 1L;
-        Long accidentId = 2L;
         LocalDateTime incidientDate = LocalDateTime.now();
         String name = "홍길동";
         String carNumber = "12허12345";
@@ -83,25 +82,17 @@ class AccidentIntakeServiceTests {
                 carNumber
         );
 
-        AccidentIntakeEntity entity = AccidentIntakeEntity.from(dto, userId,name);
-        ReflectionTestUtils.setField(entity,"id", accidentId);
-
-        given(accidentIntakeRepository.existsByUserIdAndIncidentDateBetween(userId, incidientDate.minusMinutes(5), incidientDate)).willReturn(true);
-
-        given(accidentIntakeRepository.save(any(AccidentIntakeEntity.class)))
-                .willReturn(entity);
+        given(accidentIntakeRepository.existsByInsuredPersonIdAndIncidentDateBetween(userId, incidientDate.minusMinutes(5), incidientDate)).willReturn(true);
 
 
 
         //when
 
-        ApiResponse<AccidentIntakeIdDTO> result =  accidentIntakeService.acceptIntake(dto, userId,name);
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> accidentIntakeService.acceptIntake(dto, userId,name));
 
-        // then
 
-        assertThat(result).isNotNull();
-        assertThat(result.getData().intakeId()).isEqualTo(accidentId);
-        verify(accidentIntakeRepository).save(any(AccidentIntakeEntity.class));
+        assertThat(exception).isNotNull();
+        assertThat(exception.getMessage()).isEqualTo("5분 이내의 접수한 건이 존재합니다.");
 
 
     }

@@ -24,7 +24,7 @@ public class AccidentIntakeService {
             throw new RuntimeException("사고 일자가 미래일 수는 없습니다.");
         }
         LocalDateTime interval = dto.incidentDate().minusMinutes(5);
-        boolean isDuplicated = accidentIntakeRepository.existsByUserIdAndIncidentDateBetween(userId,interval,dto.incidentDate());
+        boolean isDuplicated = accidentIntakeRepository.existsByInsuredPersonIdAndIncidentDateBetween(userId,interval,dto.incidentDate());
 
         if(isDuplicated) {
             throw new RuntimeException("5분 이내의 접수한 건이 존재합니다.");
