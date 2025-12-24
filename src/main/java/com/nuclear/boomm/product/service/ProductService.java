@@ -15,6 +15,7 @@ import com.nuclear.boomm.product.repository.FeedbackRepository;
 import com.nuclear.boomm.product.repository.ProductFileRepository;
 import com.nuclear.boomm.product.repository.ProductRepository;
 import com.nuclear.boomm.product.repository.RiskReportRepository;
+import com.nuclear.boomm.product.repository.SystemAndRegulationPrepRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,7 @@ public class ProductService {
     private final CoverageRepository coverageRepository;
     private final ProductFileRepository productFileRepository;
     private final RiskReportRepository riskReportRepository;
+    private final SystemAndRegulationPrepRepository systemAndRegulationPrep;
 
     private final FileService fileService;
 
@@ -132,6 +134,7 @@ public class ProductService {
         coverageRepository.deleteAllByProductId(productId);
         feedbackRepository.deleteAllByProductId(productId);
         riskReportRepository.deleteAllByProductId(productId);
+        systemAndRegulationPrep.deleteAllByProductId(productId);
 
         if (product.isReleased()) {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
