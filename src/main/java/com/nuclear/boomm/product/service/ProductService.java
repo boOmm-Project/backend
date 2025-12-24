@@ -120,4 +120,13 @@ public class ProductService {
                 productFileList
         );
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ProductResponse deleteUnReleasedProduct(Long productId) {
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        productRepository.delete(product);
+
+        return ProductResponse.from(product);
+    }
 }

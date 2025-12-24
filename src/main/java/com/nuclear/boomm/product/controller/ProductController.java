@@ -81,4 +81,12 @@ public class ProductController {
 
         return ResponseEntity.ok(ApiResponse.success(productService.getProductDetails(productId)));
     }
+
+    @Operation(description = "출시 전 상품 삭제")
+//    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER')")
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(@PathVariable("id") Long productId) {
+
+        return ResponseEntity.ok(ApiResponse.success(productService.deleteUnReleasedProduct(productId)));
+    }
 }
