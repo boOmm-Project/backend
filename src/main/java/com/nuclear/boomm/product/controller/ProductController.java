@@ -4,6 +4,7 @@ import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
+import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.service.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -49,7 +50,7 @@ public class ProductController {
     @Operation(description = "개발 중인 상품 저장 또는 임시저장")
 //    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PostMapping(value = "/save", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<ApiResponse<ProductResponse>> saveProduct(
+    public ResponseEntity<ApiResponse<ProductCoverageResponse>> saveProduct(
             @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart("request") ProductCoverageRequest request,
             @RequestPart("file") List<MultipartFile> files

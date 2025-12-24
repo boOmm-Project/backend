@@ -1,5 +1,6 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
@@ -8,6 +9,7 @@ import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
+import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
 import com.nuclear.boomm.product.repository.CoverageRepository;
@@ -49,7 +51,7 @@ public class ProductService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ProductResponse save(
+    public ProductCoverageResponse save(
             Long userId,
             ProductCoverageRequest request,
             List<MultipartFile> files
@@ -69,8 +71,15 @@ public class ProductService {
         // 새롭게 요청받은 상품 관련 파일들 minIO에 업로드
         uploadProductFiles(userId, productId, files);
 
-        coverageRepository.findAllByProductId(productId)
-                .forEach(coverage -> request.coverage().forEach(coverage::update));
+        // 상품에 대한 담보 전체 삭제
+        coverageRepository.deleteAllByProductId(productId);
+
+        // 새롭게 요청받은 상품에 대한 담보 전체 추가
+        List<Coverage> coverages = request.coverage().stream()
+                .map(coverage -> {
+                    return coverageRepository.save(CoverageResponse.from(coverage));
+                })
+                .toList();
 
         if (request.product().isDone()) {
             // product의 isDone true로 변경
@@ -85,7 +94,10 @@ public class ProductService {
             feedbackRepository.save(feedback);
         }
 
-        return ProductResponse.from(product);
+        return ProductCoverageResponse.from(
+                product,
+                coverages
+        );
     }
 
     public List<ProductResponse> getReleasedProducts() {

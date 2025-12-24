@@ -1,10 +1,12 @@
 package com.nuclear.boomm.product.dto.response;
 
 import com.nuclear.boomm.product.domain.Coverage;
+import com.nuclear.boomm.product.dto.request.CoverageRequest;
 
 import java.util.List;
 
 public record CoverageResponse(
+    Long id,
     String title,
     String description,
     double minCoverageLimit,
@@ -13,6 +15,7 @@ public record CoverageResponse(
 ) {
     public static CoverageResponse from(Coverage coverage) {
         return new CoverageResponse(
+                coverage.getCoverageId(),
                 coverage.getTitle(),
                 coverage.getDescription(),
                 coverage.getMinCoverageLimit(),
@@ -25,5 +28,19 @@ public record CoverageResponse(
         return coverages.stream()
                 .map(CoverageResponse::from)
                 .toList();
+    }
+
+    public static Coverage from(CoverageRequest request) {
+        return Coverage.builder()
+                .coverageId(request.id())
+                .category(request.category())
+                .productId(request.productId())
+                .title(request.title())
+                .description(request.description())
+                .minCoverageLimit(request.minCoverageLimit())
+                .maxCoverageLimit(request.maxCoverageLimit())
+                .isMandatory(request.isMandatory())
+                .damageCalStandard(request.damageCalStandard())
+                .build();
     }
 }
