@@ -78,7 +78,7 @@ public class ProductFile extends BaseEntity {
 
     public void update(ProductFileRequest request) {
         this.url = request.imageUrl();
-        this.originalFilename = request.origianlFileName();
+        this.originalFilename = request.originalFileName();
     }
 
     public static ProductFileResponse from(ProductFile productFile) {
