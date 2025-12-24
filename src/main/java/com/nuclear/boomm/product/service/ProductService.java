@@ -99,7 +99,7 @@ public class ProductService {
     public List<ProductResponse> getNotReleasedProducts() {
 
         return productRepository
-                .findAllByIsDoneFalse()
+                .findAllByIsReleasedFalse()
                 .stream()
                 .map(Product::from)
                 .toList();

@@ -397,13 +397,13 @@ class ProductServiceTest {
         Long productId2 = 2L;
         Long productId3 = 3L;
 
-        given(productRepository.findAllByIsDoneTrue()).willReturn(doneProductList);
+        given(productRepository.findAllByIsReleasedTrue()).willReturn(doneProductList);
 
         // when
         List<ProductResponse> responses = productService.getReleasedProducts();
 
         // then
-        verify(productRepository, times(1)).findAllByIsDoneTrue();
+        verify(productRepository, times(1)).findAllByIsReleasedTrue();
 
         assertTrue(responses.stream().allMatch(ProductResponse::isDone));
     }
@@ -412,13 +412,13 @@ class ProductServiceTest {
     @DisplayName("미출시 상태의 모든 상품 조회")
     void selectNotDoneProducts() {
         // given
-        given(productRepository.findAllByIsDoneFalse()).willReturn(notDoneProductList);
+        given(productRepository.findAllByIsReleasedFalse()).willReturn(notDoneProductList);
 
         // when
         List<ProductResponse> responses = productService.getNotReleasedProducts();
 
         // then
-        verify(productRepository, times(1)).findAllByIsDoneFalse();
+        verify(productRepository, times(1)).findAllByIsReleasedFalse();
 
         assertFalse(responses.stream().allMatch(ProductResponse::isDone));
     }

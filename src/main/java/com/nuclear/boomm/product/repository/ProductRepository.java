@@ -21,4 +21,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByIsDoneFalse();
 
     List<Product> findAllByIsReleasedTrue();
+
+    List<Product> findAllByIsReleasedFalse();
 }
