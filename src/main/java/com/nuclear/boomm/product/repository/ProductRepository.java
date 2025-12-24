@@ -4,7 +4,6 @@ import com.nuclear.boomm.product.domain.Product;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByIsDoneTrue();
 
     List<Product> findAllByIsDoneFalse();
+
+    List<Product> findAllByIsReleasedTrue();
 }
