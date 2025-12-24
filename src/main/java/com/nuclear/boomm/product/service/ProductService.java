@@ -62,27 +62,8 @@ public class ProductService {
         productFileRepository.deleteByProductId(request.product().productId());
 
         // 클라이언트에게 요청받은 파일들로 상품에 대한 파일들에 대한 수정을 DB, minIO에 반영
-        try {
-            try {
-                fileService.deleteFiles(productFileRepository.findAllByProductId(request.product().productId())
-                        .stream()
-                        .map(ProductFile::getUrl)
-                        .toList());
-            } catch (CustomException e) {
-                log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
-            }
-
-            List<ProductFile> productFileList = fileService.uploadFiles(
-                    request.product().userId(),
-                    request.product().productId(),
-                    files
-            );
-            productFileRepository.saveAll(productFileList);
-        } catch (IOException e) {
-            log.error("파일 업로드 실패: productId: {}", request.product().productId(), e);
-
-            throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
-        }
+        deleteProductFiles(request.product().productId());
+        uploadProductFiles(userId, request.product().productId(), files);
 
         coverageRepository.findAllByProductId(request.product().productId())
                 .forEach(coverage -> request.coverage().forEach(coverage::update));
@@ -157,9 +138,22 @@ public class ProductService {
         } catch (CustomException e) {
             log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
         }
-
-        productRepository.delete(product);
-
-        return ProductResponse.from(product);
     }
 }
+    public void uploadProductFiles(Long userId, Long productId, List<MultipartFile> files) {
+        try {
+            deleteProductFiles(productId);
+
+            List<ProductFile> productFileList = fileService.uploadFiles(
+                    userId,
+                    productId,
+                    files
+            );
+            productFileRepository.saveAll(productFileList);
+        } catch (IOException e) {
+            log.error("파일 업로드 실패: productId: {}", productId, e);
+
+            throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
+        }
+    }
+
