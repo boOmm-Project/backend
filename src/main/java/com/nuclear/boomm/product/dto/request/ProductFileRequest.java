@@ -4,7 +4,7 @@ import com.nuclear.boomm.product.domain.ProductFile;
 
 public record ProductFileRequest(
         String imageUrl,
-        String origianlFileName
+        String originalFileName
 ) {
     public static ProductFileRequest from(ProductFile productFile) {
         return new ProductFileRequest(
