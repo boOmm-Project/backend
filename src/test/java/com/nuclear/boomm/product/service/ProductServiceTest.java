@@ -91,6 +91,7 @@ class ProductServiceTest {
                 true,
                 stakeholderId
         );
+
         request = new ProductCoverageRequest(
                 productRequest,
                 List.of(
@@ -107,16 +108,6 @@ class ProductServiceTest {
                                 5.0,
                                 10.0,
                                 true
-                        )
-                ),
-                List.of(
-                        new ProductFileRequest(
-                                "imageUrl",
-                                "originalFileName"
-                        ),
-                        new ProductFileRequest(
-                                "imageUrl",
-                                "originalFileName"
                         )
                 )
         );
