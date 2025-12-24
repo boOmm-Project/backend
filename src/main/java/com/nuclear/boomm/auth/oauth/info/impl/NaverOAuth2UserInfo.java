@@ -1,7 +1,6 @@
 package com.nuclear.boomm.auth.oauth.info.impl;
 
 import com.nuclear.boomm.auth.oauth.info.OAuth2UserInfo;
-
 import java.util.Map;
 
 public class NaverOAuth2UserInfo implements OAuth2UserInfo {

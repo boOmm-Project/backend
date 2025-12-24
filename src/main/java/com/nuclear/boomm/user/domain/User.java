@@ -36,7 +36,7 @@ public class User extends BaseEntity {      // user는 DB예약어일 수 있어
 
     // 소셜 로그인 필수 식별자
     @Column(nullable = false)
-    private String provider;   //  kakao,goole 추후에 추가할 예정
+    private String provider;   //  kakao,google 추후에 추가할 예정
 
     @Column(nullable = false)
     private String providerId; // 네이버 고유 식별값
@@ -46,8 +46,8 @@ public class User extends BaseEntity {      // user는 DB예약어일 수 있어
     private Role role;
 
     // 네이버가 줄 수도 있고 안 줄 수도 있는 정보 (Nullable = true 처리)
-    // 네이버는 출생연도(YYYY)와 생일(MM-DD)을 따로 줍니다.
-    // 일단 String으로 저장하거나, 서비스 로직에서 합쳐서 LocalDate로 변환해야 합니다.
+    // 네이버는 출생연도(YYYY)와 생일(MM-DD)을 따로 줌.
+    // 일단 String으로 저장하거나, 서비스 로직에서 합쳐서 LocalDate로 변환해야함.
     @Column(nullable = true)
     private String birthYear;
 
@@ -97,6 +97,12 @@ public class User extends BaseEntity {      // user는 DB예약어일 수 있어
         this.zipCode = zipCode;
         this.job = job;
         this.idNum = idNum;
+    }
+
+    public User update(String name, String phone){
+        this.name = name;
+        this.phone = phone;
+        return this;
     }
 
     // 시큐리티가 이해할 수 있게 "ROLE_" 을 붙여서 리턴해줌.(호환성)
