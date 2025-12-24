@@ -54,18 +54,22 @@ public class ProductService {
             ProductCoverageRequest request,
             List<MultipartFile> files
     ) {
-        Product product = productRepository.findByProductIdAndUserId(request.product().productId(), userId)
+        Long productId = request.product().productId();
+
+        Product product = productRepository.findByProductIdAndUserId(productId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
         product.update(request.product());
 
-        // 클라이언트가 임시저장/저장 요청을 보낼 시 일단 저장하고 있던 파일 전부 삭제
-        productFileRepository.deleteByProductId(request.product().productId());
+        // minIO에 있는 해당 상품 관련 파일들 삭제
+        deleteProductFiles(productId);
 
-        // 클라이언트에게 요청받은 파일들로 상품에 대한 파일들에 대한 수정을 DB, minIO에 반영
-        deleteProductFiles(request.product().productId());
-        uploadProductFiles(userId, request.product().productId(), files);
+        // DB에 있는 해당 상품 관련 파일들 삭제
+        productFileRepository.deleteByProductId(productId);
 
-        coverageRepository.findAllByProductId(request.product().productId())
+        // 새롭게 요청받은 상품 관련 파일들 minIO에 업로드
+        uploadProductFiles(userId, productId, files);
+
+        coverageRepository.findAllByProductId(productId)
                 .forEach(coverage -> request.coverage().forEach(coverage::update));
 
         if (request.product().isDone()) {
@@ -74,7 +78,7 @@ public class ProductService {
 
             // 피드백 생성
             Feedback feedback = Feedback.builder()
-                    .productId(product.getProductId())
+                    .productId(productId)
                     .writerId(request.product().stakeholderId())
                     .build();
 
