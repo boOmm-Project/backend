@@ -27,7 +27,7 @@ public class Product extends BaseEntity {
     private Long productId;
 
     @Builder.Default
-    @Column(unique = true)
+    @Column(nullable = false)
     private String productName = "임시 상품";
 
     @Builder.Default
