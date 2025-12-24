@@ -95,8 +95,7 @@ public class Product extends BaseEntity {
                 product.getPeriod(),
                 product.getSalesChannel(),
                 product.getUserId(),
-                product.isDone,
-                product.getUserId()
+                product.isDone
         );
     }
 }

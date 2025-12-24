@@ -31,9 +31,7 @@ public record ProductResponse(
         Long userId,
 
         @NotNull
-        boolean isDone,
-
-        Long writerId
+        boolean isDone
 ) {
     public static ProductResponse from(Product product) {
         return new ProductResponse(
@@ -44,8 +42,7 @@ public record ProductResponse(
                 product.getPeriod(),
                 product.getSalesChannel(),
                 product.getUserId(),
-                product.isDone(),
-                null
+                product.isDone()
         );
     }
 }
