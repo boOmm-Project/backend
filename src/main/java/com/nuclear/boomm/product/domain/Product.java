@@ -74,7 +74,6 @@ public class Product extends BaseEntity {
         this.targetCustomer = request.targetCustomer();
         this.period = request.period();
         this.salesChannel = request.salesChannel();
-        this.userId = request.userId();
         this.isDone = request.isDone();
     }
 

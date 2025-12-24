@@ -72,7 +72,7 @@ public class FileService {
 
             ProductFile productFile = ProductFile.builder()
                     .bucketName(bucket)
-                    .url("http://dev.macacolabs.site:9000/" + bucket + "/" + uuidFileName)
+                    .url(uuidFileName)
                     .originalFilename(originalName)
                     .extension(extension)
                     .contentType(file.getContentType())
@@ -118,5 +118,16 @@ public class FileService {
                 .key(fileName)
                 .build();
         s3Client.deleteObject(request);
+    }
+
+    // 다중 파일 삭제
+    public void deleteFiles(List<String> fileNames) {
+        for (String fileName : fileNames) {
+            DeleteObjectRequest request = DeleteObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(fileName)
+                    .build();
+            s3Client.deleteObject(request);
+        }
     }
 }

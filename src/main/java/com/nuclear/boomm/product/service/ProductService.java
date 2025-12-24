@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -61,8 +62,19 @@ public class ProductService {
         // 클라이언트가 임시저장/저장 요청을 보낼 시 일단 저장하고 있던 파일 전부 삭제
         productFileRepository.deleteByProductId(request.product().productId());
 
-        // 클라이언트에게 요청받은 파일들 전부 저장 및 minIO에 업로드
+        // 클라이언트에게 요청받은 파일들로 상품에 대한 파일들에 대한 수정을 DB, minIO에 반영
         try {
+            List<String> savedNames = new ArrayList<>();
+
+            try {
+                fileService.deleteFiles(productFileRepository.findAllByProductId(request.product().productId())
+                        .stream()
+                        .map(ProductFile::getUrl)
+                        .toList());
+            } catch (CustomException e) {
+                log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
+            }
+
             List<ProductFile> productFileList = fileService.uploadFiles(
                     request.product().userId(),
                     request.product().productId(),
