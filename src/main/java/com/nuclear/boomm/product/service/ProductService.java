@@ -143,8 +143,6 @@ public class ProductService {
 
     public void uploadProductFiles(Long userId, Long productId, List<MultipartFile> files) {
         try {
-            deleteProductFiles(productId);
-
             List<ProductFile> productFileList = fileService.uploadFiles(
                     userId,
                     productId,
