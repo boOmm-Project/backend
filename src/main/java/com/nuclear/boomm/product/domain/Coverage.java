@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "coverage")
+@Table(name = "coverage", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "PRODUCT_ID_TITLE_UNIQUE",
+                columnNames = {"product_id", "title"}
+        )
+})
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
