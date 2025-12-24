@@ -39,6 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -283,7 +284,7 @@ class ProductServiceTest {
     }
 
     @Test
-    @DisplayName("상품 임시 저장 시 담보, 파일은 삭제 후 새로운 값 저장")
+    @DisplayName("상품 최종 저장 시 isDone 값 변경 확인")
     void draftProduct() {
         // given
         ProductRequest proReq = new ProductRequest(
@@ -335,56 +336,58 @@ class ProductServiceTest {
         assertEquals(productId, response.productId());
     }
 
-    /*@Test
-    @DisplayName("상품 최종 저장 시 isDone 값이 변경되는지 확인")
+    @Test
+    @DisplayName("상품 임시 저장 시 isDone 값이 변경되지 않는지 확인")
     void saveProduct() {
         // given
-        given(userDetails.getUsername()).willReturn(String.valueOf(userId));
+        ProductRequest proReq = new ProductRequest(
+                productId,
+                "새상품명",
+                1L,
+                "새고객",
+                12,
+                "새채널",
+                userId,
+                false,
+                stakeholderId
+        );
 
-        // request
+        List<CoverageRequest> covReq = List.of(new CoverageRequest(
+                "새담보명",
+                "새설명",
+                0.3,
+                0.4,
+                false
+        ));
+
+        ProductCoverageRequest proCovReq = new ProductCoverageRequest(
+                proReq,
+                covReq
+        );
+
+        multipartFileList = List.of(
+                new MockMultipartFile("files", "test.jpg", "image/png", "content".getBytes())
+        );
+
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
 
-        given(productFileRepository.findAllByProductId(productId))
-                .willReturn(List.of(pf1, pf2));
-
         given(coverageRepository.findAllByProductId(productId))
-                .willReturn(List.of(cov1, cov2));
-
-        Feedback feedback = Feedback.builder()
-                .productId(product.getProductId())
-                .writerId(request.stakeholderId())
-                .build();
-
-        given(feedbackRepository.save(any(Feedback.class))).willReturn(feedback);
+                .willReturn(coverageList);
 
         // when
-        ProductResponse productResponse = productService.save(userDetails, request);
+        ProductResponse response = productService.save(userId, proCovReq, multipartFileList);
 
-        // then: 조회 여부
-        verify(productRepository).findByProductIdAndUserId(productId, userId);
+        // then
+        assertEquals("새상품명", response.productName());
+        assertFalse(response.isDone());
 
-        // then: 기존 파일 delete 호출 여부
-        verify(productFileRepository).delete(pf1);
-        verify(productFileRepository).delete(pf2);
-        verify(coverageRepository).delete(cov1);
-        verify(coverageRepository).delete(cov2);
+        verify(productFileRepository).deleteByProductId(productId);
 
-        // then: saveAll
-        verify(productFileRepository).saveAll(productFilesCaptor.capture());
-        verify(coverageRepository).saveAll(coveragesCaptor.capture());
+        verify(feedbackRepository, never()).save(any(Feedback.class));
 
-        assertEquals(2, productFilesCaptor.getValue().size());
-        assertEquals(2, coveragesCaptor.getValue().size());
-
-        verify(feedbackRepository, times(1)).save(any(Feedback.class));
-
-        // then: isDone의 true
-        assertTrue(product.isDone());
-
-        // then: response가 null이 아닌지
-        assertNotNull(productResponse);
-    }*/
+        assertEquals(productId, response.productId());
+    }
 
     @Test
     @DisplayName("출시 상태의 모든 상품 조회")
