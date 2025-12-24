@@ -2,7 +2,6 @@ package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.dto.request.CoverageRequest;
-import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.enums.CoverageCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

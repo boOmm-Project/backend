@@ -1,17 +1,9 @@
 package com.nuclear.boomm.product.controller;
 
-import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.service.FeedbackService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "상품 피드백", description = "피드백 업데이트, 피드백에 반영, 피드백 추가 설명 요청 API")

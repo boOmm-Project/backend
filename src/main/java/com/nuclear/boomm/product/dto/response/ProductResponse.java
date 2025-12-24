@@ -1,11 +1,8 @@
 package com.nuclear.boomm.product.dto.response;
 
-import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Product;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 public record ProductResponse(
 
