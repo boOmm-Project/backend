@@ -130,16 +130,13 @@ public class ProductService {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
         }
 
-        try {
-            fileService.deleteFiles(productFileRepository.findAllByProductId(productId)
-                    .stream()
-                    .map(ProductFile::getUrl)
-                    .toList());
-        } catch (CustomException e) {
-            log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
-        }
+        deleteProductFiles(productId);
+
+        productRepository.delete(product);
+
+        return ProductResponse.from(product);
     }
-}
+
     public void uploadProductFiles(Long userId, Long productId, List<MultipartFile> files) {
         try {
             deleteProductFiles(productId);
@@ -157,3 +154,14 @@ public class ProductService {
         }
     }
 
+    public void deleteProductFiles(Long productId) {
+        try {
+            fileService.deleteFiles(productFileRepository.findAllByProductId(productId)
+                    .stream()
+                    .map(ProductFile::getUrl)
+                    .toList());
+        } catch (CustomException e) {
+            log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
+        }
+    }
+}

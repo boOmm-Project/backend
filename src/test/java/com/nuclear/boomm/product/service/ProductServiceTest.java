@@ -4,7 +4,6 @@ import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.dto.request.CoverageRequest;
-import com.nuclear.boomm.product.dto.request.ProductFileRequest;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
