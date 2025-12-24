@@ -64,8 +64,6 @@ public class ProductService {
 
         // 클라이언트에게 요청받은 파일들로 상품에 대한 파일들에 대한 수정을 DB, minIO에 반영
         try {
-            List<String> savedNames = new ArrayList<>();
-
             try {
                 fileService.deleteFiles(productFileRepository.findAllByProductId(request.product().productId())
                         .stream()
@@ -150,6 +148,15 @@ public class ProductService {
 
         if (product.isReleased()) {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
+
+        try {
+            fileService.deleteFiles(productFileRepository.findAllByProductId(productId)
+                    .stream()
+                    .map(ProductFile::getUrl)
+                    .toList());
+        } catch (CustomException e) {
+            log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
         }
 
         productRepository.delete(product);
