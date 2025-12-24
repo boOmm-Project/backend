@@ -28,6 +28,9 @@ public record ProductRequest(
         @NotNull
         boolean isDone,
 
-        Long stakeholderId
+        Long stakeholderId,
+
+        @NotNull
+        boolean isReleased
 ) {
 }

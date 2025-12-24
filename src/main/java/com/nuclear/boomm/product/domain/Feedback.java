@@ -45,12 +45,4 @@ public class Feedback extends BaseEntity {
 
 //    @Column(nullable = false)
 //    private Role role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
-
-    @Builder
-    public Feedback(FeedbackStatus status, String description, Long productId, Long writerId) {
-        this.status = status;
-        this.description = description;
-        this.productId = productId;
-        this.writerId = writerId;
-    }
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,12 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "product")
+@Table(name = "product", uniqueConstraints = {
+        @UniqueConstraint(
+                name = "PRODUCT_ID_TITLE_UNIQUE",
+                columnNames = {"product_id", "product_name"}
+        )
+})
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
@@ -75,6 +81,7 @@ public class Product extends BaseEntity {
         this.period = request.period();
         this.salesChannel = request.salesChannel();
         this.isDone = request.isDone();
+        this.isReleased = request.isReleased();
     }
 
     public void updateIsDone(boolean isDone) {
@@ -94,7 +101,8 @@ public class Product extends BaseEntity {
                 product.getPeriod(),
                 product.getSalesChannel(),
                 product.getUserId(),
-                product.isDone
+                product.isDone,
+                product.isReleased
         );
     }
 }
