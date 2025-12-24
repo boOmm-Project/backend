@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class FileService {
     private final S3Client s3Client;
 
-    private final String bucket = "product-file";
+    private final String bucket = "product-files";
 
     // ✅ 업로드
     public String uploadFile(MultipartFile file) throws IOException {
