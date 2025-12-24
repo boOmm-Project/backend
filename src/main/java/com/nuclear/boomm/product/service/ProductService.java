@@ -125,6 +125,11 @@ public class ProductService {
     public ProductResponse deleteUnReleasedProduct(Long productId) {
         Product product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        if (product.isReleased()) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
+
         productRepository.delete(product);
 
         return ProductResponse.from(product);
