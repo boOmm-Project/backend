@@ -19,14 +19,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -67,6 +70,7 @@ class ProductServiceTest {
     private List<Product> notDoneProductList;
     private List<ProductFile> productFileList;
     private List<Coverage> coverageList;
+    private List<MultipartFile> multipartFileList;
 
     private String username;
 
@@ -224,8 +228,6 @@ class ProductServiceTest {
     @DisplayName("상품 임시 저장 시 담보, 파일은 삭제 후 새로운 값 저장")
     void draftProduct() {
         // given
-        given(userDetails.getUsername()).willReturn(String.valueOf(userId));
-
         // request
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
@@ -237,7 +239,7 @@ class ProductServiceTest {
                 .willReturn(List.of(cov1, cov2));
 
         // when
-        ProductResponse productResponse = productService.save(userDetails, request);
+        ProductResponse productResponse = productService.save(userId, request);
 
         // then: 조회 여부
         verify(productRepository).findByProductIdAndUserId(productId, userId);
