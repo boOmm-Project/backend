@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Coverage;
+import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.dto.request.CoverageRequest;
@@ -16,12 +17,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -49,12 +56,14 @@ class ProductServiceTest {
     private CoverageRepository coverageRepository;
     @Mock
     private FeedbackRepository feedbackRepository;
-//    @Mock
+    @Mock
+    private FileService fileService;
+    //    @Mock
 //    private UserDetails userDetails;
-//    @Captor
-//    private ArgumentCaptor<List<ProductFile>> productFilesCaptor;
-//    @Captor
-//    private ArgumentCaptor<List<Coverage>> coveragesCaptor;
+    @Captor
+    private ArgumentCaptor<List<ProductFile>> productFilesCaptor;
+    @Captor
+    private ArgumentCaptor<List<Coverage>> coveragesCaptor;
 
     private ProductRequest productRequest;
     private ProductCoverageRequest request;
@@ -169,6 +178,55 @@ class ProductServiceTest {
                         .isDone(false)
                         .build()
         ));
+
+        multipartFileList = List.of(
+                new MultipartFile() {
+                    @Override
+                    public String getName() {
+                        return "";
+                    }
+
+                    @Override
+                    public String getOriginalFilename() {
+                        return "";
+                    }
+
+                    @Override
+                    public String getContentType() {
+                        return "";
+                    }
+
+                    @Override
+                    public boolean isEmpty() {
+                        return false;
+                    }
+
+                    @Override
+                    public long getSize() {
+                        return 0;
+                    }
+
+                    @Override
+                    public byte[] getBytes() throws IOException {
+                        return new byte[0];
+                    }
+
+                    @Override
+                    public InputStream getInputStream() throws IOException {
+                        return new InputStream() {
+                            @Override
+                            public int read() throws IOException {
+                                return 0;
+                            }
+                        };
+                    }
+
+                    @Override
+                    public void transferTo(File dest) throws IOException, IllegalStateException {
+
+                    }
+                }
+        );
     }
 
     @Test
@@ -224,47 +282,58 @@ class ProductServiceTest {
         assertFalse(product.isDone());
     }
 
-    /*@Test
+    @Test
     @DisplayName("상품 임시 저장 시 담보, 파일은 삭제 후 새로운 값 저장")
     void draftProduct() {
         // given
-        // request
+        ProductRequest proReq = new ProductRequest(
+                productId,
+                "새상품명",
+                1L,
+                "새고객",
+                12,
+                "새채널",
+                userId,
+                true,
+                stakeholderId
+        );
+
+        List<CoverageRequest> covReq = List.of(new CoverageRequest(
+                "새담보명",
+                "새설명",
+                0.3,
+                0.4,
+                false
+        ));
+
+        ProductCoverageRequest proCovReq = new ProductCoverageRequest(
+                proReq,
+                covReq
+        );
+
+        multipartFileList = List.of(
+                new MockMultipartFile("files", "test.jpg", "image/png", "content".getBytes())
+        );
+
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
 
-        given(productFileRepository.findAllByProductId(productId))
-                .willReturn(List.of(pf1, pf2));
-
         given(coverageRepository.findAllByProductId(productId))
-                .willReturn(List.of(cov1, cov2));
+                .willReturn(coverageList);
 
         // when
-        ProductResponse productResponse = productService.save(userId, request);
+        ProductResponse response = productService.save(userId, proCovReq, multipartFileList);
 
-        // then: 조회 여부
-        verify(productRepository).findByProductIdAndUserId(productId, userId);
+        // then
+        assertEquals("새상품명", response.productName());
+        assertTrue(response.isDone());
 
-        // then: 기존 파일 delete 호출 여부
-        verify(productFileRepository).delete(pf1);
-        verify(productFileRepository).delete(pf2);
-        verify(coverageRepository).delete(cov1);
-        verify(coverageRepository).delete(cov2);
+        verify(productFileRepository).deleteByProductId(productId);
 
-        // then: saveAll
-        verify(productFileRepository).saveAll(productFilesCaptor.capture());
-        verify(coverageRepository).saveAll(coveragesCaptor.capture());
+        verify(feedbackRepository, times(1)).save(any(Feedback.class));
 
-        assertEquals(2, productFilesCaptor.getValue().size());
-        assertEquals(2, coveragesCaptor.getValue().size());
-
-        verify(feedbackRepository, never()).save(any(Feedback.class));
-
-        // then: isDone의 false 유지
-        assertFalse(product.isDone());
-
-        // then: response가 null이 아닌지
-        assertNotNull(productResponse);
-    }*/
+        assertEquals(productId, response.productId());
+    }
 
     /*@Test
     @DisplayName("상품 최종 저장 시 isDone 값이 변경되는지 확인")
