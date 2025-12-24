@@ -53,6 +53,10 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private boolean isDone = false;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isReleased = false;
+
     @Builder
     public Product(String productName, Long category, String targetCustomer, int period, String salesChannel, Long userId, boolean isDone) {
         this.productName = productName;
@@ -78,6 +82,10 @@ public class Product extends BaseEntity {
         this.isDone = isDone;
     }
 
+    public void updateIsReleased(boolean isReleased) {
+        this.isReleased = isReleased;
+    }
+
     public static ProductResponse from(Product product) {
         return new ProductResponse(
                 product.getProductId(),
@@ -88,7 +96,7 @@ public class Product extends BaseEntity {
                 product.getSalesChannel(),
                 product.getUserId(),
                 product.isDone,
-                null
+                product.getUserId()
         );
     }
 }
