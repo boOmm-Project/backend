@@ -1,7 +1,6 @@
 package com.nuclear.boomm.product.dto.response;
 
 import com.nuclear.boomm.product.domain.Coverage;
-import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -41,19 +40,5 @@ public record CoverageResponse(
         return coverages.stream()
                 .map(CoverageResponse::from)
                 .toList();
-    }
-
-    public static Coverage from(CoverageRequest request) {
-        return Coverage.builder()
-                .coverageId(request.id())
-                .category(request.category())
-                .productId(request.productId())
-                .title(request.title())
-                .description(request.description())
-                .minCoverageLimit(request.minCoverageLimit())
-                .maxCoverageLimit(request.maxCoverageLimit())
-                .isMandatory(request.isMandatory())
-                .damageCalStandard(request.damageCalStandard())
-                .build();
     }
 }
