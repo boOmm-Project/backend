@@ -63,17 +63,6 @@ public class Product extends BaseEntity {
     @Column(nullable = false)
     private boolean isReleased = false;
 
-    @Builder
-    public Product(String productName, Long category, String targetCustomer, int period, String salesChannel, Long userId, boolean isDone) {
-        this.productName = productName;
-        this.category = category;
-        this.targetCustomer = targetCustomer;
-        this.period = period;
-        this.salesChannel = salesChannel;
-        this.userId = userId;
-        this.isDone = isDone;
-    }
-
     public void update(ProductRequest request) {
         this.productName = request.productName();
         this.category = request.category();

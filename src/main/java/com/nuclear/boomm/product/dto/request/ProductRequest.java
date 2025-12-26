@@ -17,7 +17,7 @@ public record ProductRequest(
         String targetCustomer,
 
         @NotNull(message = "계약 기간은 필수입니다.")
-        int period,
+        Integer period,
 
         @NotBlank(message = "판매 채널은 필수입니다.")
         String salesChannel,
@@ -26,11 +26,11 @@ public record ProductRequest(
         Long userId,
 
         @NotNull
-        boolean isDone,
+        Boolean isDone,
 
         Long stakeholderId,
 
         @NotNull
-        boolean isReleased
+        Boolean isReleased
 ) {
 }

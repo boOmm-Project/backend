@@ -53,29 +53,6 @@ public class ProductFile extends BaseEntity {
     @Column(nullable = false)
     private Long productId;
 
-    @Builder(builderMethodName = "noExtensionBuilder")
-    public ProductFile(String bucketName, String url, String originalFilename, String contentType, Long fileSize, Long uploaderId, Long productId) {
-        this.bucketName = bucketName;
-        this.url = url;
-        this.originalFilename = originalFilename;
-        this.contentType = contentType;
-        this.fileSize = fileSize;
-        this.uploaderId = uploaderId;
-        this.productId = productId;
-    }
-
-    @Builder    // extension 필드 포함된 기본 builder
-    public ProductFile(String bucketName, String url, String originalFilename, String extension, String contentType, Long fileSize, Long uploaderId, Long productId) {
-        this.bucketName = bucketName;
-        this.url = url;
-        this.originalFilename = originalFilename;
-        this.extension = extension;
-        this.contentType = contentType;
-        this.fileSize = fileSize;
-        this.uploaderId = uploaderId;
-        this.productId = productId;
-    }
-
     public void update(ProductFileRequest request) {
         this.url = request.imageUrl();
         this.originalFilename = request.originalFileName();

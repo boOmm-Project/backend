@@ -19,7 +19,7 @@ public record ProductResponse(
         String targetCustomer,
 
         @NotNull
-        int period,
+        Integer period,
 
         @NotBlank
         String salesChannel,
@@ -28,10 +28,10 @@ public record ProductResponse(
         Long userId,
 
         @NotNull
-        boolean isDone,
+        Boolean isDone,
 
         @NotNull
-        boolean isReleased
+        Boolean isReleased
 ) {
     public static ProductResponse from(Product product) {
         return new ProductResponse(

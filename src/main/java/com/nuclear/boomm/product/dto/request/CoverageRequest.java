@@ -22,13 +22,13 @@ public record CoverageRequest(
         String description,
 
         @NotNull
-        double minCoverageLimit ,
+        Double minCoverageLimit ,
 
         @NotNull
-        double maxCoverageLimit ,
+        Double maxCoverageLimit ,
 
         @NotNull
-        boolean isMandatory,
+        Boolean isMandatory,
 
         @NotBlank
         String damageCalStandard
