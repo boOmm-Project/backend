@@ -56,11 +56,6 @@ public class ProductFile extends BaseEntity {
     @Column(nullable = false)
     private Long productId;
 
-    public void update(ProductFileRequest request) {
-        this.url = request.imageUrl();
-        this.originalFilename = request.originalFileName();
-    }
-
     public static ProductFileResponse from(ProductFile productFile) {
         return new ProductFileResponse(
                 productFile.getUrl(),
