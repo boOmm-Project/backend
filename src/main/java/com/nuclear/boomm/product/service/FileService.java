@@ -2,6 +2,7 @@ package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.ProductFile;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -20,6 +21,9 @@ public class FileService {
 
     private final String bucket = "product-files";
 
+    @Value("${app.storage.base-url}")
+    private String baseUrl;
+
     // 다중 파일 업로드
     public List<ProductFile> uploadFiles (
             Long userId,
@@ -36,6 +40,7 @@ public class FileService {
             }
 
             String uuidFileName = UUID.randomUUID() + extension;
+            String url = baseUrl + uuidFileName;
 
             PutObjectRequest request = PutObjectRequest.builder()
                     .bucket(bucket)
@@ -45,7 +50,8 @@ public class FileService {
 
             ProductFile productFile = ProductFile.builder()
                     .bucketName(bucket)
-                    .url(uuidFileName)
+                    .url(url)
+                    .uuidName(uuidFileName)
                     .originalFilename(originalName)
                     .extension(extension)
                     .contentType(file.getContentType())

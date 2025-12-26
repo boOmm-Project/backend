@@ -14,7 +14,7 @@ public record ProductFileResponse(
 ) {
     public static ProductFileResponse from(ProductFile productFile) {
         return new ProductFileResponse(
-                "http://dev.macacolabs.site:9000/product-files/" + productFile.getUrl(),
+                productFile.getUrl(),
                 productFile.getOriginalFilename()
         );
     }

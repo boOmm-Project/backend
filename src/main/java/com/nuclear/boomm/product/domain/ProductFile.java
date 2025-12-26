@@ -39,6 +39,9 @@ public class ProductFile extends BaseEntity {
     @Column(nullable = false)
     private String originalFilename;
 
+    @Column(nullable = false)
+    private String uuidName;
+
     private String extension;   // 확장자
 
     @Column(nullable = false)   // MIME 타입
