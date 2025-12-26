@@ -3,6 +3,8 @@ package com.nuclear.boomm.product.domain;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.error.CustomException;
+import com.nuclear.boomm.product.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -58,21 +60,23 @@ public class Product extends BaseEntity {
     private boolean isReleased = false;
 
     public void update(ProductRequest request) {
+        if (request.isReleased()) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
+
         this.productName = request.productName();
         this.category = request.category();
         this.targetCustomer = request.targetCustomer();
         this.period = request.period();
         this.salesChannel = request.salesChannel();
-        this.isDone = request.isDone();
-        this.isReleased = request.isReleased();
     }
 
     public void updateIsDone(boolean isDone) {
-        this.isDone = isDone;
-    }
+        if (isReleased) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
 
-    public void updateIsReleased(boolean isReleased) {
-        this.isReleased = isReleased;
+        this.isDone = isDone;
     }
 
     public static ProductResponse from(Product product) {
@@ -84,8 +88,8 @@ public class Product extends BaseEntity {
                 product.getPeriod(),
                 product.getSalesChannel(),
                 product.getUserId(),
-                product.isDone,
-                product.isReleased
+                product.isDone(),
+                product.isReleased()
         );
     }
 }
