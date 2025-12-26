@@ -1,12 +1,14 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Coverage;
+import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.enums.CoverageCategory;
 import com.nuclear.boomm.product.repository.CoverageRepository;
 import com.nuclear.boomm.product.repository.FeedbackRepository;
@@ -21,6 +23,7 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,12 +32,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -287,7 +292,7 @@ class ProductServiceTest {
         assertFalse(product.isDone());
     }
 
-    /*@Test
+    @Test
     @DisplayName("상품 임시 저장 시 isDone 값이 변경되지 않는지 확인")
     void saveProduct() {
         // given
@@ -300,15 +305,20 @@ class ProductServiceTest {
                 "새채널",
                 userId,
                 false,
-                stakeholderId
+                stakeholderId,
+                false
         );
 
         List<CoverageRequest> covReq = List.of(new CoverageRequest(
+                50L,
+                CoverageCategory.MANDATORY_BASIC_COVERAGE,
+                productId,
                 "새담보명",
                 "새설명",
                 0.3,
                 0.4,
-                false
+                false,
+                "새 피해산정기준"
         ));
 
         ProductCoverageRequest proCovReq = new ProductCoverageRequest(
@@ -323,22 +333,26 @@ class ProductServiceTest {
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
 
-        given(coverageRepository.findAllByProductId(productId))
-                .willReturn(coverageList);
+        given(coverageRepository.save(any(Coverage.class)))
+                .willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        ProductResponse response = productService.save(userId, proCovReq, multipartFileList);
+        ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList);
 
         // then
-        assertEquals("새상품명", response.productName());
-        assertFalse(response.isDone());
+        assertEquals("새상품명", response.product().productName());
+        assertFalse(response.product().isDone());
+        assertEquals(productId, response.product().productId());
+
+        assertEquals(userId, response.product().userId());
+
+        assertEquals(50L, response.coverage().get(0).id());
+        assertEquals("새담보명", response.coverage().get(0).title());
 
         verify(productFileRepository).deleteByProductId(productId);
 
         verify(feedbackRepository, never()).save(any(Feedback.class));
-
-        assertEquals(productId, response.productId());
-    }*/
+    }
 
     /*@Test
     @DisplayName("상품 최종 저장 시 isDone 값 변경 확인")
