@@ -8,6 +8,7 @@ import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import com.nuclear.boomm.product.dto.request.ProductRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
 import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.enums.CoverageCategory;
 import com.nuclear.boomm.product.repository.CoverageRepository;
@@ -36,6 +37,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -149,9 +151,11 @@ class ProductServiceTest {
 
         cov1 = Coverage.builder()
                 .productId(productId)
+                .coverageId(10L)
                 .build();
         cov2 = Coverage.builder()
                 .productId(productId)
+                .coverageId(20L)
                 .build();
         coverageList = List.of(cov1, cov2);
 
@@ -450,7 +454,7 @@ class ProductServiceTest {
         assertFalse(responses.stream().allMatch(ProductResponse::isDone));
     }
 
-    /*@Test
+    @Test
     @DisplayName("상품 하나의 상세 정보 전달")
     void selectProductDetails() {
         // given
@@ -459,7 +463,7 @@ class ProductServiceTest {
         given(coverageRepository.findAllByProductId(productId)).willReturn(coverageList);
 
         // when
-        ProductCoverageResponse response = productService.getProductDetails(productId);
+        ProductCoverageFileResponse response = productService.getProductDetails(productId);
 
         // then
         verify(productRepository, times(1)).findByProductId(productId);
@@ -467,6 +471,10 @@ class ProductServiceTest {
         verify(coverageRepository, times(1)).findAllByProductId(productId);
 
         assertNotNull(response);
-        assertEquals(productId, response.product().productId());
-    }*/
+        assertEquals(productId, response.productResponse().productId());
+        assertEquals(userId, response.productResponse().userId());
+
+        assertEquals(10L, response.coverageResponses().get(0).id());
+        assertEquals(20L, response.coverageResponses().get(1).id());
+    }
 }
