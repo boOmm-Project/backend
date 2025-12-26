@@ -391,17 +391,29 @@ class ProductServiceTest {
                 true
         );
 
-        List<CoverageRequest> covReq = List.of(new CoverageRequest(
-                50L,
-                CoverageCategory.MANDATORY_BASIC_COVERAGE,
-                productId,
-                "새담보명",
-                "새설명",
-                0.3,
-                0.4,
-                false,
-                "새피해액산정기준1"
-        ));
+        List<CoverageRequest> covReq = List.of(
+                new CoverageRequest(
+                        2L,
+                        CoverageCategory.MANDATORY_BASIC_COVERAGE,
+                        productId,
+                        "새담보명",
+                        "새설명",
+                        0.3,
+                        0.4,
+                        false,
+                        "새 피해산정기준"
+                ),
+                new CoverageRequest(
+                        4L,
+                        CoverageCategory.MANDATORY_BASIC_COVERAGE,
+                        productId,
+                        "새담보명4L",
+                        "새설명",
+                        0.3,
+                        0.4,
+                        false,
+                        "새 피해산정기준"
+                ));
 
         ProductCoverageRequest proCovReq = new ProductCoverageRequest(
                 proReq,
@@ -418,6 +430,9 @@ class ProductServiceTest {
         given(coverageRepository.save(any(Coverage.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
+        given(coverageRepository.findByProductIdAndCoverageIdIn(productId, List.of(2L, 4L)))
+                .willReturn(coverageList);
+
         // when
         ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList);
 
@@ -428,8 +443,10 @@ class ProductServiceTest {
 
         assertEquals(userId, response.product().userId());
 
-        assertEquals(50L, response.coverage().get(0).id());
+        assertEquals(2L, response.coverage().get(0).id());
+        assertEquals(2, response.coverage().size());
         assertEquals("새담보명", response.coverage().get(0).title());
+        assertEquals("새담보명4L", response.coverage().get(1).title());
 
         verify(productFileRepository).deleteByProductId(productId);
 
