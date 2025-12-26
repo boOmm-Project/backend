@@ -8,17 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    Optional<Product> findByUserIdAndProductId(Long userId, @NotNull Long aLong);
-
     Optional<Product> findByProductId(@NotNull Long aLong);
 
-    List<Product> findAllByProductIdAndIsDoneTrue(@NotNull Long aLong);
-
-    Optional<Product> findByProductIdAndUserId(@NotNull Long aLong, Long userId);
-
-    List<Product> findAllByIsDoneTrue();
-
-    List<Product> findAllByIsDoneFalse();
+    Optional<Product> findByProductIdAndUserId(@NotNull Long productId, Long userId);
 
     List<Product> findAllByIsReleasedTrue();
 
