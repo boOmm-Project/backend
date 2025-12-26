@@ -9,5 +9,5 @@ import java.util.List;
 public interface CoverageRepository extends JpaRepository<Coverage, Long> {
     List<Coverage> findAllByProductId(@NotNull Long productId);
 
-    void deleteAllByProductId(Long productId);
+    void deleteAllByProductId(@NotNull Long productId);
 }
