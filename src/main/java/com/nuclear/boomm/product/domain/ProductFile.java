@@ -1,7 +1,6 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.dto.request.ProductFileRequest;
 import com.nuclear.boomm.product.dto.response.ProductFileResponse;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

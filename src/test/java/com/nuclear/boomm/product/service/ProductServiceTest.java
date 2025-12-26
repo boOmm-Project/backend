@@ -163,16 +163,19 @@ class ProductServiceTest {
                 Product.builder()
                         .userId(1L)
                         .isDone(true)
+                        .isReleased(true)
                         .build()
                 ,
                 Product.builder()
                         .userId(2L)
                         .isDone(true)
+                        .isReleased(true)
                         .build()
                 ,
                 Product.builder()
                         .userId(1L)
                         .isDone(true)
+                        .isReleased(true)
                         .build()
         ));
 
@@ -465,7 +468,7 @@ class ProductServiceTest {
         // then
         verify(productRepository, times(1)).findAllByIsReleasedTrue();
 
-        assertTrue(responses.stream().allMatch(ProductResponse::isDone));
+        assertTrue(responses.stream().allMatch(ProductResponse::isReleased));
     }
 
     @Test
