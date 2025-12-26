@@ -354,7 +354,7 @@ class ProductServiceTest {
         verify(feedbackRepository, never()).save(any(Feedback.class));
     }
 
-    /*@Test
+    @Test
     @DisplayName("상품 최종 저장 시 isDone 값 변경 확인")
     void draftProduct() {
         // given
@@ -372,7 +372,7 @@ class ProductServiceTest {
         );
 
         List<CoverageRequest> covReq = List.of(new CoverageRequest(
-                1L,
+                50L,
                 CoverageCategory.MANDATORY_BASIC_COVERAGE,
                 productId,
                 "새담보명",
@@ -395,22 +395,26 @@ class ProductServiceTest {
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
 
-        given(coverageRepository.findAllByProductId(productId))
-                .willReturn(coverageList);
+        given(coverageRepository.save(any(Coverage.class)))
+                .willAnswer(invocation -> invocation.getArgument(0));
 
         // when
-        ProductResponse response = productService.save(userId, proCovReq, multipartFileList);
+        ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList);
 
         // then
-        assertEquals("새상품명", response.productName());
-        assertTrue(response.isDone());
+        assertEquals("새상품명", response.product().productName());
+        assertTrue(response.product().isDone());
+        assertEquals(productId, response.product().productId());
+
+        assertEquals(userId, response.product().userId());
+
+        assertEquals(50L, response.coverage().get(0).id());
+        assertEquals("새담보명", response.coverage().get(0).title());
 
         verify(productFileRepository).deleteByProductId(productId);
 
         verify(feedbackRepository, times(1)).save(any(Feedback.class));
-
-        assertEquals(productId, response.productId());
-    }*/
+    }
 
     @Test
     @DisplayName("출시 상태의 모든 상품 조회")
