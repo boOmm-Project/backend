@@ -69,11 +69,11 @@ public class FileService {
     }
 
     // 다중 파일 삭제
-    public void deleteFiles(List<String> fileNames) {
-        for (String fileName : fileNames) {
+    public void deleteFiles(List<String> uuidNames) {
+        for (String uuidName : uuidNames) {
             DeleteObjectRequest request = DeleteObjectRequest.builder()
                     .bucket(bucket)
-                    .key(fileName)
+                    .key(uuidName)
                     .build();
             s3Client.deleteObject(request);
         }

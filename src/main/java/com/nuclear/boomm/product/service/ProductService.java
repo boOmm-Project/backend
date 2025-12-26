@@ -207,7 +207,7 @@ public class ProductService {
         try {
             fileService.deleteFiles(productFileRepository.findAllByProductId(productId)
                     .stream()
-                    .map(ProductFile::getUrl)
+                    .map(ProductFile::getUuidName)
                     .toList());
         } catch (Exception e) {
             log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
