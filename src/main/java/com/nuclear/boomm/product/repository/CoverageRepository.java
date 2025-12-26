@@ -10,4 +10,8 @@ public interface CoverageRepository extends JpaRepository<Coverage, Long> {
     List<Coverage> findAllByProductId(@NotNull Long productId);
 
     void deleteAllByProductId(@NotNull Long productId);
+
+    List<Coverage> findByProductIdAndCoverageIdIn(Long productId, List<Long> coverageIds);
+
+    void deleteAllByProductIdAndCoverageIdNotIn(Long productId, List<Long> coverageIds);
 }

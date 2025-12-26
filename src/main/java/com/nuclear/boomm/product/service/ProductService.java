@@ -4,6 +4,7 @@ import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
+import com.nuclear.boomm.product.dto.request.CoverageRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
 import com.nuclear.boomm.product.dto.response.CoverageResponse;
 import com.nuclear.boomm.product.dto.response.ProductFileResponse;
@@ -25,7 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -71,15 +76,45 @@ public class ProductService {
         // 새롭게 요청받은 상품 관련 파일들 minIO에 업로드
         uploadProductFiles(userId, productId, files);
 
-        // 상품에 대한 담보 전체 삭제
-        coverageRepository.deleteAllByProductId(productId);
-
-        // 새롭게 요청받은 상품에 대한 담보 전체 추가
-        List<Coverage> coverages = request.coverage().stream()
-                .map(coverage -> {
-                    return coverageRepository.save(CoverageResponse.from(coverage));
-                })
+        // 상품에 대한 담보 업데이트
+        List<Long> coverageIds = request.coverage()
+                .stream()
+                .map(CoverageRequest::id)
                 .toList();
+
+        List<Coverage> coverages = coverageRepository.findByProductIdAndCoverageIdIn(productId, coverageIds);
+        coverageRepository.deleteAllByProductIdAndCoverageIdNotIn(productId, coverageIds);
+
+        // 검색을 위해 List -> Map 자료형으로 변경
+        Map<Long, Coverage> coverageMap = coverages.stream()
+                .collect(Collectors.toMap(Coverage::getCoverageId, Function.identity()));
+
+        // 업데이트 진행
+        List<Coverage> responseCoverages = new ArrayList<>();
+        for (CoverageRequest coverageRequest : request.coverage()) {
+            Coverage coverage = coverageMap.get(coverageRequest.id());
+
+            if (coverage != null) {
+                // DB에 값이 있는 경우 -> update 필요
+                coverage.update(coverageRequest);
+                responseCoverages.add(coverage);
+            } else {
+                // DB에 값이 없는 경우 -> save 필요
+                Coverage newCoverage = Coverage.builder()
+                        .category(coverageRequest.category())
+                        .productId(coverageRequest.productId())
+                        .title(coverageRequest.title())
+                        .description(coverageRequest.description())
+                        .minCoverageLimit(coverageRequest.minCoverageLimit())
+                        .maxCoverageLimit(coverageRequest.maxCoverageLimit())
+                        .isMandatory(coverageRequest.isMandatory())
+                        .damageCalStandard(coverageRequest.damageCalStandard())
+                        .build();
+                coverageRepository.save(newCoverage);
+
+                responseCoverages.add(newCoverage);
+            }
+        }
 
         if (request.product().isDone()) {
             // product의 isDone true로 변경
@@ -96,7 +131,7 @@ public class ProductService {
 
         return ProductCoverageResponse.from(
                 product,
-                coverages
+                responseCoverages
         );
     }
 
