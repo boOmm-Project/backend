@@ -1,6 +1,10 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.product.dto.request.ProductRequest;
+import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.error.CustomException;
+import com.nuclear.boomm.product.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,37 +20,76 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "product")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productId;
 
+    @Builder.Default
     @Column(nullable = false, unique = true)
-    private String productName;
+    private String productName = "임시 상품";
 
-    @Column(nullable = false)
-    private Long category;  // category 테이블의 id
+    @Builder.Default
+    @Column
+    private Long category = 1L;  // category 테이블의 id
 
-    @Column(nullable = false)
-    private String targetCustomer;
+    @Builder.Default
+    @Column
+    private String targetCustomer = "임시 고객";
 
-    @Column(nullable = false)
-    private int period;     // 보장 기간
+    @Builder.Default
+    @Column
+    private int period = 12;     // 보장 기간
 
-    @Column(nullable = false)
-    private String salesChannel;
+    @Builder.Default
+    @Column
+    private String salesChannel = "임시 판매 채널";
 
     @Column(nullable = false)
     private Long userId;    // User 테이블의 pk 참조. 해당 상품의 생성자
 
-    @Builder
-    public Product(String productName, Long category, String targetCustomer, int period, String salesChannel, Long userId) {
-        this.productName = productName;
-        this.category = category;
-        this.targetCustomer = targetCustomer;
-        this.period = period;
-        this.salesChannel = salesChannel;
-        this.userId = userId;
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isDone = false;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private boolean isReleased = false;
+
+    public void update(ProductRequest request) {
+        if (request.isReleased()) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
+
+        this.productName = request.productName();
+        this.category = request.category();
+        this.targetCustomer = request.targetCustomer();
+        this.period = request.period();
+        this.salesChannel = request.salesChannel();
+    }
+
+    public void updateIsDone(boolean isDone) {
+        if (isReleased) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
+
+        this.isDone = isDone;
+    }
+
+    public static ProductResponse from(Product product) {
+        return new ProductResponse(
+                product.getProductId(),
+                product.getProductName(),
+                product.getCategory(),
+                product.getTargetCustomer(),
+                product.getPeriod(),
+                product.getSalesChannel(),
+                product.getUserId(),
+                product.isDone(),
+                product.isReleased()
+        );
     }
 }
