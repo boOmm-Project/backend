@@ -174,7 +174,7 @@ public class ProductService {
                     .stream()
                     .map(ProductFile::getUrl)
                     .toList());
-        } catch (CustomException e) {
+        } catch (Exception e) {
             log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
         }
     }
