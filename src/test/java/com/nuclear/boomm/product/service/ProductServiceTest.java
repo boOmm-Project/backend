@@ -457,10 +457,6 @@ class ProductServiceTest {
     @DisplayName("출시 상태의 모든 상품 조회")
     void selectDoneProducts() {
         // given
-        Long productId1 = 1L;
-        Long productId2 = 2L;
-        Long productId3 = 3L;
-
         given(productRepository.findAllByIsReleasedTrue()).willReturn(doneProductList);
 
         // when
@@ -507,7 +503,7 @@ class ProductServiceTest {
         assertEquals(productId, response.productResponse().productId());
         assertEquals(userId, response.productResponse().userId());
 
-        assertEquals(10L, response.coverageResponses().get(0).id());
-        assertEquals(20L, response.coverageResponses().get(1).id());
+        assertEquals(1L, response.coverageResponses().get(0).id());
+        assertEquals(2L, response.coverageResponses().get(1).id());
     }
 }
