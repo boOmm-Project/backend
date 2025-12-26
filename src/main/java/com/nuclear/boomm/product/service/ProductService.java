@@ -136,17 +136,17 @@ public class ProductService {
         Product product = productRepository.findByProductId(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        productFileRepository.deleteAllByProductId(productId);
-        coverageRepository.deleteAllByProductId(productId);
-        feedbackRepository.deleteAllByProductId(productId);
-        riskReportRepository.deleteAllByProductId(productId);
-        systemAndRegulationPrep.deleteAllByProductId(productId);
-
         if (product.isReleased()) {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
         }
 
         deleteProductFiles(productId);
+
+        productFileRepository.deleteAllByProductId(productId);
+        coverageRepository.deleteAllByProductId(productId);
+        feedbackRepository.deleteAllByProductId(productId);
+        riskReportRepository.deleteAllByProductId(productId);
+        systemAndRegulationPrep.deleteAllByProductId(productId);
 
         productRepository.delete(product);
 
