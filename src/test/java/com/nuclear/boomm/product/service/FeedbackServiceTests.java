@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -115,5 +116,18 @@ class FeedbackServiceTests {
     }
 
 
+    @Test
+    @DisplayName("이해관계자 피드백 전체 조회 - 성공")
+    void deleteFeedback_Success() {
+        // given
+        given(feedbackRepository.findAllByWriterId(stakeholderId)).willReturn(List.of(feedback));
 
+        // when
+        List<FeedbackResponse> responses = feedbackService.getAllStakeholderFeedbacks(stakeholderId);
+
+        // then
+        assertEquals(1, responses.size());
+        assertEquals(feedbackId, responses.get(0).feedbackId());
+        assertEquals(stakeholderId, responses.get(0).writerId());
+    }
 }
