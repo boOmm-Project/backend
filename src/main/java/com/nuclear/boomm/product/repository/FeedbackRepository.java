@@ -14,4 +14,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     Optional<Feedback> findByFeedbackIdAndWriterId(Long feedbackId, Long userId);
 
     List<Feedback> findAllByWriterId(Long userId);
+
+    Optional<Feedback> findByProductId(Long productId);
 }

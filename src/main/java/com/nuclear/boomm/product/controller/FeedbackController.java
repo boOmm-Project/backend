@@ -31,7 +31,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
             @PathVariable("id") Long productId
     ) {
-        Long userId = 1L;
+        Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.createFeedback(userId, productId)));
     }
@@ -42,7 +42,7 @@ public class FeedbackController {
             @PathVariable("id") Long feedbackId,
             @RequestBody FeedbackUpdateRequest request
             ) {
-        Long userId = 1L;
+        Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.updateFeedback(userId, feedbackId, request)));
     }
@@ -50,17 +50,19 @@ public class FeedbackController {
     @Operation(summary = "이해관계자의 피드백 조회", description = "이해관계자가 요청받은 피드백 완료 여부 상관 없이 전부 조회")
     @GetMapping("/stakeholder")
     public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllStakeholderFeedbacks() {
-        Long userId = 1L;
+        Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllStakeholderFeedbacks(userId)));
     }
 
-    @Operation(summary = "상품 관리자의 피드백 조회", description = "피드백 완료 여부 상관 없이 상품 관리자의 해당 상품에 대한 피드백 조회")
-    @GetMapping("/product-manager")
-    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllProductManagerFeedbacks(
-
+    @Operation(summary = "상품 관리자의 피드백 조회", description = "피드백 완료 여부 상관 없이 상품 관리자의 본인이 생성한 상품의 피드백 조회")
+    @GetMapping("/{id}/product-manager")
+    public ResponseEntity<ApiResponse<FeedbackResponse>> getAllProductManagerFeedbacks(
+            @PathVariable("id") Long productId
     ) {
-        return null;
+        Long userId= 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getProductManagerFeedback(userId, productId)));
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")

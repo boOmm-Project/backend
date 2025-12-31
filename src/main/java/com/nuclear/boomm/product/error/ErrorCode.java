@@ -22,7 +22,7 @@ public enum ErrorCode {
     PRODUCT_IS_RELEASED(HttpStatus.BAD_REQUEST, "출시된 상품은 삭제할 수 없습니다."),
 
     // 피드백 찾을 수 없음
-    FEEDBACK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 피드백은 찾을 수 없습니다."),
+    FEEDBACK_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 피드백은 찾을 수 없거나 권한이 없습니다."),
 
     // 입력 값 잘못됨
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력 값이 잘못되었습니다.");

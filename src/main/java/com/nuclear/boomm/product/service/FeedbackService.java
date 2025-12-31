@@ -7,6 +7,7 @@ import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
 import com.nuclear.boomm.product.repository.FeedbackRepository;
+import com.nuclear.boomm.product.repository.ProductRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FeedbackService {
 
+    private final ProductRepository productRepository;
     private final FeedbackRepository feedbackRepository;
 
     @Transactional(rollbackFor = Exception.class)
@@ -45,5 +47,16 @@ public class FeedbackService {
 
     public List<FeedbackResponse> getAllStakeholderFeedbacks(Long userId) {
         return FeedbackResponse.from(feedbackRepository.findAllByWriterId(userId));
+    }
+
+    public FeedbackResponse getProductManagerFeedback(Long userId, Long productId) {
+        if (!productRepository.existsByProductIdAndUserId(productId, userId)) {
+            throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
+        }
+
+        return FeedbackResponse.from(
+                feedbackRepository.findByProductId(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND))
+        );
     }
 }
