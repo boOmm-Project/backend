@@ -5,6 +5,8 @@ import com.nuclear.boomm.product.enums.FeedbackStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public record FeedbackResponse(
         @NotNull
         Long feedbackId,
@@ -29,5 +31,11 @@ public record FeedbackResponse(
                 feedback.getProductId(),
                 feedback.getWriterId()
         );
+    }
+
+    public static List<FeedbackResponse> from(List<Feedback> feedbacks) {
+        return feedbacks.stream()
+                .map(FeedbackResponse::from)
+                .toList();
     }
 }

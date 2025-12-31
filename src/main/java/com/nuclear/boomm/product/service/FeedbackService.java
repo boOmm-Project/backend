@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class FeedbackService {
@@ -39,5 +41,9 @@ public class FeedbackService {
         feedback.updateStatus(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE_PENDING);
 
         return FeedbackResponse.from(feedback);
+    }
+
+    public List<FeedbackResponse> getAllStakeholderFeedbacks(Long userId) {
+        return FeedbackResponse.from(feedbackRepository.findAllByWriterId(userId));
     }
 }

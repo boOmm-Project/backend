@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -49,17 +48,17 @@ public class FeedbackController {
     }
 
     @Operation(summary = "이해관계자의 피드백 조회", description = "이해관계자가 요청받은 피드백 완료 여부 상관 없이 전부 조회")
-    @GetMapping
-    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllStakeholderFeedbacks(
-            @RequestParam(required = false) String role
-    ) {
-        return null;
+    @GetMapping("/stakeholder")
+    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllStakeholderFeedbacks() {
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllStakeholderFeedbacks(userId)));
     }
 
     @Operation(summary = "상품 관리자의 피드백 조회", description = "피드백 완료 여부 상관 없이 상품 관리자의 해당 상품에 대한 피드백 조회")
     @GetMapping("/product-manager")
     public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllProductManagerFeedbacks(
-            @RequestParam(required = false) String role
+
     ) {
         return null;
     }
