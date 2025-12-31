@@ -24,6 +24,11 @@ public class FeedbackService {
 
     @Transactional(rollbackFor = Exception.class)
     public FeedbackResponse createFeedback(Long userId, @NotNull Long productId) {
+        // productId로 존재하는 product 있는지 검증해야함
+        if (!productRepository.existsByProductId(productId)) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+
         return FeedbackResponse.from(
                 feedbackRepository.save(
                         Feedback.builder()

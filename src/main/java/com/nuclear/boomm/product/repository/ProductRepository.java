@@ -17,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findAllByIsReleasedFalse();
 
     boolean existsByProductIdAndUserId(Long productId, Long userId);
+
+    boolean existsByProductId(@NotNull Long productId);
 }
