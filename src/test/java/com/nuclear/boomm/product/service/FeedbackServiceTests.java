@@ -1,7 +1,9 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Feedback;
+import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
+import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
 import com.nuclear.boomm.product.repository.FeedbackRepository;
@@ -14,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -31,23 +35,30 @@ class FeedbackServiceTests {
     private FeedbackRepository feedbackRepository;
 
 
-    private Long userId;
+    private Long stakeholderId;
+
     private Long productId;
     private Long feedbackId;
 
     private Feedback feedback;
+    private FeedbackUpdateRequest updateRequest;
 
     @BeforeEach
     void setUp() {
-        userId = 1L;
-        productId = 10L;
-        feedbackId = 100L;
+        stakeholderId = 1L;
+
+        productId = 2L;
+        feedbackId = 20L;
 
         feedback = Feedback.builder()
                 .productId(productId)
-                .writerId(userId)
+                .writerId(stakeholderId)
                 .build();
         ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+
+        updateRequest = new FeedbackUpdateRequest(
+                "reqDescription"
+        );
     }
 
     @Test
@@ -59,21 +70,48 @@ class FeedbackServiceTests {
         given(feedbackRepository.save(any(Feedback.class))).willAnswer(invocation -> feedback);
 
         // when
-        FeedbackResponse response = feedbackService.createFeedback(userId, productId);
+        FeedbackResponse response = feedbackService.createFeedback(stakeholderId, productId);
 
         // then
         assertEquals(productId, response.productId());
-        assertEquals(userId, response.writerId());
+        assertEquals(stakeholderId, response.writerId());
     }
     @Test
     @DisplayName("피드백 생성 - 실패 - 잘못된 productId")
-    void createFeedback_Failure() {
+    void createFeedback_Failure_INVALID_PRODUCT_ID() {
         // given
         given(productRepository.existsByProductId(productId)).willReturn(false);
 
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.createFeedback(userId, productId));
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.createFeedback(stakeholderId, productId));
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("이해관계자 피드백 업데이트 - 성공")
+    void updateFeedback_Success() {
+        // given
+        given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(Optional.of(feedback));
+
+        // when
+        FeedbackResponse response = feedbackService.updateFeedback(stakeholderId, feedbackId, updateRequest);
+
+        // then
+        assertEquals(feedbackId, response.feedbackId());
+        assertEquals(stakeholderId, response.writerId());
+        assertEquals("reqDescription", response.description());
+        assertEquals(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE_PENDING, response.status());
+    }
+    @Test
+    @DisplayName("이해관계자 피드백 업데이트 - 실패 - INVALID INPUT")
+    void updateFeedback_Failure_InvalidInput() {
+        // given
+        given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.updateFeedback(stakeholderId, feedbackId, updateRequest));
+        assertEquals(ErrorCode.INVALID_INPUT_VALUE, exception.getErrorCode());
     }
 
 
