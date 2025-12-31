@@ -30,8 +30,9 @@ public class ExtraDescription {
     @Column(nullable = false)
     String request;
 
+    @Builder.Default
     @Column(nullable = false)
-    String response;
+    String response = "추가 설명을 입력해 주세요.";
 
     @Builder.Default
     @Column(nullable = false)
