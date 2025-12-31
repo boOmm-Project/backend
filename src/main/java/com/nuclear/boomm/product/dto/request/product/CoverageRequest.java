@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.dto.request;
+package com.nuclear.boomm.product.dto.request.product;
 
 import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.enums.CoverageCategory;

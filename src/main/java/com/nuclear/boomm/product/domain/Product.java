@@ -1,8 +1,8 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.dto.request.ProductRequest;
-import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.request.product.ProductRequest;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
 import jakarta.persistence.Column;

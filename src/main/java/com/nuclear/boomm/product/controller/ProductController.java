@@ -2,7 +2,7 @@ package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
-import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.service.ProductService;
