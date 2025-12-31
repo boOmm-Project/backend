@@ -1,7 +1,6 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Coverage;
-import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.dto.request.CoverageRequest;
@@ -119,14 +118,6 @@ public class ProductService {
         if (request.product().isDone()) {
             // product의 isDone true로 변경
             product.updateIsDone(true);
-
-            // 피드백 생성
-            Feedback feedback = Feedback.builder()
-                    .productId(productId)
-                    .writerId(request.product().stakeholderId())
-                    .build();
-
-            feedbackRepository.save(feedback);
         }
 
         return ProductCoverageResponse.from(
