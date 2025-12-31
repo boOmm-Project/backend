@@ -2,8 +2,8 @@ package com.nuclear.boomm.product.dto.request.feedback;
 
 import jakarta.validation.constraints.NotNull;
 
-public record FeedbackCreateRequest(
+public record FeedbackUpdateRequest(
         @NotNull
-        Long productId
+        String description
 ) {
 }

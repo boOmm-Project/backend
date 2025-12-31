@@ -1,7 +1,7 @@
 package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
-import com.nuclear.boomm.product.dto.request.feedback.FeedbackRequest;
+import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.service.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,11 +40,12 @@ public class FeedbackController {
     @Operation(summary = "이해관계자의 피드백 업데이트", description = "이해관계자의 요청받은 상품에 대한 피드백 업데이트")
     @PatchMapping("/{id}/content")
     public ResponseEntity<ApiResponse<FeedbackResponse>> updateFeedback(
-            @RequestBody FeedbackRequest request
+            @PathVariable("id") Long feedbackId,
+            @RequestBody FeedbackUpdateRequest request
             ) {
         Long userId = 1L;
 
-        return null;
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.updateFeedback(userId, feedbackId, request)));
     }
 
     @Operation(summary = "이해관계자의 피드백 조회", description = "이해관계자가 요청받은 피드백 완료 여부 상관 없이 전부 조회")

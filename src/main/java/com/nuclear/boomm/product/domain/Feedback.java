@@ -2,6 +2,8 @@ package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
+import com.nuclear.boomm.product.error.CustomException;
+import com.nuclear.boomm.product.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -42,6 +44,22 @@ public class Feedback extends BaseEntity {
 
     @Column(nullable = false)
     private Long writerId;    // user 테이블 pk 참조. 피드백을 작성한 사람
+
+    public void updateDescription(String description) {
+        if (description == null || description.isEmpty()) {
+            throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
+        }
+
+        this.description = description;
+    }
+
+    public void updateStatus(FeedbackStatus feedbackStatus) {
+        if (feedbackStatus == null) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        this.status = feedbackStatus;
+    }
 
 //    @Column(nullable = false)
 //    private Role role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
