@@ -1,5 +1,7 @@
 package com.nuclear.boomm.product.domain;
 
+import com.nuclear.boomm.product.error.CustomException;
+import com.nuclear.boomm.product.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -40,4 +42,16 @@ public class ExtraDescription {
 
     @Column(nullable = false)
     Long constructor;
+
+    public void updateResponse(String description) {
+        if (description == null || description.isEmpty()) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        this.response = description;
+    }
+
+    public void updateIsResolved(boolean isResolved) {
+        this.isResolved = isResolved;
+    }
 }

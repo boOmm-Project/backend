@@ -3,7 +3,7 @@ package com.nuclear.boomm.product.controller;
 import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
-import com.nuclear.boomm.product.dto.response.feedback.ExtraDescriptionResponse;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.service.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -69,7 +69,7 @@ public class FeedbackController {
 
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")
     @PostMapping("/{feedback-id}/{product-id}/description-requests")
-    public ResponseEntity<ApiResponse<ExtraDescriptionResponse>> requestExtraDescription(
+    public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> requestExtraDescription(
             @PathVariable("feedback-id") Long feedbackId,
             @PathVariable("product-id") Long productId,
             @RequestBody FeedbackExtraDescriptionRequest request
@@ -80,9 +80,14 @@ public class FeedbackController {
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 전송", description = "피드백에 대해 요청받은 추가 설명 전송")
-    @PostMapping("/{id}/descriptions")
-    public ResponseEntity<ApiResponse<FeedbackResponse>> getExtraDescriptions() {
-        return null;
+    @PatchMapping("/{extra-description-id}/descriptions")
+    public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> responseExtraDescription(
+            @PathVariable("extra-description-id") Long extraDescriptionId,
+            @RequestBody FeedbackExtraDescriptionRequest request
+    ) {
+        Long userId= 10L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.responseExtraDescription(userId, extraDescriptionId, request)));
     }
 
     @Operation(summary = "상품 관리자의 피드백 반영", description = "상품 관리자가 요청받은 피드백을 반영")

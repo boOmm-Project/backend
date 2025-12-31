@@ -4,7 +4,7 @@ import com.nuclear.boomm.product.domain.ExtraDescription;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
-import com.nuclear.boomm.product.dto.response.feedback.ExtraDescriptionResponse;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
@@ -71,22 +71,42 @@ public class FeedbackService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ExtraDescriptionResponse requestExtraDescription(Long userId, Long feedbackId, Long productId, FeedbackExtraDescriptionRequest request) {
+    public FeedbackExtraDescriptionResponse requestExtraDescription(Long userId, Long feedbackId, Long productId, FeedbackExtraDescriptionRequest request) {
         if (!feedbackRepository.existsByFeedbackId(feedbackId)) {
             throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
         } else if (!productRepository.existsByProductIdAndUserId(productId, userId)) {
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         }
 
-        return ExtraDescriptionResponse.from(
+        return FeedbackExtraDescriptionResponse.from(
                 extraDescriptionRepository.save(
                         ExtraDescription.builder()
                                 .feedbackId(feedbackId)
                                 .productId(productId)
-                                .request(request.request())
+                                .request(request.description())
                                 .constructor(userId)
                                 .build()
                 )
         );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public FeedbackExtraDescriptionResponse responseExtraDescription(Long userId, Long extraDescriptionId, FeedbackExtraDescriptionRequest request) {
+        if (!feedbackRepository.existsByFeedbackIdAndWriterId(
+                extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
+                        .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND))
+                        .getFeedbackId()
+                , userId
+        )) {
+            throw new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND);
+        }
+
+        ExtraDescription extraDescription = extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND));
+
+        extraDescription.updateResponse(request.description());
+        extraDescription.updateIsResolved(true);
+
+        return FeedbackExtraDescriptionResponse.from(extraDescription);
     }
 }

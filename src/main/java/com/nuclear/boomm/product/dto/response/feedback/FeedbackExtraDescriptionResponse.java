@@ -3,7 +3,7 @@ package com.nuclear.boomm.product.dto.response.feedback;
 import com.nuclear.boomm.product.domain.ExtraDescription;
 import jakarta.validation.constraints.NotNull;
 
-public record ExtraDescriptionResponse(
+public record FeedbackExtraDescriptionResponse(
         @NotNull
         Long feedbackId,
 
@@ -22,8 +22,8 @@ public record ExtraDescriptionResponse(
         @NotNull
         Long constructor
 ) {
-    public static ExtraDescriptionResponse from(ExtraDescription extraDescription) {
-        return new ExtraDescriptionResponse(
+    public static FeedbackExtraDescriptionResponse from(ExtraDescription extraDescription) {
+        return new FeedbackExtraDescriptionResponse(
                 extraDescription.getFeedbackId(),
                 extraDescription.getProductId(),
                 extraDescription.getRequest(),

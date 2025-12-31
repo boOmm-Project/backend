@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 
 public record FeedbackExtraDescriptionRequest(
         @NotBlank
-        String request
+        String description
 ) {
 }
