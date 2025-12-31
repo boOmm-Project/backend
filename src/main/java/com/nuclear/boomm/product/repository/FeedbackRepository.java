@@ -20,4 +20,6 @@ public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
     boolean existsByFeedbackId(Long feedbackId);
 
     boolean existsByFeedbackIdAndWriterId(Long feedbackId, Long userId);
+
+    Optional<Feedback> findByFeedbackIdAndProductId(Long feedbackId, Long productId);
 }

@@ -2,10 +2,13 @@ package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.ExtraDescription;
 import com.nuclear.boomm.product.domain.Feedback;
+import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
+import com.nuclear.boomm.product.dto.request.product.ProductRequest;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
@@ -108,5 +111,20 @@ public class FeedbackService {
         extraDescription.updateIsResolved(true);
 
         return FeedbackExtraDescriptionResponse.from(extraDescription);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ProductResponse reflectFeedback(Long userId, Long feedbackId, Long productId, ProductRequest request) {
+        Product product = productRepository.findByProductIdAndUserId(productId, userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        Feedback feedback = feedbackRepository.findByFeedbackIdAndProductId(feedbackId, productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
+
+        product.update(request);
+
+        feedback.updateStatus(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE);
+
+        return ProductResponse.from(product);
     }
 }

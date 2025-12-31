@@ -3,8 +3,10 @@ package com.nuclear.boomm.product.controller;
 import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
+import com.nuclear.boomm.product.dto.request.product.ProductRequest;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.service.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -91,8 +93,14 @@ public class FeedbackController {
     }
 
     @Operation(summary = "상품 관리자의 피드백 반영", description = "상품 관리자가 요청받은 피드백을 반영")
-    @PatchMapping("/{id}/reflection")
-    public ResponseEntity<ApiResponse<FeedbackResponse>> reflectFeedback() {
-        return null;
+    @PatchMapping("/{feedback-id}/{product-id}/reflection")
+    public ResponseEntity<ApiResponse<ProductResponse>> feedbackReflection(
+            @PathVariable("feedback-id") Long feedbackId,
+            @PathVariable("product-id") Long productId,
+            @RequestBody ProductRequest request
+    ) {
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.reflectFeedback(userId, feedbackId, productId, request)));
     }
 }
