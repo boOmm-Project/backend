@@ -37,6 +37,7 @@ class FeedbackServiceTests {
 
 
     private Long stakeholderId;
+    private Long productManagerId;
 
     private Long productId;
     private Long feedbackId;
@@ -47,6 +48,7 @@ class FeedbackServiceTests {
     @BeforeEach
     void setUp() {
         stakeholderId = 1L;
+        productManagerId = 10L;
 
         productId = 2L;
         feedbackId = 20L;
@@ -118,7 +120,7 @@ class FeedbackServiceTests {
 
     @Test
     @DisplayName("이해관계자 피드백 전체 조회 - 성공")
-    void deleteFeedback_Success() {
+    void getAllStakeholderFeedbacks_Success() {
         // given
         given(feedbackRepository.findAllByWriterId(stakeholderId)).willReturn(List.of(feedback));
 
@@ -129,5 +131,24 @@ class FeedbackServiceTests {
         assertEquals(1, responses.size());
         assertEquals(feedbackId, responses.get(0).feedbackId());
         assertEquals(stakeholderId, responses.get(0).writerId());
+    }
+
+
+    @Test
+    @DisplayName("상품 관리자 상품 피드백 조회 - 성공")
+    void getAllProductManagerFeedbacks_Success() {
+        // given
+        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(true);
+
+        given(feedbackRepository.findByProductId(productId)).willReturn(Optional.of(feedback));
+
+        // when
+        FeedbackResponse response = feedbackService.getProductManagerFeedback(productManagerId, productId);
+
+        // then
+        assertEquals(productId, response.productId());
+        assertEquals(stakeholderId, response.writerId());
+        assertEquals(feedbackId, response.feedbackId());
+        assertEquals("피드백 사항을 작성해 주세요.", response.description());
     }
 }

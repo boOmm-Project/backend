@@ -66,7 +66,7 @@ public class FeedbackService {
         if (!productRepository.existsByProductIdAndUserId(productId, userId)) {
             throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
         }
-
+        // 여기 반환값 리스트로 바꿔야 함
         return FeedbackResponse.from(
                 feedbackRepository.findByProductId(productId)
                         .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND))
