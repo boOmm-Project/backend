@@ -1,13 +1,14 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Feedback;
+import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
-import com.nuclear.boomm.product.repository.FeedbackRepository;
-import com.nuclear.boomm.product.repository.ProductRepository;
+import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -45,6 +46,8 @@ class FeedbackServiceTests {
     private Feedback feedback;
     private FeedbackUpdateRequest updateRequest;
 
+    private Product product;
+
     @BeforeEach
     void setUp() {
         stakeholderId = 1L;
@@ -53,8 +56,13 @@ class FeedbackServiceTests {
         productId = 2L;
         feedbackId = 20L;
 
+        product = Product.builder()
+                .userId(productManagerId)
+                .build();
+        ReflectionTestUtils.setField(product, "productId", productId);
+
         feedback = Feedback.builder()
-                .productId(productId)
+                .product(product)
                 .writerId(stakeholderId)
                 .build();
         ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
@@ -138,17 +146,17 @@ class FeedbackServiceTests {
     @DisplayName("상품 관리자 상품 피드백 조회 - 성공")
     void getAllProductManagerFeedbacks_Success() {
         // given
-        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(true);
+        given(productRepository.existsByUserId(productManagerId)).willReturn(true);
 
-        given(feedbackRepository.findByProductId(productId)).willReturn(Optional.of(feedback));
+        given(feedbackRepository.searchAllFeedbackByUserIdWithProduct(productManagerId)).willReturn(List.of(feedback));
 
         // when
-        FeedbackResponse response = feedbackService.getProductManagerFeedback(productManagerId, productId);
+        List<FeedbackResponse> response = feedbackService.getProductManagerFeedback(productManagerId);
 
         // then
-        assertEquals(productId, response.productId());
-        assertEquals(stakeholderId, response.writerId());
-        assertEquals(feedbackId, response.feedbackId());
-        assertEquals("피드백 사항을 작성해 주세요.", response.description());
+        assertEquals(productId, response.get(0).productId());
+        assertEquals(stakeholderId, response.get(0).writerId());
+        assertEquals(feedbackId, response.get(0).feedbackId());
+        assertEquals("피드백 사항을 작성해 주세요.", response.get(0).description());
     }
 }
