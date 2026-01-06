@@ -28,7 +28,7 @@ public record FeedbackResponse(
                 feedback.getFeedbackId(),
                 feedback.getStatus(),
                 feedback.getDescription(),
-                feedback.getProductId(),
+                feedback.getProduct().getProductId(),
                 feedback.getWriterId()
         );
     }

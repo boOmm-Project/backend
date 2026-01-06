@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.repository;
+package com.nuclear.boomm.product.repository.product;
 
 import com.nuclear.boomm.product.domain.Product;
 import jakarta.validation.constraints.NotNull;

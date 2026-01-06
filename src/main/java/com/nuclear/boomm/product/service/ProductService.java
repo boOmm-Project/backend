@@ -12,12 +12,12 @@ import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileRespons
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
-import com.nuclear.boomm.product.repository.CoverageRepository;
-import com.nuclear.boomm.product.repository.FeedbackRepository;
-import com.nuclear.boomm.product.repository.ProductFileRepository;
-import com.nuclear.boomm.product.repository.ProductRepository;
-import com.nuclear.boomm.product.repository.RiskReportRepository;
-import com.nuclear.boomm.product.repository.SystemAndRegulationPrepRepository;
+import com.nuclear.boomm.product.repository.product.CoverageRepository;
+import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.ProductFileRepository;
+import com.nuclear.boomm.product.repository.product.ProductRepository;
+import com.nuclear.boomm.product.repository.product.RiskReportRepository;
+import com.nuclear.boomm.product.repository.product.SystemAndRegulationPrepRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -170,7 +170,7 @@ public class ProductService {
 
         productFileRepository.deleteAllByProductId(productId);
         coverageRepository.deleteAllByProductId(productId);
-        feedbackRepository.deleteAllByProductId(productId);
+        feedbackRepository.deleteAllByProduct_ProductId(productId);
         riskReportRepository.deleteAllByProductId(productId);
         systemAndRegulationPrep.deleteAllByProductId(productId);
 

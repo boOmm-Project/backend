@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.repository;
+package com.nuclear.boomm.product.repository.feedback;
 
 import com.nuclear.boomm.product.domain.Feedback;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,18 +8,18 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface FeedbackRepository extends JpaRepository<Feedback, Long> {
-    void deleteAllByProductId(Long productId);
+public interface FeedbackRepository extends JpaRepository<Feedback, Long>, FeedbackRepositoryCustom {
+    void deleteAllByProduct_ProductId(Long productId);
 
     Optional<Feedback> findByFeedbackIdAndWriterId(Long feedbackId, Long userId);
 
     List<Feedback> findAllByWriterId(Long userId);
 
-    Optional<Feedback> findByProductId(Long productId);
+    Optional<Feedback> findByProduct_ProductId(Long productId);
 
     boolean existsByFeedbackId(Long feedbackId);
 
     boolean existsByFeedbackIdAndWriterId(Long feedbackId, Long userId);
 
-    Optional<Feedback> findByFeedbackIdAndProductId(Long feedbackId, Long productId);
+    Optional<Feedback> findByFeedbackIdAndProduct_ProductId(Long feedbackId, Long productId);
 }

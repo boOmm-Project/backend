@@ -60,13 +60,11 @@ public class FeedbackController {
     }
 
     @Operation(summary = "상품 관리자의 피드백 조회", description = "피드백 완료 여부 상관 없이 상품 관리자의 본인이 생성한 상품의 피드백 조회")
-    @GetMapping("/{id}/product-manager")
-    public ResponseEntity<ApiResponse<FeedbackResponse>> getAllProductManagerFeedbacks(
-            @PathVariable("id") Long productId
-    ) {
+    @GetMapping("/product-manager")
+    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllProductManagerFeedbacks() {
         Long userId= 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(feedbackService.getProductManagerFeedback(userId, productId)));
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getProductManagerFeedback(userId)));
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")
