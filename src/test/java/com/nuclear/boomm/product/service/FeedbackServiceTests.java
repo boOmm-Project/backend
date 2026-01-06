@@ -159,4 +159,15 @@ class FeedbackServiceTests {
         assertEquals(feedbackId, response.get(0).feedbackId());
         assertEquals("피드백 사항을 작성해 주세요.", response.get(0).description());
     }
+    @Test
+    @DisplayName("상품 관리자 상품 피드백 조회 - 실패 - PRODUCT_NOT_FOUND")
+    void getAllProductManagerFeedbacks_Failure_PRODUCT_NOT_FOUND() {
+        // given
+        given(productRepository.existsByUserId(productManagerId)).willReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class,
+                () -> feedbackService.getProductManagerFeedback(productManagerId));
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
 }
