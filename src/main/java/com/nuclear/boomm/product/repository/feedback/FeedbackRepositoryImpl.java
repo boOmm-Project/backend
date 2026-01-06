@@ -1,0 +1,25 @@
+package com.nuclear.boomm.product.repository.feedback;
+
+import com.nuclear.boomm.product.domain.Feedback;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
+import static com.nuclear.boomm.product.domain.QFeedback.feedback;
+import static com.nuclear.boomm.product.domain.QProduct.product;
+
+@RequiredArgsConstructor
+public class FeedbackRepositoryImpl implements FeedbackRepositoryCustom {
+
+    private final JPAQueryFactory queryFactory;
+
+    @Override
+    public List<Feedback> searchAllFeedbackByUserIdWithProduct(Long userId) {
+        return queryFactory
+                .selectFrom(feedback)
+                .join(feedback.product, product).fetchJoin()
+                .where(product.userId.eq(userId))
+                .fetch();
+    }
+}
