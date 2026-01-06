@@ -1,13 +1,17 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.product.domain.ExtraDescription;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
+import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.ExtraDescriptionRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +39,8 @@ class FeedbackServiceTests {
     private ProductRepository productRepository;
     @Mock
     private FeedbackRepository feedbackRepository;
+    @Mock
+    private ExtraDescriptionRepository extraDescriptionRepository;
 
 
     private Long stakeholderId;
@@ -48,6 +54,10 @@ class FeedbackServiceTests {
 
     private Product product;
 
+    private ExtraDescription extraDescription;
+    private Long extraDescriptionId;
+    private FeedbackExtraDescriptionRequest feedbackExtraDescriptionRequest;
+
     @BeforeEach
     void setUp() {
         stakeholderId = 1L;
@@ -55,6 +65,7 @@ class FeedbackServiceTests {
 
         productId = 2L;
         feedbackId = 20L;
+        extraDescriptionId = 200L;
 
         product = Product.builder()
                 .userId(productManagerId)
@@ -66,6 +77,18 @@ class FeedbackServiceTests {
                 .writerId(stakeholderId)
                 .build();
         ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+
+        feedbackExtraDescriptionRequest = new FeedbackExtraDescriptionRequest(
+                "reqDescription"
+        );
+
+        extraDescription = ExtraDescription.builder()
+                .feedbackId(feedbackId)
+                .productId(productId)
+                .request(feedbackExtraDescriptionRequest.description())
+                .constructor(productManagerId)
+                .build();
+        ReflectionTestUtils.setField(extraDescription, "extraDescriptionId", extraDescriptionId);
 
         updateRequest = new FeedbackUpdateRequest(
                 "reqDescription"
@@ -168,6 +191,54 @@ class FeedbackServiceTests {
         // when & then
         CustomException exception = assertThrows(CustomException.class,
                 () -> feedbackService.getProductManagerFeedback(productManagerId));
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("피드백 추가 설명 요청 - 성공")
+    void requestExtraDescription_Success() {
+        // given
+        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(true);
+
+        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(true);
+
+        given(extraDescriptionRepository.save(any(ExtraDescription.class))).willAnswer(invocation -> extraDescription);
+
+        // when
+        FeedbackExtraDescriptionResponse response = feedbackService.requestExtraDescription(productManagerId, feedbackId, productId, feedbackExtraDescriptionRequest);
+
+        // then
+        assertEquals(feedbackId, response.feedbackId());
+        assertEquals(productManagerId, response.constructor());
+        assertEquals(productId, response.productId());
+        assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
+        assertEquals("추가 설명을 입력해 주세요.", response.response());
+    }
+    @Test
+    @DisplayName("피드백 추가 설명 요청 - 실패 - FEEDBACK_NOT_FOUND")
+    void requestExtraDescription_Failure_FEEDBACK_NOT_FOUND() {
+        // given
+        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class,
+                () -> feedbackService.requestExtraDescription(productManagerId, feedbackId, productId, feedbackExtraDescriptionRequest)
+        );
+        assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
+    }
+    @Test
+    @DisplayName("피드백 추가 설명 요청 - 실패 - PRODUCT_NOT_FOUND")
+    void requestExtraDescription_Failure_PRODUCT_NOT_FOUND() {
+        // given
+        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(true);
+
+        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class,
+                () -> feedbackService.requestExtraDescription(productManagerId, feedbackId, productId, feedbackExtraDescriptionRequest)
+        );
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }
 }
