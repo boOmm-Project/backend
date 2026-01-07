@@ -241,4 +241,30 @@ class FeedbackServiceTests {
         );
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }
+
+
+    @Test
+    @DisplayName("피드백 추가 설명 전송 - 성공")
+    void responseExtraDescription_Success() {
+        // given
+        given(feedbackRepository.existsByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(true);
+
+        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.of(extraDescription));
+
+        // when
+        FeedbackExtraDescriptionResponse response = feedbackService.responseExtraDescription(stakeholderId, extraDescriptionId, feedbackExtraDescriptionRequest);
+
+        // then
+        assertEquals(feedbackId, response.feedbackId());
+        assertEquals(productManagerId, response.constructor());
+        assertEquals(productId, response.productId());
+        assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
+    }
+    @Test
+    @DisplayName("피드백 추가 설명 전송 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
+    void responseExtraDescription_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, feedbackId, feedbackExtraDescriptionRequest));
+        assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
+    }
 }
