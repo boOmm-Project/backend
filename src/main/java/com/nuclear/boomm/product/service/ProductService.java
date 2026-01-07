@@ -1,24 +1,23 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Coverage;
-import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
-import com.nuclear.boomm.product.dto.request.CoverageRequest;
+import com.nuclear.boomm.product.dto.request.product.CoverageRequest;
 import com.nuclear.boomm.product.dto.request.wrapper.ProductCoverageRequest;
-import com.nuclear.boomm.product.dto.response.CoverageResponse;
-import com.nuclear.boomm.product.dto.response.ProductFileResponse;
-import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.product.CoverageResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductFileResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
-import com.nuclear.boomm.product.repository.CoverageRepository;
-import com.nuclear.boomm.product.repository.FeedbackRepository;
-import com.nuclear.boomm.product.repository.ProductFileRepository;
-import com.nuclear.boomm.product.repository.ProductRepository;
-import com.nuclear.boomm.product.repository.RiskReportRepository;
-import com.nuclear.boomm.product.repository.SystemAndRegulationPrepRepository;
+import com.nuclear.boomm.product.repository.product.CoverageRepository;
+import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.ProductFileRepository;
+import com.nuclear.boomm.product.repository.product.ProductRepository;
+import com.nuclear.boomm.product.repository.product.RiskReportRepository;
+import com.nuclear.boomm.product.repository.product.SystemAndRegulationPrepRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -119,14 +118,6 @@ public class ProductService {
         if (request.product().isDone()) {
             // product의 isDone true로 변경
             product.updateIsDone(true);
-
-            // 피드백 생성
-            Feedback feedback = Feedback.builder()
-                    .productId(productId)
-                    .writerId(request.product().stakeholderId())
-                    .build();
-
-            feedbackRepository.save(feedback);
         }
 
         return ProductCoverageResponse.from(
@@ -179,7 +170,7 @@ public class ProductService {
 
         productFileRepository.deleteAllByProductId(productId);
         coverageRepository.deleteAllByProductId(productId);
-        feedbackRepository.deleteAllByProductId(productId);
+        feedbackRepository.deleteAllByProduct_ProductId(productId);
         riskReportRepository.deleteAllByProductId(productId);
         systemAndRegulationPrep.deleteAllByProductId(productId);
 

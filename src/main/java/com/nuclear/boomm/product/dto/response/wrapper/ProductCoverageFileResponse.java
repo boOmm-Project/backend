@@ -1,8 +1,8 @@
 package com.nuclear.boomm.product.dto.response.wrapper;
 
-import com.nuclear.boomm.product.dto.response.CoverageResponse;
-import com.nuclear.boomm.product.dto.response.ProductFileResponse;
-import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.response.product.CoverageResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductFileResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 
 import java.util.List;
 

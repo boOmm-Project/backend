@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.dto.response;
+package com.nuclear.boomm.product.dto.response.product;
 
 import com.nuclear.boomm.product.domain.ProductFile;
 import jakarta.validation.constraints.NotBlank;
