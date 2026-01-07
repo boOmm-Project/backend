@@ -46,7 +46,7 @@ public class Feedback extends BaseEntity {
     private Long writerId;    // user 테이블 pk 참조. 피드백을 작성한 사람
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id",  nullable = false)
     private Product product;
 
     public void updateDescription(String description) {
