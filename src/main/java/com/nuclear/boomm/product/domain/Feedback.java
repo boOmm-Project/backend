@@ -50,8 +50,8 @@ public class Feedback extends BaseEntity {
     private Product product;
 
     public void updateDescription(String description) {
-        if (description == null || description.isEmpty()) {
-            throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
+        if (description == null || description.isBlank()) {
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
         }
 
         this.description = description;
