@@ -294,7 +294,7 @@ class FeedbackServiceTests {
     @DisplayName("피드백 추가 설명 전송 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
     void responseExtraDescription_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, feedbackId, feedbackExtraDescriptionRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, extraDescriptionId, feedbackExtraDescriptionRequest));
         assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
     }
 
