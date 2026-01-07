@@ -20,7 +20,7 @@ public record FeedbackExtraDescriptionResponse(
         Boolean isResolved,
 
         @NotNull
-        Long constructor
+        Long creatorId
 ) {
     public static FeedbackExtraDescriptionResponse from(ExtraDescription extraDescription) {
         return new FeedbackExtraDescriptionResponse(

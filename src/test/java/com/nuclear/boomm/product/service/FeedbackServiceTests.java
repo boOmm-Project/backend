@@ -240,7 +240,7 @@ class FeedbackServiceTests {
 
         // then
         assertEquals(feedbackId, response.feedbackId());
-        assertEquals(productManagerId, response.constructor());
+        assertEquals(productManagerId, response.creatorId());
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
         assertEquals("추가 설명을 입력해 주세요.", response.response());
@@ -286,7 +286,7 @@ class FeedbackServiceTests {
 
         // then
         assertEquals(feedbackId, response.feedbackId());
-        assertEquals(productManagerId, response.constructor());
+        assertEquals(productManagerId, response.creatorId());
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
     }
