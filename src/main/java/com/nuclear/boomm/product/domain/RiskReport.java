@@ -37,7 +37,4 @@ public class RiskReport extends BaseEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String competitorProductComparison;
-
-    @Column(nullable = false)
-    private Long creatorId;
 }

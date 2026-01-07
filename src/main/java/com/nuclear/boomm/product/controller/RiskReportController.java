@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,15 @@ public class RiskReportController {
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.createRiskReport(userId, productId)));
+    }
+
+    @Operation(summary = "위험 보고서 조회", description = "위험 보고서의 세부 내용 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<RiskReportResponse>> getRiskReport(
+            @PathVariable("id") Long productId
+    ) {
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReport(userId, productId)));
     }
 }
