@@ -8,14 +8,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "risk_report")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class RiskReport extends BaseEntity {
 
     @Id
@@ -25,20 +28,12 @@ public class RiskReport extends BaseEntity {
     @Column(nullable = false)
     private Long productId; // product 테이블 pk 참조
 
-    @Column(nullable = false, unique = true)
-    private Long productFileId; // product_file 테이블 pk 참조
-
     @Column(nullable = false)
     private Double lossRatioForecast;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String competitorProductComparison;
 
-    @Builder
-    public RiskReport(Long productId, Long productFileId, Double lossRatioForecast, String competitorProductComparison) {
-        this.productId = productId;
-        this.productFileId = productFileId;
-        this.lossRatioForecast = lossRatioForecast;
-        this.competitorProductComparison = competitorProductComparison;
-    }
+    @Column(nullable = false)
+    private Long creatorId;
 }
