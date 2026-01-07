@@ -12,8 +12,8 @@ import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
-import com.nuclear.boomm.product.repository.product.ExtraDescriptionRepository;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.ExtraDescriptionRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,6 @@ public class FeedbackService {
 
     @Transactional(rollbackFor = Exception.class)
     public FeedbackResponse createFeedback(Long userId, @NotNull Long productId) {
-        // productId로 존재하는 product 있는지 검증해야함
         if (!productRepository.existsByProductId(productId)) {
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         }
@@ -59,20 +58,6 @@ public class FeedbackService {
         return FeedbackResponse.from(feedback);
     }
 
-    public List<FeedbackResponse> getAllStakeholderFeedbacks(Long userId) {
-        return FeedbackResponse.from(feedbackRepository.findAllByWriterId(userId));
-    }
-
-    public List<FeedbackResponse> getProductManagerFeedback(Long userId) {
-        if (!productRepository.existsByUserId(userId)) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-
-        return FeedbackResponse.from(
-                feedbackRepository.searchAllFeedbackByUserIdWithProduct(userId)
-        );
-    }
-
     @Transactional(rollbackFor = Exception.class)
     public FeedbackExtraDescriptionResponse requestExtraDescription(Long userId, Long feedbackId, Long productId, FeedbackExtraDescriptionRequest request) {
         if (!feedbackRepository.existsByFeedbackId(feedbackId)) {
@@ -95,17 +80,15 @@ public class FeedbackService {
 
     @Transactional(rollbackFor = Exception.class)
     public FeedbackExtraDescriptionResponse responseExtraDescription(Long userId, Long extraDescriptionId, FeedbackExtraDescriptionRequest request) {
+        ExtraDescription extraDescription = extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND));
+
         if (!feedbackRepository.existsByFeedbackIdAndWriterId(
-                extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND))
-                        .getFeedbackId()
-                , userId
+                extraDescription.getFeedbackId(),
+                userId
         )) {
             throw new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND);
         }
-
-        ExtraDescription extraDescription = extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
-                .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND));
 
         extraDescription.updateResponse(request.description());
         extraDescription.updateIsResolved(true);
@@ -127,5 +110,19 @@ public class FeedbackService {
         feedback.updateStatus(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE);
 
         return ProductResponse.from(product);
+    }
+
+    public List<FeedbackResponse> getAllStakeholderFeedbacks(Long userId) {
+        return FeedbackResponse.from(feedbackRepository.findAllByWriterId(userId));
+    }
+
+    public List<FeedbackResponse> getProductManagerFeedback(Long userId) {
+        if (!productRepository.existsByUserId(userId)) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+
+        return FeedbackResponse.from(
+                feedbackRepository.searchAllFeedbackByUserIdWithProduct(userId)
+        );
     }
 }
