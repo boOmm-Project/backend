@@ -62,6 +62,9 @@ public class Product extends BaseEntity {
     private boolean isReleased = false;
 
     public void update(ProductRequest request) {
+        if (this.isReleased) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
         if (request.isReleased()) {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
         }
