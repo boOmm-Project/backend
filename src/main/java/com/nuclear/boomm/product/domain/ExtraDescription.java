@@ -41,7 +41,7 @@ public class ExtraDescription {
     Boolean isResolved = false;
 
     @Column(nullable = false)
-    Long constructor;
+    Long creatorId;
 
     public void updateResponse(String description) {
         if (description == null || description.isEmpty()) {

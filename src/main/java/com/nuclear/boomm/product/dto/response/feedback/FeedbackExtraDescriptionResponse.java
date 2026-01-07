@@ -29,7 +29,7 @@ public record FeedbackExtraDescriptionResponse(
                 extraDescription.getRequest(),
                 extraDescription.getResponse(),
                 extraDescription.getIsResolved(),
-                extraDescription.getConstructor()
+                extraDescription.getCreatorId()
         );
     }
 }

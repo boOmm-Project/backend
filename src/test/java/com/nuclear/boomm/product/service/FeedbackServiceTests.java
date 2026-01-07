@@ -90,7 +90,7 @@ class FeedbackServiceTests {
                 .feedbackId(feedbackId)
                 .productId(productId)
                 .request(feedbackExtraDescriptionRequest.description())
-                .constructor(productManagerId)
+                .creatorId(productManagerId)
                 .build();
         ReflectionTestUtils.setField(extraDescription, "extraDescriptionId", extraDescriptionId);
 

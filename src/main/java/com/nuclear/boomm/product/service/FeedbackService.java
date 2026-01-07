@@ -72,7 +72,7 @@ public class FeedbackService {
                                 .feedbackId(feedbackId)
                                 .productId(productId)
                                 .request(request.description())
-                                .constructor(userId)
+                                .creatorId(userId)
                                 .build()
                 )
         );
