@@ -122,6 +122,7 @@ public class FeedbackService {
                 .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
 
         product.update(request);
+        product.updateIsDone(request.isDone());
 
         feedback.updateStatus(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE);
 

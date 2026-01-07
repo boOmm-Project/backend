@@ -5,8 +5,10 @@ import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
+import com.nuclear.boomm.product.dto.request.product.ProductRequest;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
@@ -53,6 +55,8 @@ class FeedbackServiceTests {
     private FeedbackUpdateRequest updateRequest;
 
     private Product product;
+    private ProductRequest productRequest;
+    private ProductRequest releasedProductRequest;
 
     private ExtraDescription extraDescription;
     private Long extraDescriptionId;
@@ -92,6 +96,32 @@ class FeedbackServiceTests {
 
         updateRequest = new FeedbackUpdateRequest(
                 "reqDescription"
+        );
+
+        productRequest = new ProductRequest(
+                productId,
+                "changedProductName",
+                1L,
+                "changedTargetCustomer",
+                12,
+                "changedSalesChannel",
+                productManagerId,
+                true,
+                stakeholderId,
+                false
+        );
+
+        releasedProductRequest = new ProductRequest(
+                productId,
+                "changedProductName",
+                1L,
+                "changedTargetCustomer",
+                12,
+                "changedSalesChannel",
+                productManagerId,
+                true,
+                stakeholderId,
+                true
         );
     }
 
@@ -266,5 +296,41 @@ class FeedbackServiceTests {
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, feedbackId, feedbackExtraDescriptionRequest));
         assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("피드백 반영 - 성공")
+    void reflectFeedback_Success() {
+        // given
+        given(productRepository.findByProductIdAndUserId(productId, productManagerId)).willReturn(Optional.of(product));
+
+        given(feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)).willReturn(Optional.of(feedback));
+
+        // when
+        ProductResponse response = feedbackService.reflectFeedback(productManagerId, feedbackId, productId, productRequest);
+
+        // then
+        assertEquals(productId, response.productId());
+        assertEquals("changedProductName", response.productName());
+        assertEquals(1L, response.category());
+        assertEquals("changedTargetCustomer", response.targetCustomer());
+        assertEquals(12, response.period());
+        assertEquals("changedSalesChannel",  response.salesChannel());
+        assertEquals(productManagerId, response.userId());
+        assertEquals(true, response.isDone());
+        assertEquals(false, response.isReleased());
+    }
+    @Test
+    @DisplayName("피드백 반영 - 실패 - PRODUCT_IS_RELEASED")
+    void reflectFeedback_Failure_PRODUCT_IS_RELEASED() {
+        // given
+        given(productRepository.findByProductIdAndUserId(productId, productManagerId)).willReturn(Optional.of(product));
+
+        given(feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)).willReturn(Optional.of(feedback));
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.reflectFeedback(productManagerId, feedbackId, productId, releasedProductRequest));
+        assertEquals(ErrorCode.PRODUCT_IS_RELEASED, exception.getErrorCode());
     }
 }
