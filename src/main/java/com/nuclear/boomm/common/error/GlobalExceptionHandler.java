@@ -1,6 +1,7 @@
-package com.nuclear.boomm.product.error;
+package com.nuclear.boomm.common.error;
 
 import com.nuclear.boomm.common.ApiResponse;
+import com.nuclear.boomm.product.error.CustomException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

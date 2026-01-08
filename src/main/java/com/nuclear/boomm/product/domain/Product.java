@@ -4,7 +4,7 @@ import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.dto.request.product.ProductRequest;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.common.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

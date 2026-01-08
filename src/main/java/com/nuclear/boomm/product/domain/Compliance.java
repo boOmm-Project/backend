@@ -20,7 +20,7 @@ public class Compliance extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long stakeholderId;
+    private Long complianceId;
 
     @Column(nullable = false)
     private Long userId;        // user 테이블 pk 참조

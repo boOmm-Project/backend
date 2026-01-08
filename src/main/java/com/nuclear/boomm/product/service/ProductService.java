@@ -11,7 +11,7 @@ import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.repository.product.CoverageRepository;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
