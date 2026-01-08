@@ -1,7 +1,7 @@
 package com.nuclear.boomm.product.dto.request.wrapper;
 
-import com.nuclear.boomm.product.dto.request.CoverageRequest;
-import com.nuclear.boomm.product.dto.request.ProductRequest;
+import com.nuclear.boomm.product.dto.request.product.CoverageRequest;
+import com.nuclear.boomm.product.dto.request.product.ProductRequest;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.dto.request;
+package com.nuclear.boomm.product.dto.request.product;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

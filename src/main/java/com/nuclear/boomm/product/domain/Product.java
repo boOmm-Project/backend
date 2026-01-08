@@ -1,8 +1,8 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.dto.request.ProductRequest;
-import com.nuclear.boomm.product.dto.response.ProductResponse;
+import com.nuclear.boomm.product.dto.request.product.ProductRequest;
+import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
 import jakarta.persistence.Column;
@@ -25,7 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "product_id")
     private Long productId;
 
     @Builder.Default
@@ -60,6 +62,9 @@ public class Product extends BaseEntity {
     private boolean isReleased = false;
 
     public void update(ProductRequest request) {
+        if (this.isReleased) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
         if (request.isReleased()) {
             throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
         }
