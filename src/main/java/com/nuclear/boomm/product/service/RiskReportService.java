@@ -4,7 +4,7 @@ import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
-import com.nuclear.boomm.product.dto.request.product.RiskReportRequest;
+import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.error.CustomException;
@@ -91,7 +91,7 @@ public class RiskReportService {
      *
      */
     @Transactional(rollbackFor = Exception.class)
-    public RiskReportResponse updateRiskReport(Long userId, Long reportId, RiskReportRequest request) {
+    public RiskReportResponse updateRiskReport(Long userId, Long reportId, RiskReportUpdateRequest request) {
         // reportId로 위험 보고서 조회
         RiskReport report = riskReportRepository.findByReportId(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));

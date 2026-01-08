@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 
-public record RiskReportRequest(
+public record RiskReportUpdateRequest(
         @NotBlank
         String competitorProductComparison,
 

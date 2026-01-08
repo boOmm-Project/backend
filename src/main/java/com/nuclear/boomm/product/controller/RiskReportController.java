@@ -1,7 +1,7 @@
 package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
-import com.nuclear.boomm.product.dto.request.product.RiskReportRequest;
+import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.service.RiskReportService;
@@ -50,7 +50,7 @@ public class RiskReportController {
     @PatchMapping("/{report-id}")
     public ResponseEntity<ApiResponse<RiskReportResponse>> updateRiskReport(
             @PathVariable("report-id") Long reportId,
-            @RequestBody RiskReportRequest request
+            @RequestBody RiskReportUpdateRequest request
     ) {
         Long userId = 1L;
 

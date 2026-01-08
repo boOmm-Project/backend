@@ -1,7 +1,7 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.product.dto.request.product.RiskReportRequest;
+import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -44,7 +44,7 @@ public class RiskReport extends BaseEntity {
     @Column(nullable = false)
     private Long complianceId;
 
-    public RiskReport update(RiskReportRequest request) {
+    public RiskReport update(RiskReportUpdateRequest request) {
         this.lossRatioForecast = request.lossRatioForecast();
         this.competitorProductComparison = request.competitorProductComparison();
 
