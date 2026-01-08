@@ -83,7 +83,7 @@ class RiskReportServiceTests {
         given(riskReportRepository.save(any(RiskReport.class))).willReturn(riskReport);
 
         // when
-        RiskReportResponse response = riskReportService.createRiskReport(productManagerId, productId);
+        RiskReportResponse response = riskReportService.createRiskReport(productManagerId, productId, complianceId);
 
         // then
         assertEquals(reportId, response.reportId());
@@ -99,7 +99,7 @@ class RiskReportServiceTests {
     void createRiskReport_Failure_PRODUCT_NOT_FOUND_1() {
         // when
         CustomException exception = assertThrows(CustomException.class,
-                () -> riskReportService.createRiskReport(productManagerId, productId));
+                () -> riskReportService.createRiskReport(productManagerId, productId, complianceId));
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }
 }
