@@ -159,6 +159,9 @@ class RiskReportServiceTests {
                 .product(product)
                 .build();
 
+        given(riskReportRepository.findByProduct_ProductId(productId))
+                .willReturn(Optional.of(report));
+
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
                 riskReportService.getRiskReportDetails(productManagerId, productId, complianceId)
