@@ -39,10 +39,10 @@ class AccidentIntakeServiceTests {
         Long accidentId = 2L;
         LocalDateTime incidientDate = LocalDateTime.now();
         String name = "홍길동";
-        String carNumber = "12허12345";
+        String policyNumber = "12412412345";
         AccidentIntakeDTO dto = new AccidentIntakeDTO(
                 incidientDate,
-                carNumber
+                policyNumber
         );
 
         AccidentIntakeEntity entity = AccidentIntakeEntity.from(dto, userId,name);
@@ -77,9 +77,10 @@ class AccidentIntakeServiceTests {
         LocalDateTime incidientDate = LocalDateTime.now();
         String name = "홍길동";
         String carNumber = "12허12345";
+        String policyNumber = "12412412345";
         AccidentIntakeDTO dto = new AccidentIntakeDTO(
                 incidientDate,
-                carNumber
+                policyNumber
         );
 
         given(accidentIntakeRepository.existsByInsuredPersonIdAndIncidentDateBetween(userId, incidientDate.minusMinutes(5), incidientDate)).willReturn(true);
@@ -104,10 +105,10 @@ class AccidentIntakeServiceTests {
         Long userId = 1L;
         LocalDateTime incidientDate = LocalDateTime.now().plusDays(1);
         String name = "홍길동";
-        String carNumber = "12허12345";
+        String policyNumber = "12412412345";
         AccidentIntakeDTO dto = new AccidentIntakeDTO(
                 incidientDate,
-                carNumber
+                policyNumber
         );
 
         //when
