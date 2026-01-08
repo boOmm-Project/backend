@@ -90,7 +90,6 @@ class AccidentIntakeServiceTests {
 
         RuntimeException exception = assertThrows(RuntimeException.class, () -> accidentIntakeService.acceptIntake(dto, userId,name));
 
-
         assertThat(exception).isNotNull();
         assertThat(exception.getMessage()).isEqualTo("5분 이내의 접수한 건이 존재합니다.");
 
