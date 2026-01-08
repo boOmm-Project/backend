@@ -32,11 +32,13 @@ public class RiskReport extends BaseEntity {
     @JoinColumn(name = "product_id",  nullable = false, unique = true)
     private Product product;
 
+    @Builder.Default
     @Column(nullable = false, precision = 10, scale = 4)
-    private BigDecimal lossRatioForecast;
+    private BigDecimal lossRatioForecast = BigDecimal.ZERO;
 
+    @Builder.Default
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String competitorProductComparison;
+    private String competitorProductComparison = "경쟁사 상품 비교";
 
     @Column(nullable = false)
     private Long complianceId;
