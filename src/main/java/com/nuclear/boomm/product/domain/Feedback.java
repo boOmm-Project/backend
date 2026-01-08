@@ -3,7 +3,7 @@ package com.nuclear.boomm.product.domain;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.common.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

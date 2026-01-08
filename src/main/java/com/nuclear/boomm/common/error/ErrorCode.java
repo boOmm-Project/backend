@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.error;
+package com.nuclear.boomm.common.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,7 +28,10 @@ public enum ErrorCode {
     INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST, "입력 값이 잘못되었습니다."),
 
     // 추가 설명 요청 찾을 수 없음
-    EXTRA_DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 추가 설명을 찾을 수 없거나 권한이 없습니다.");
+    EXTRA_DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 추가 설명을 찾을 수 없거나 권한이 없습니다."),
+
+    // 위험 보고서 찾을 수 없음
+    RISK_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위험 보고서를 찾을 수 없거나 권한이 없습니다.");
 
     private final HttpStatus status;
     private final String message;
