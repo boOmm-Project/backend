@@ -17,7 +17,7 @@ public record AccidentIntakeDTO(
 
         @NotNull(message = "차량번호는 필수입니다.")
         @Schema(example = "14허3325", description = "차량번호")
-        String carNumber
+        String policyNumber
 
 ) {
 }

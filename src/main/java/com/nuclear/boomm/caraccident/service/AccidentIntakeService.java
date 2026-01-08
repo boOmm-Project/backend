@@ -36,4 +36,14 @@ public class AccidentIntakeService {
 
         return ApiResponse.success(AccidentIntakeIdDTO.from(accidentIntakeRepository.save(entity).getId()));
     }
+
+    // TODO: 내용 입력
+//    public ApiResponse<String> updateDescription(
+//            return
+//    );
+
+
+    // TODO: 파일 첨부
+
+    // TODO 신청 완료
 }

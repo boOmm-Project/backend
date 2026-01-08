@@ -1,10 +1,8 @@
 package com.nuclear.boomm.caraccident.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
 import com.nuclear.boomm.common.BaseEntity;
-import com.nuclear.boomm.common.enums.BankEnum;
-import com.nuclear.boomm.common.enums.InsuranceClaimStatus;
+import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -40,7 +38,7 @@ public class AccidentIntakeEntity extends BaseEntity {
     private LocalDateTime incidentDate; // 사고 일자
 
     @Column(nullable = false)
-    private String carNumber; // 차량번호
+    private String policyNumber; // 증권번호
 
     @Column(nullable = false)
     private Long insuredPersonId; // 보험금 청구 접수자 유저 아이디
@@ -73,18 +71,24 @@ public class AccidentIntakeEntity extends BaseEntity {
     }
 
     @Builder
-    public AccidentIntakeEntity(LocalDateTime incidentDate, String carNumber, Long insuredPersonId, String insuranceClaimPersonName, InsuranceClaimStatus intakeStatus) {
+    public AccidentIntakeEntity(LocalDateTime incidentDate, String policyNumber, Long insuredPersonId, String insuranceClaimPersonName, InsuranceClaimStatus intakeStatus) {
         this.incidentDate = incidentDate;
-        this.carNumber = carNumber;
+        this.policyNumber = policyNumber;
         this.insuredPersonId = insuredPersonId;
         this.insuranceClaimPersonName = insuranceClaimPersonName;
         this.intakeStatus = intakeStatus;
     }
 
+    public void updateDescription(String accDescription, String damageDescription) {
+        this.accidentDescription = accDescription;
+        this.damageDescription = damageDescription;
+    }
+
+
     public static AccidentIntakeEntity from(AccidentIntakeDTO dto, Long userId, String name) {
         return AccidentIntakeEntity.builder()
                 .incidentDate(dto.incidentDate())
-                .carNumber(dto.carNumber())
+                .policyNumber(dto.policyNumber())
                 .insuredPersonId(userId)
                 .insuranceClaimPersonName(name)
                 .intakeStatus(InsuranceClaimStatus.RECEIVED)
