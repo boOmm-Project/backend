@@ -1,12 +1,13 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
+import com.nuclear.boomm.product.dto.request.product.RiskReportRequest;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;
@@ -57,7 +58,8 @@ public class RiskReportService {
      * @param userId    상품 관리자 고유 번호
      * @param productId 상품 고유 번호
      * @return RiskReportDetailResponse    Dto로 변환된 RiskReport
-     * @throws CustomException()
+     * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
+     * @throws CustomException(ErrorCode.PRODUCT_NOT_FOUND)     권한 없거나 상품 없음
      */
     public RiskReportDetailResponse getRiskReportDetails(Long userId, Long productId, Long complianceId) {
         RiskReport report = riskReportRepository.findByProduct_ProductId(productId)
@@ -75,5 +77,31 @@ public class RiskReportService {
         List<ProductFile> fileList = productFileRepository.findAllByProductId(productId);
 
         return RiskReportDetailResponse.from(report, fileList);
+    }
+
+    /**
+     * 위험 보고서 피드백 반영(업데이트)
+     *
+     * @param userId   상품 관리자 고유 번호
+     * @param reportId 위험 보고서 고유 번호
+     * @param request 위험 보고서 변경 사항
+     * @return RiskReportResponse    Dto로 변환된 RiskReport
+     * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
+     * @throws CustomException(ErrorCode.PRODUCT_NOT_FOUND)     권한 없거나 상품 없음
+     *
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public RiskReportResponse updateRiskReport(Long userId, Long reportId, RiskReportRequest request) {
+        // reportId로 위험 보고서 조회
+        RiskReport report = riskReportRepository.findByReportId(reportId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));
+
+        // 위험 보고서의 상품에 대한 권한 확인
+        if (!report.getProduct().getUserId().equals(userId)) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+
+        // 위험 보고서 업데이트 및 결과 반환
+        return RiskReportResponse.from(report.update(request));
     }
 }

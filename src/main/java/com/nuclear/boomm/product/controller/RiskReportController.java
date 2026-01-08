@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
+import com.nuclear.boomm.product.dto.request.product.RiskReportRequest;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.service.RiskReportService;
@@ -9,8 +10,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,5 +44,16 @@ public class RiskReportController {
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, productId, complianceId)));
+    }
+
+    @Operation(summary = "위험 보고서 피드백 업데이트", description = "피드백 내용을 위험 보고서에 업데이트")
+    @PatchMapping("/{report-id}")
+    public ResponseEntity<ApiResponse<RiskReportResponse>> updateRiskReport(
+            @PathVariable("report-id") Long reportId,
+            @RequestBody RiskReportRequest request
+    ) {
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.updateRiskReport(userId, reportId, request)));
     }
 }

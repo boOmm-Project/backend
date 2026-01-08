@@ -11,4 +11,6 @@ public interface RiskReportRepository extends JpaRepository<RiskReport, Long> {
     void deleteAllByProductId(Long productId);
 
     Optional<RiskReport> findByProduct_ProductId(Long productId);
+
+    Optional<RiskReport> findByReportId(Long reportId);
 }
