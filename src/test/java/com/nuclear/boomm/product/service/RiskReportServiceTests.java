@@ -145,4 +145,24 @@ class RiskReportServiceTests {
         assertEquals("url", response.fileResponseList().get(0).imageUrl());
         assertEquals("originalFilename", response.fileResponseList().get(0).fileName());
     }
+    @Test
+    @DisplayName("상품에 대한 위험 보고서 세부사항 조회 - 실패 - PRODUCT_NOT_FOUND")
+    void getRiskReportDetails_Failure_PRODUCT_NOT_FOUND() {
+        // given
+        given(riskReportRepository.findByProduct_ProductId(productId)).willReturn(Optional.of(riskReport));
+
+        Product product = Product.builder()
+                .userId(99L)
+                .build();
+
+        RiskReport report = RiskReport.builder()
+                .product(product)
+                .build();
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.getRiskReportDetails(productManagerId, productId, complianceId)
+        );
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
 }
