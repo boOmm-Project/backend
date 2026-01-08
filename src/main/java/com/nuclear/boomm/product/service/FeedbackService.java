@@ -11,7 +11,7 @@ import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
 import com.nuclear.boomm.product.repository.product.ExtraDescriptionRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;

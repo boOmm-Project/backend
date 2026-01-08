@@ -6,7 +6,7 @@ import com.nuclear.boomm.product.domain.RiskReport;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;

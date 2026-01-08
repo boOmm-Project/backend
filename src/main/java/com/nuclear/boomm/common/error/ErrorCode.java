@@ -1,4 +1,4 @@
-package com.nuclear.boomm.product.error;
+package com.nuclear.boomm.common.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
