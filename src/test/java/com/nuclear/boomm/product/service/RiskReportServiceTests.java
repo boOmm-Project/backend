@@ -1,10 +1,13 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.product.domain.Product;
+import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
+import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.error.ErrorCode;
+import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -35,6 +39,8 @@ class RiskReportServiceTests {
     private RiskReportRepository riskReportRepository;
     @Mock
     private ProductRepository productRepository;
+    @Mock
+    private ProductFileRepository productFileRepository;
 
     private Long productManagerId;
     private Long complianceId;
@@ -48,6 +54,8 @@ class RiskReportServiceTests {
     private String competitorProductComparison;
 
     private Product product;
+
+    private List<ProductFile> productFileList;
 
     @BeforeEach
     void setUp() {
@@ -69,8 +77,23 @@ class RiskReportServiceTests {
                 .product(product)
                 .lossRatioForecast(lossRatioForecast)
                 .competitorProductComparison(competitorProductComparison)
+                .complianceId(complianceId)
                 .build();
         ReflectionTestUtils.setField(riskReport, "reportId", reportId);
+
+        productFileList = List.of(
+                ProductFile.builder()
+                        .url("url")
+                        .originalFilename("originalFilename")
+                        .uuidName("uuidName")
+                        .extension("extension")
+                        .contentType("contentType")
+                        .fileSize(1L)
+                        .uploaderId(productManagerId)
+                        .productId(productId)
+                        .build()
+        );
+        ReflectionTestUtils.setField(productFileList.get(0), "fileId", 1L);
     }
 
 
@@ -101,5 +124,25 @@ class RiskReportServiceTests {
         CustomException exception = assertThrows(CustomException.class,
                 () -> riskReportService.createRiskReport(productManagerId, productId, complianceId));
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("상품에 대한 위험 보고서 세부사항 조회 - 성공")
+    void getRiskReportDetails_Success() {
+        // given
+        given(riskReportRepository.findByProduct_ProductId(productId)).willReturn(Optional.of(riskReport));
+
+        given(productFileRepository.findAllByProductId(productId)).willReturn(productFileList);
+
+        // when
+        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, productId, complianceId);
+
+        // then
+        assertEquals(reportId, response.reportId());
+        assertEquals(lossRatioForecast, response.lossRatioForecast());
+        assertEquals(competitorProductComparison, response.competitorProductComparison());
+        assertEquals("url", response.fileResponseList().get(0).imageUrl());
+        assertEquals("originalFilename", response.fileResponseList().get(0).fileName());
     }
 }
