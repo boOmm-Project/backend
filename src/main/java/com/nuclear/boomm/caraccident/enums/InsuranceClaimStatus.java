@@ -1,4 +1,4 @@
-package com.nuclear.boomm.common.enums;
+package com.nuclear.boomm.caraccident.enums;
 
 public enum InsuranceClaimStatus {
     RECEIVED, // 접수대기
