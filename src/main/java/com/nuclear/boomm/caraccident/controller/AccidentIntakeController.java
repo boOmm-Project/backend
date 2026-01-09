@@ -1,6 +1,7 @@
 package com.nuclear.boomm.caraccident.controller;
 
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDescriptionDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
 import com.nuclear.boomm.caraccident.service.AccidentIntakeService;
 import com.nuclear.boomm.common.ApiResponse;
@@ -10,6 +11,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,5 +33,14 @@ public class AccidentIntakeController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(intakeService.acceptIntake(dto, userId, username));
 
+    }
+
+    @Operation(summary = "자동차 사고 접수 내용 작성 입니다.")
+    @PatchMapping("/{id}")
+    public ResponseEntity<ApiResponse<Void>> updateDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeDescriptionDTO dto) {
+        Long userId = 1L;
+        String username = "홍길동";
+
+        return ResponseEntity.ok(intakeService.updateDescription(dto, id, userId, username));
     }
 }

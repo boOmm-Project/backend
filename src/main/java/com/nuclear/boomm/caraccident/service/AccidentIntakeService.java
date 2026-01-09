@@ -2,7 +2,9 @@ package com.nuclear.boomm.caraccident.service;
 
 import com.nuclear.boomm.caraccident.domain.AccidentIntakeEntity;
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDescriptionDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
+import com.nuclear.boomm.caraccident.exception.IntakeNotFoundException;
 import com.nuclear.boomm.caraccident.repository.AccidentIntakeRepository;
 import com.nuclear.boomm.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -38,12 +40,15 @@ public class AccidentIntakeService {
     }
 
     // TODO: 내용 입력
-//    public ApiResponse<String> updateDescription(
-//            return
-//    );
+    @Transactional
+    public ApiResponse<Void> updateDescription(AccidentIntakeDescriptionDTO dto, Long intakeId,Long userId, String username) {
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId,userId,username).orElseThrow(
+                ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
 
+        entity.updateDescription(dto);
 
-    // TODO: 파일 첨부
+        accidentIntakeRepository.save(entity);
+        return ApiResponse.success(null);
+    }
 
-    // TODO 신청 완료
 }

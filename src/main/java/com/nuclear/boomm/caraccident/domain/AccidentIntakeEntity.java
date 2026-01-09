@@ -1,6 +1,7 @@
 package com.nuclear.boomm.caraccident.domain;
 
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDescriptionDTO;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import jakarta.persistence.Column;
@@ -79,9 +80,9 @@ public class AccidentIntakeEntity extends BaseEntity {
         this.intakeStatus = intakeStatus;
     }
 
-    public void updateDescription(String accDescription, String damageDescription) {
-        this.accidentDescription = accDescription;
-        this.damageDescription = damageDescription;
+    public void updateDescription(AccidentIntakeDescriptionDTO dto) {
+        this.accidentDescription = dto.accidentDescription();
+        this.damageDescription = dto.damageDescription();
     }
 
 
