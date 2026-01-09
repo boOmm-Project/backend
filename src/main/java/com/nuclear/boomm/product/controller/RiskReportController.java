@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
+import com.nuclear.boomm.product.dto.request.feedback.RiskReportFeedbackRequest;
 import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
@@ -50,10 +51,10 @@ public class RiskReportController {
     @PatchMapping("/{report-id}/{compliance-id}")
     public ResponseEntity<ApiResponse<RiskReportDetailResponse>> feedbackRiskReport(
             @PathVariable("report-id") Long reportId,
-            @PathVariable("compliance-id") Long complianceId
+            @PathVariable("compliance-id") Long complianceId,
+            @RequestBody RiskReportFeedbackRequest request
     ) {
-//        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId)));
-        return null;
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId, request)));
     }
 
     @Operation(summary = "위험 보고서 피드백 업데이트", description = "피드백 내용을 위험 보고서에 업데이트")
