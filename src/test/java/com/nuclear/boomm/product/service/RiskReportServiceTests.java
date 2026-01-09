@@ -138,12 +138,12 @@ class RiskReportServiceTests {
     @DisplayName("상품에 대한 위험 보고서 세부사항 조회 - 성공")
     void getRiskReportDetails_Success() {
         // given
-        given(riskReportRepository.findByProduct_ProductId(productId)).willReturn(Optional.of(riskReport));
+        given(riskReportRepository.findByReportId(reportId)).willReturn(Optional.of(riskReport));
 
         given(productFileRepository.findAllByProductId(productId)).willReturn(productFileList);
 
         // when
-        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, productId, complianceId);
+        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, reportId, complianceId);
 
         // then
         assertEquals(reportId, response.reportId());
@@ -156,8 +156,6 @@ class RiskReportServiceTests {
     @DisplayName("상품에 대한 위험 보고서 세부사항 조회 - 실패 - PRODUCT_NOT_FOUND")
     void getRiskReportDetails_Failure_PRODUCT_NOT_FOUND() {
         // given
-        given(riskReportRepository.findByProduct_ProductId(productId)).willReturn(Optional.of(riskReport));
-
         Product product = Product.builder()
                 .userId(99L)
                 .build();
@@ -166,12 +164,12 @@ class RiskReportServiceTests {
                 .product(product)
                 .build();
 
-        given(riskReportRepository.findByProduct_ProductId(productId))
+        given(riskReportRepository.findByReportId(reportId))
                 .willReturn(Optional.of(report));
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
-                riskReportService.getRiskReportDetails(productManagerId, productId, complianceId)
+                riskReportService.getRiskReportDetails(productManagerId, reportId, complianceId)
         );
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }

@@ -36,14 +36,24 @@ public class RiskReportController {
     }
 
     @Operation(summary = "위험 보고서 조회", description = "위험 보고서의 세부 내용 조회")
-    @GetMapping("/{product-id}/{compliance-id}")
+    @GetMapping("/{report-id}/{compliance-id}")
     public ResponseEntity<ApiResponse<RiskReportDetailResponse>> getRiskReport(
-            @PathVariable("product-id") Long productId,
+            @PathVariable("report-id") Long reportId,
             @PathVariable("compliance-id") Long complianceId
     ) {
         Long userId = 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, productId, complianceId)));
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, reportId, complianceId)));
+    }
+
+    @Operation(summary = "위험 보고서에 대한 피드백 전송", description = "컴플라이언스가 상품에 대한 위험 보고서 피드백 전송")
+    @PatchMapping("/{report-id}/{compliance-id}")
+    public ResponseEntity<ApiResponse<RiskReportDetailResponse>> feedbackRiskReport(
+            @PathVariable("report-id") Long reportId,
+            @PathVariable("compliance-id") Long complianceId
+    ) {
+//        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId)));
+        return null;
     }
 
     @Operation(summary = "위험 보고서 피드백 업데이트", description = "피드백 내용을 위험 보고서에 업데이트")
@@ -56,4 +66,5 @@ public class RiskReportController {
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.updateRiskReport(userId, reportId, request)));
     }
+    // 컴플 기본항목피드백 전송, 위험보고서피드백전송, 상품 출시
 }
