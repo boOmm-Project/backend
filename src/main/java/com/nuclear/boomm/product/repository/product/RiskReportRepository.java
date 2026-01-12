@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 public interface RiskReportRepository extends JpaRepository<RiskReport, Long> {
-    void deleteAllByProductId(Long productId);
+    void deleteAllByProduct_ProductId(Long productId);
 
     Optional<RiskReport> findByProduct_ProductId(Long productId);
 }

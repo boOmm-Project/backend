@@ -171,7 +171,7 @@ public class ProductService {
         productFileRepository.deleteAllByProductId(productId);
         coverageRepository.deleteAllByProductId(productId);
         feedbackRepository.deleteAllByProduct_ProductId(productId);
-        riskReportRepository.deleteAllByProductId(productId);
+        riskReportRepository.deleteAllByProduct_ProductId(productId);
         systemAndRegulationPrep.deleteAllByProductId(productId);
 
         productRepository.delete(product);
