@@ -92,7 +92,7 @@ public class AccidentIntakeEntity extends BaseEntity {
                 .policyNumber(dto.policyNumber())
                 .insuredPersonId(userId)
                 .insuranceClaimPersonName(name)
-                .intakeStatus(InsuranceClaimStatus.RECEIVED)
+                .intakeStatus(InsuranceClaimStatus.WRITING)
                 .build();
     }
 

@@ -1,6 +1,8 @@
 package com.nuclear.boomm.caraccident.enums;
 
 public enum InsuranceClaimStatus {
+    WRITING, // 작성 중
+
     RECEIVED, // 접수대기
 
     RECEIPT_REVIEW, // 접수 검토중
