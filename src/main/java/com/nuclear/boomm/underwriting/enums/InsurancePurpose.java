@@ -7,4 +7,3 @@ public enum InsurancePurpose {
         TAX_BENEFIT,                // 세제 혜택
         OTHER
     }
-

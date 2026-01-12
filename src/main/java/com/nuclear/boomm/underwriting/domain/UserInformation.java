@@ -11,7 +11,7 @@ public class UserInformation extends BaseEntity {
 
     @Id
     @Column(nullable = false)
-    private Long userId; //
+    private Long userId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
