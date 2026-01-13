@@ -131,23 +131,22 @@ class FeedbackServiceTests {
     @DisplayName("피드백 생성 - 성공")
     void createFeedback_Success() {
         // given
-        given(productRepository.existsByProductId(productId)).willReturn(true);
+        given(productRepository.findByProductIdAndUserId(productId, stakeholderId)).willReturn(Optional.of(product));
 
         given(feedbackRepository.save(any(Feedback.class))).willAnswer(invocation -> feedback);
 
         // when
-        FeedbackResponse response = feedbackService.createFeedback(stakeholderId, productId);
+        Long response = feedbackService.createFeedback(stakeholderId, productId);
 
         // then
-        assertEquals(productId, response.productId());
-        assertEquals(stakeholderId, response.writerId());
+        assertEquals(feedbackId, response);
     }
 
     @Test
     @DisplayName("피드백 생성 - 실패 - 잘못된 productId")
     void createFeedback_Failure_INVALID_PRODUCT_ID() {
         // given
-        given(productRepository.existsByProductId(productId)).willReturn(false);
+        given(productRepository.findByProductIdAndUserId(productId, stakeholderId)).willReturn(Optional.empty());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> feedbackService.createFeedback(stakeholderId, productId));

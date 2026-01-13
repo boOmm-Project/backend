@@ -33,20 +33,16 @@ public class FeedbackService {
     private final ExtraDescriptionRepository extraDescriptionRepository;
 
     @Transactional(rollbackFor = Exception.class)
-    public FeedbackResponse createFeedback(Long userId, @NotNull Long productId) {
-        if (!productRepository.existsByProductId(productId)) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
+    public Long createFeedback(Long userId, @NotNull Long productId) {
+        // 사용자 검증
+        Product product = productRepository.findByProductIdAndUserId(productId, userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
-        return FeedbackResponse.from(
-                feedbackRepository.save(
-                        Feedback.builder()
-                                .product(productRepository.findByProductId(productId)
-                                        .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)))
-                                .writerId(userId)
-                                .build()
-                )
-        );
+        // 이해관계자의 피드백 생성 및 저장
+        Feedback savedFeedback = feedbackRepository.save(Feedback.create(userId, product, "STAKEHOLDER"));
+
+        // feedbackId 반환
+        return savedFeedback.getFeedbackId();
     }
 
     @Transactional(rollbackFor = Exception.class)
