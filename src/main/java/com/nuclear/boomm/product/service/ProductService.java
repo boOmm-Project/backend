@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -45,7 +46,7 @@ public class ProductService {
 
     private final FileService fileService;
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long createProduct(Long userId) {
         Product product = Product.builder()
                 .userId(userId)
@@ -175,6 +176,7 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void uploadProductFiles(Long userId, Long productId, List<MultipartFile> files) {
         try {
             List<ProductFile> productFileList = fileService.uploadFiles(
@@ -198,6 +200,7 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteProductFiles(Long productId) {
         try {
             fileService.deleteFiles(productFileRepository.findAllByProductId(productId)

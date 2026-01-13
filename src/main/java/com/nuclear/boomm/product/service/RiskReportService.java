@@ -24,6 +24,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class RiskReportService {
     private final RiskReportRepository riskReportRepository;
     private final ProductRepository productRepository;
@@ -124,7 +125,7 @@ public class RiskReportService {
      * @param request   피드백 사항
      * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
      */
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long feedbackRiskReport(Long reportId, Long complianceId, Long feedbackId, RiskReportFeedbackRequest request) {
         // 사용자 검증
         Feedback feedback = feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, complianceId)
@@ -138,6 +139,7 @@ public class RiskReportService {
         return feedback.getFeedbackId();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public FeedbackResponse createRiskReportFeedback(Long complianceId, Long productId, Long reportId) {
         // 사용자 검증
         if (!riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)) {

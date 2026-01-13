@@ -25,6 +25,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FeedbackService {
 
     private final ProductRepository productRepository;
@@ -155,7 +156,6 @@ public class FeedbackService {
         return ProductResponse.from(approvedProduct);
     }
 
-    @Transactional(readOnly = true)
     public List<FeedbackExtraDescriptionResponse> getAllExtraDescriptions(Long userId, Long productId) {
         // TODO: Role로 검증하는 로직 추가
 
