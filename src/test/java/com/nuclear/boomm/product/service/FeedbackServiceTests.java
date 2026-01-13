@@ -6,6 +6,7 @@ import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.request.product.ProductRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionDetailResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
@@ -362,6 +363,7 @@ class FeedbackServiceTests {
         assertEquals(productId, response.productId());
         assertTrue(response.isDone());
     }
+
     @Test
     @DisplayName("상품 승인 - 실패 - UNAUTHORIZED")
     void approveProduct_Failure_UNAUTHORIZED() {
@@ -388,5 +390,32 @@ class FeedbackServiceTests {
         // then
         assertEquals(1, responses.size());
         assertEquals("추가 설명을 입력해 주세요.", responses.get(0).response());
+    }
+
+
+    @Test
+    @DisplayName("추가 설명 상세 조회 - 성공")
+    void getAllExtraDescriptionDetails_Success() {
+        // given
+        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.of(extraDescription));
+
+        // when
+        FeedbackExtraDescriptionDetailResponse response = feedbackService.getExtraDescriptionDetails(productManagerId, extraDescriptionId);
+
+        // then
+        assertEquals("추가 설명을 입력해 주세요.", response.response());
+    }
+
+    @Test
+    @DisplayName("추가 설명 상세 조회 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
+    void getAllExtraDescriptionDetails_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
+        // given
+        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                feedbackService.getExtraDescriptionDetails(productManagerId, extraDescriptionId)
+        );
+        assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
     }
 }
