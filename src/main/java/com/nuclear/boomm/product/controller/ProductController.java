@@ -77,12 +77,19 @@ public class ProductController {
     }
 
     @Operation(summary = "출시 상품 상세 조회", description = "출시된 상품에 대한 정보 상세 조회")
-    @GetMapping("/details/{id}")
+    @GetMapping("/{product-id}/details/released")
     public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getProductDetails(
-            @PathVariable("id") Long productId
+            @PathVariable("product-id") Long productId
     ) {
-
         return ResponseEntity.ok(ApiResponse.success(productService.getProductDetails(productId)));
+    }
+
+    @Operation(summary = "출시 전 상품 상세 조회", description = "출시 전 상품에 대한 정보 상세 조회")
+    @GetMapping("/{product-id}/details/un-released")
+    public ResponseEntity<ApiResponse<ProductResponse>> getUnReleasedProductDetails(
+            @PathVariable("product-id") Long productId
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(productService.getUnReleasedProductDetails(productId)));
     }
 
     @Operation(summary = "출시 전 상품 삭제", description = "상태가 출시 전인 상품 삭제")

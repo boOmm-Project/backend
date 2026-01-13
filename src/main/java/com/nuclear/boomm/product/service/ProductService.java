@@ -144,7 +144,7 @@ public class ProductService {
     }
 
     public ProductCoverageFileResponse getProductDetails(Long productId) {
-        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedFalse(productId)
+        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedTrue(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
 
         List<ProductFileResponse> productFileList = ProductFileResponse.from(productFileRepository.findAllByProductId(productId));
@@ -192,6 +192,14 @@ public class ProductService {
 
             throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
         }
+    }
+
+    public ProductResponse getUnReleasedProductDetails(Long productId) {
+        // 사용자 검증 & 상품 조회
+        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        return ProductResponse.from(product);
     }
 
     public void deleteProductFiles(Long productId) {
