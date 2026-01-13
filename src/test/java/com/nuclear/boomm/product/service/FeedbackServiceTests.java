@@ -1,5 +1,6 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.domain.ExtraDescription;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
@@ -12,7 +13,6 @@ import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
 import com.nuclear.boomm.product.repository.product.ExtraDescriptionRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
@@ -273,25 +273,32 @@ class FeedbackServiceTests {
     @DisplayName("피드백 추가 설명 전송 - 성공")
     void responseExtraDescription_Success() {
         // given
-        given(feedbackRepository.existsByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(true);
+        given(extraDescriptionRepository.findByExtraDescriptionIdAndFeedbackId(extraDescriptionId, feedbackId)).willReturn(Optional.of(extraDescription));
 
-        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.of(extraDescription));
+        Feedback mockFeedback = Feedback.builder()
+                .product(product)
+                .writerId(stakeholderId)
+                .build();
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+
+        given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(Optional.of(mockFeedback));
 
         // when
-        FeedbackExtraDescriptionResponse response = feedbackService.responseExtraDescription(stakeholderId, extraDescriptionId, feedbackExtraDescriptionRequest);
+        FeedbackExtraDescriptionResponse response = feedbackService.responseExtraDescription(stakeholderId, feedbackId, extraDescriptionId, feedbackExtraDescriptionRequest);
 
         // then
         assertEquals(feedbackId, response.feedbackId());
         assertEquals(productManagerId, response.creatorId());
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
+        assertEquals(FeedbackStatus.ADDITIONAL_EXPLANATION_UPDATE_PENDING, mockFeedback.getStatus());
     }
 
     @Test
     @DisplayName("피드백 추가 설명 전송 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
     void responseExtraDescription_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, extraDescriptionId, feedbackExtraDescriptionRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, feedbackId, extraDescriptionId, feedbackExtraDescriptionRequest));
         assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
     }
 
