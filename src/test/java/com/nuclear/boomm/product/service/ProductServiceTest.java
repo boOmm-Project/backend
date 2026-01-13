@@ -1,5 +1,6 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
@@ -11,8 +12,9 @@ import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.enums.CoverageCategory;
-import com.nuclear.boomm.product.repository.product.CoverageRepository;
+import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.CoverageRepository;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,6 +40,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -508,5 +511,33 @@ class ProductServiceTest {
 
         assertEquals(1L, response.coverageResponses().get(0).id());
         assertEquals(2L, response.coverageResponses().get(1).id());
+    }
+
+
+    @Test
+    @DisplayName("출시 전 상품 상세조회 - 성공")
+    void getUnReleasedProductDetails_Success() {
+        // given
+        given(productRepository.findByProductIdAndIsReleasedFalse(productId)).willReturn(Optional.of(product));
+
+        // when
+        ProductResponse response = productService.getUnReleasedProductDetails(productId);
+
+        // then
+        assertEquals(productId, response.productId());
+    }
+    @Test
+    @DisplayName("출시 전 상품 상세조회 - 실패 - PRODUCT_NOT_FOUND")
+    void getUnReleasedProductDetails_Failure_PRODUCT_NOT_FOUND() {
+        // given
+        given(productRepository.findByProductIdAndIsReleasedFalse(productId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                productService.getUnReleasedProductDetails(productId)
+        );
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+
+        verify(productRepository, times(1)).findByProductIdAndIsReleasedFalse(productId);
     }
 }
