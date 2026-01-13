@@ -7,6 +7,7 @@ import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
 import com.nuclear.boomm.product.dto.request.feedback.RiskReportFeedbackRequest;
 import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
@@ -264,23 +265,80 @@ class RiskReportServiceTests {
         given(feedbackRepository.save(any(Feedback.class))).willReturn(feedback);
 
         // when
-        Long response = riskReportService.feedbackRiskReport(reportId, complianceId, riskReportFeedbackRequest);
+        Long response = riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, riskReportFeedbackRequest);
 
         // then
         assertEquals(feedbackId, response);
         assertEquals("description", feedback.getDescription());
+        assertEquals(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE_PENDING, feedback.getStatus());
     }
     @Test
     @DisplayName("위험 보고서 피드백 전송 - 실패 - RISK_REPORT_NOT_FOUND")
     void feedbackRiskReport_Failure_RISK_REPORT_NOT_FOUND() {
         // given
+        Long feedbackId = 30L;
+
         given(riskReportRepository.findByReportIdAndComplianceId(reportId, complianceId)).willReturn(Optional.empty());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
-                riskReportService.feedbackRiskReport(reportId, complianceId, riskReportFeedbackRequest)
+                riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, riskReportFeedbackRequest)
         );
         assertEquals(ErrorCode.RISK_REPORT_NOT_FOUND, exception.getErrorCode());
         verify(riskReportRepository, times(1)).findByReportIdAndComplianceId(reportId, complianceId);
+    }
+
+
+    @Test
+    @DisplayName("위험 보고서 피드백 생성 - 성공")
+    void createRiskReportFeedback_Success() {
+        // given
+        given(riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)).willReturn(true);
+
+        given(productRepository.findById(productId)).willReturn(Optional.of(product));
+
+        Long feedbackId = 30L;
+        Feedback mockFeedback = Feedback.builder()
+                .writerId(complianceId)
+                .role("COMPLIANCE")
+                .product(product)
+                .build();
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", feedbackId);
+        given(feedbackRepository.save(any(Feedback.class))).willAnswer(invocation -> mockFeedback);
+
+        // when
+        FeedbackResponse response = riskReportService.createRiskReportFeedback(complianceId, productId, reportId);
+
+        // then
+        assertEquals(complianceId, response.writerId());
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 생성 - 실패 - RISK_REPORT_NOT_FOUND")
+    void createRiskReportFeedback_Failure_RISK_REPORT_NOT_FOUND() {
+        // given
+        given(riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)).willReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.createRiskReportFeedback(complianceId, productId, reportId)
+        );
+        assertEquals(ErrorCode.RISK_REPORT_NOT_FOUND, exception.getErrorCode());
+        verify(riskReportRepository, times(1)).existsByReportIdAndComplianceId(reportId, complianceId);
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 생성 - 실패 - PRODUCT_NOT_FOUND")
+    void createRiskReportFeedback_Failure_PRODUCT_NOT_FOUND() {
+        // given
+        given(riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)).willReturn(true);
+
+        given(productRepository.findById(productId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.createRiskReportFeedback(complianceId, productId, reportId)
+        );
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+        verify(riskReportRepository, times(1)).existsByReportIdAndComplianceId(reportId, complianceId);
+        verify(productRepository, times(1)).findById(productId);
     }
 }
