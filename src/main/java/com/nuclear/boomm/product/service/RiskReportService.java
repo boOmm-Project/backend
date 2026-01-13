@@ -125,13 +125,25 @@ public class RiskReportService {
      * @param complianceId  컴플라이언스 고유 번호
      * @param request   피드백 사항
      * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
-     * @throws CustomException(ErrorCode.PRODUCT_NOT_FOUND)     권한 없거나 상품 없음
-     *
      */
     @Transactional
-    public RiskReportDetailResponse feedbackRiskReport(Long reportId, Long complianceId, RiskReportFeedbackRequest request) {
-        //
+    public Long feedbackRiskReport(Long reportId, Long complianceId, RiskReportFeedbackRequest request) {
+        // 사용자 검증
+        RiskReport report = riskReportRepository.findByReportIdAndComplianceId(reportId, complianceId)
+                .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));
 
-        return null;
+        // 피드백 생성 및 저장
+        Feedback feedback = Feedback.builder()
+                .status(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE)
+                .description(request.description())
+                .writerId(complianceId)
+                .product(report.getProduct())
+                .role("COMPLIANCE")
+                .build();
+
+        Feedback savedFeedback = feedbackRepository.save(feedback);
+
+        // 피드백 id 반환
+        return savedFeedback.getFeedbackId();
     }
 }

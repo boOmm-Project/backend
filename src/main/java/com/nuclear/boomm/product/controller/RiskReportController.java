@@ -50,7 +50,7 @@ public class RiskReportController {
 
     @Operation(summary = "위험 보고서에 대한 피드백 전송", description = "컴플라이언스가 상품에 대한 위험 보고서 피드백 전송")
     @PatchMapping("/{report-id}/{compliance-id}")
-    public ResponseEntity<ApiResponse<RiskReportDetailResponse>> feedbackRiskReport(
+    public ResponseEntity<ApiResponse<Long>> feedbackRiskReport(
             @PathVariable("report-id") Long reportId,
             @PathVariable("compliance-id") Long complianceId,
             @RequestBody @Valid RiskReportFeedbackRequest request

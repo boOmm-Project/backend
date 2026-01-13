@@ -1,4 +1,9 @@
 package com.nuclear.boomm.product.dto.request.feedback;
 
-public record RiskReportFeedbackRequest() {
+import jakarta.validation.constraints.NotBlank;
+
+public record RiskReportFeedbackRequest(
+        @NotBlank
+        String description
+) {
 }
