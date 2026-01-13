@@ -7,6 +7,7 @@ import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
 import com.nuclear.boomm.product.dto.request.feedback.RiskReportFeedbackRequest;
 import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
@@ -124,23 +125,33 @@ public class RiskReportService {
      * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
      */
     @Transactional
-    public Long feedbackRiskReport(Long reportId, Long complianceId, RiskReportFeedbackRequest request) {
+    public Long feedbackRiskReport(Long reportId, Long complianceId, Long feedbackId, RiskReportFeedbackRequest request) {
         // 사용자 검증
-        RiskReport report = riskReportRepository.findByReportIdAndComplianceId(reportId, complianceId)
-                .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));
+        Feedback feedback = feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, complianceId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
 
-        // 피드백 생성 및 저장
-        Feedback feedback = Feedback.builder()
-                .status(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE)
-                .description(request.description())
-                .writerId(complianceId)
-                .product(report.getProduct())
-                .role("COMPLIANCE")
-                .build();
-
-        Feedback savedFeedback = feedbackRepository.save(feedback);
+        // 피드백 업데이트
+        feedback.updateDescription(request.description());
+        feedback.updateStatus(FeedbackStatus.RISK_REPORT_FEEDBACK_PENDING);
 
         // 피드백 id 반환
-        return savedFeedback.getFeedbackId();
+        return feedback.getFeedbackId();
+    }
+
+    public FeedbackResponse createRiskReportFeedback(Long complianceId, Long productId, Long reportId) {
+        // 사용자 검증
+        if (!riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)) {
+            throw new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND);
+        }
+
+        // 피드백 생성
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        Feedback reportFeedback = Feedback.create(complianceId, product, "COMPLIANCE");
+        feedbackRepository.save(reportFeedback);
+
+        // 반환
+        return FeedbackResponse.from(reportFeedback);
     }
 }

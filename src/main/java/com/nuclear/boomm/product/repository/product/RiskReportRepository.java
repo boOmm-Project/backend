@@ -15,4 +15,6 @@ public interface RiskReportRepository extends JpaRepository<RiskReport, Long> {
     Optional<RiskReport> findByProduct_ProductIdAndComplianceId(Long productId, Long userId);
 
     Optional<RiskReport> findByReportIdAndComplianceId(Long reportId, Long complianceId);
+
+    boolean existsByReportIdAndComplianceId(Long reportId, Long complianceId);
 }

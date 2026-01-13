@@ -3,6 +3,7 @@ package com.nuclear.boomm.product.controller;
 import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.feedback.RiskReportFeedbackRequest;
 import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.service.RiskReportService;
@@ -48,15 +49,27 @@ public class RiskReportController {
         return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, reportId, complianceId)));
     }
 
+    @Operation(summary = "위험 보고서 피드백 생성", description = "해당 상품의 위험 보고서에 대한 피드백 생성")
+    @PostMapping("/{report-id}/{product-id}")
+    public ResponseEntity<ApiResponse<FeedbackResponse>> createRiskReportFeedback(
+            @PathVariable("report-id") Long reportId,
+            @PathVariable("product-id") Long productId
+    ) {
+        Long complianceId = 100L;
+
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.createRiskReportFeedback(complianceId, productId, reportId)));
+    }
+
     @Operation(summary = "위험 보고서에 대한 피드백 전송", description = "컴플라이언스가 상품에 대한 위험 보고서 피드백 전송")
-    @PatchMapping("/{report-id}")
+    @PatchMapping("/{report-id}/{feedback-id}")
     public ResponseEntity<ApiResponse<Long>> feedbackRiskReport(
             @PathVariable("report-id") Long reportId,
+            @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid RiskReportFeedbackRequest request
     ) {
         Long complianceId = 100L;
 
-        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId, request)));
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, request)));
     }
 
     @Operation(summary = "위험 보고서 피드백 업데이트", description = "피드백 내용을 위험 보고서에 업데이트")
