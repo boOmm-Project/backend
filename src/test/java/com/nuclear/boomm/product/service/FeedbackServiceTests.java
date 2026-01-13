@@ -374,4 +374,19 @@ class FeedbackServiceTests {
         );
         assertEquals(ErrorCode.UNAUTHORIZED, exception.getErrorCode());
     }
+
+
+    @Test
+    @DisplayName("추가 설명 리스트 조회 - 성공")
+    void getAllExtraDescriptions_Success() {
+        // given
+        given(extraDescriptionRepository.findAllByProductId(productId)).willReturn(List.of(extraDescription));
+
+        // when
+        List<FeedbackExtraDescriptionResponse> responses = feedbackService.getAllExtraDescriptions(productManagerId, productId);
+
+        // then
+        assertEquals(1, responses.size());
+        assertEquals("추가 설명을 입력해 주세요.", responses.get(0).response());
+    }
 }
