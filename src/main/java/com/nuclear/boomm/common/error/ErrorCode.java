@@ -34,7 +34,7 @@ public enum ErrorCode {
     RISK_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위험 보고서를 찾을 수 없거나 권한이 없습니다."),
 
     // 상품이 이해관계자의 승인을 받지 않음
-    PRODUCT_IS_NOT_DONE(HttpStatus.UNAUTHORIZED, "해당 상품은 이해관계자의 승인을 받지 않았습니다.");
+    PRODUCT_IS_NOT_DONE(HttpStatus.BAD_REQUEST, "해당 상품은 이해관계자의 승인을 받지 않았습니다.");
 
     private final HttpStatus status;
     private final String message;
