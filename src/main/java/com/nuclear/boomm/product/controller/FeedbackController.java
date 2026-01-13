@@ -37,6 +37,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 이해 관계자
         Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.createFeedback(userId, productId)));
@@ -48,6 +49,7 @@ public class FeedbackController {
             @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid FeedbackUpdateRequest request
             ) {
+        // 권한: 이해 관계자
         Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.updateFeedback(userId, feedbackId, request)));
@@ -56,6 +58,7 @@ public class FeedbackController {
     @Operation(summary = "이해관계자의 피드백 조회", description = "이해관계자가 요청받은 피드백 완료 여부 상관 없이 전부 조회")
     @GetMapping("/stakeholder")
     public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllStakeholderFeedbacks() {
+        // 권한: 이해 관계자
         Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllStakeholderFeedbacks(userId)));
@@ -64,6 +67,7 @@ public class FeedbackController {
     @Operation(summary = "상품 관리자의 피드백 조회", description = "피드백 완료 여부 상관 없이 상품 관리자의 본인이 생성한 상품의 피드백 조회")
     @GetMapping("/product-manager")
     public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllProductManagerFeedbacks() {
+        // 권한: 상품 관리자
         Long userId= 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getProductManagerFeedback(userId)));
@@ -76,6 +80,7 @@ public class FeedbackController {
             @PathVariable("product-id") Long productId,
             @RequestBody @Valid FeedbackExtraDescriptionRequest request
     ) {
+        // 권한: 상품 관리자
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.requestExtraDescription(userId, feedbackId, productId, request)));
@@ -88,6 +93,7 @@ public class FeedbackController {
             @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid FeedbackExtraDescriptionRequest request
     ) {
+        // 권한: 이해 관계자, 컴플라이언스
         Long userId= 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.responseExtraDescription(userId, feedbackId, extraDescriptionId, request)));
@@ -100,6 +106,7 @@ public class FeedbackController {
             @PathVariable("product-id") Long productId,
             @RequestBody @Valid ProductRequest request
     ) {
+        // 권한: 상품 관리자
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.reflectFeedback(userId, feedbackId, productId, request)));
@@ -110,6 +117,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<List<FeedbackExtraDescriptionResponse>>> getAllExtraDescriptions(
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 상품 관리자, 이해 관계자, 컴플라이언스
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllExtraDescriptions(userId, productId)));
@@ -120,6 +128,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionDetailResponse>> getExtraDescriptionDetials(
             @PathVariable("extra-description-id") Long extraDescriptionId
     ) {
+        // 권한: 상품 관리자, 이해 관계자, 컴플라이언스
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getExtraDescriptionDetails(userId, extraDescriptionId)));
@@ -130,6 +139,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<ProductResponse>> approveProduct(
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 이해 관계자
         Long userId = 10L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.approveProduct(userId, productId)));

@@ -36,26 +36,22 @@ public class ProductController {
     private final ProductService productService;
 
     @Operation(summary = "상품 생성", description = "해당 사용자의 고유번호로 새로운 상품 생성")
-//    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<Long>> createProduct(
-//            @AuthenticationPrincipal UserDetails userDetails
-            ) {
+    public ResponseEntity<ApiResponse<Long>> createProduct() {
+        // 권한: 상품 관리자
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(productService.createProduct(userId)));
     }
 
-    // minio에 어떻게 저장하고 그 결과를 DB에 저장할 지 로직 필요
     @Operation(summary = "상품 저장", description = "개발 중인 상품을 완료 상태로 저장 혹은 임시 저장")
-//    @PreAuthorize("hasRole('PRODUCT_DEVELOPER')")
     @PostMapping(value = "/save", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProductCoverageResponse>> saveProduct(
             @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart("request") ProductCoverageRequest request,
             @RequestPart("file") List<MultipartFile> files
-//            @AuthenticationPrincipal UserDetails userDetails
             ) {
+        // 권한: 상품 관리자
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(productService.save(userId, request, files)));
@@ -64,14 +60,15 @@ public class ProductController {
     @Operation(summary = "출시 상품 조회", description = "출시된 상품 목록 전체 조회")
     @GetMapping("/released")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getReleasedProducts() {
+        // 권한: 상품 관리자, 이해 관계자, 컴플라이언스, 일반 사용자
 
         return ResponseEntity.ok(ApiResponse.success(productService.getReleasedProducts()));
     }
 
     @Operation(summary = "출시 전 상품 조회", description = "출시되지 않은 상품 목록 전체 조회")
-//    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER', 'PRODUCT_STAKEHOLDER', 'PRODUCT_COMPLIANCE')")
     @GetMapping("/not-released")
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getNotReleasedProducts() {
+        // 권한: 상품 관리자, 이해 관계자, 컴플라이언스
 
         return ResponseEntity.ok(ApiResponse.success(productService.getNotReleasedProducts()));
     }
@@ -81,6 +78,8 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getProductDetails(
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 상품 관리자, 이해 관계자, 컴플라이언스, 일반 사용자
+
         return ResponseEntity.ok(ApiResponse.success(productService.getProductDetails(productId)));
     }
 
@@ -89,18 +88,18 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductResponse>> getUnReleasedProductDetails(
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 상품 관리자, 이해 관계자, 컴플라이언스
+
         return ResponseEntity.ok(ApiResponse.success(productService.getUnReleasedProductDetails(productId)));
     }
 
     @Operation(summary = "출시 전 상품 삭제", description = "상태가 출시 전인 상품 삭제")
-//    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER')")
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(
             @PathVariable("id") Long productId
     ) {
+        // 권한: 컴플라이언스
 
         return ResponseEntity.ok(ApiResponse.success(productService.deleteUnReleasedProduct(productId)));
     }
-
-    // 상품 승인
 }

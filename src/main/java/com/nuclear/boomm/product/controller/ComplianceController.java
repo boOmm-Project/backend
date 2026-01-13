@@ -1,7 +1,6 @@
 package com.nuclear.boomm.product.controller;
 
 import com.nuclear.boomm.common.ApiResponse;
-import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.service.ComplianceService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,6 +25,7 @@ public class ComplianceController {
     public ResponseEntity<ApiResponse<Long>> permitRelease(
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 컴플라이언스
         Long userId = 100L;
 
         return ResponseEntity.ok(ApiResponse.success(complianceService.permitRelease(userId, productId)));

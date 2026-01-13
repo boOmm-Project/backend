@@ -33,6 +33,7 @@ public class RiskReportController {
             @PathVariable("product-id") Long productId,
             @PathVariable("compliance-id") Long complianceId
     ) {
+        // 권한: 상품 관리자
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.createRiskReport(userId, productId, complianceId)));
@@ -44,6 +45,7 @@ public class RiskReportController {
             @PathVariable("report-id") Long reportId,
             @PathVariable("compliance-id") Long complianceId
     ) {
+        // 권한: 상품 관리자, 컴플라이언스
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, reportId, complianceId)));
@@ -55,6 +57,7 @@ public class RiskReportController {
             @PathVariable("report-id") Long reportId,
             @PathVariable("product-id") Long productId
     ) {
+        // 권한: 컴플라이언스
         Long complianceId = 100L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.createRiskReportFeedback(complianceId, productId, reportId)));
@@ -67,6 +70,7 @@ public class RiskReportController {
             @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid RiskReportFeedbackRequest request
     ) {
+        // 권한: 컴플라이언스
         Long complianceId = 100L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, request)));
@@ -78,6 +82,7 @@ public class RiskReportController {
             @PathVariable("report-id") Long reportId,
             @RequestBody @Valid RiskReportUpdateRequest request
     ) {
+        // 권한: 상품 관리자
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.updateRiskReport(userId, reportId, request)));
