@@ -82,19 +82,24 @@ public class FeedbackService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public FeedbackExtraDescriptionResponse responseExtraDescription(Long userId, Long extraDescriptionId, FeedbackExtraDescriptionRequest request) {
-        ExtraDescription extraDescription = extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
+    public FeedbackExtraDescriptionResponse responseExtraDescription(
+            Long userId,
+            Long feedbackId,
+            Long extraDescriptionId,
+            FeedbackExtraDescriptionRequest request
+    ) {
+        // 사용자 검증
+        ExtraDescription extraDescription = extraDescriptionRepository.findByExtraDescriptionIdAndFeedbackId(extraDescriptionId, feedbackId)
                 .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND));
 
-        if (!feedbackRepository.existsByFeedbackIdAndWriterId(
-                extraDescription.getFeedbackId(),
-                userId
-        )) {
-            throw new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND);
-        }
+        Feedback feedback = feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
 
+        // 추가 설명 업데이트
         extraDescription.updateResponse(request.description());
-        extraDescription.updateIsResolved(true);
+
+        // 피드백 상태 업데이트
+        feedback.updateStatus(FeedbackStatus.ADDITIONAL_EXPLANATION_UPDATE_PENDING);
 
         return FeedbackExtraDescriptionResponse.from(extraDescription);
     }

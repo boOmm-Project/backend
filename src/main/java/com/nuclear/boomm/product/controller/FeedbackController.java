@@ -82,14 +82,15 @@ public class FeedbackController {
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 전송", description = "피드백에 대해 요청받은 추가 설명 전송")
-    @PatchMapping("/{extra-description-id}/descriptions")
+    @PatchMapping("/{extra-description-id}/{feedback-id}/descriptions")
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> responseExtraDescription(
             @PathVariable("extra-description-id") Long extraDescriptionId,
+            @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid FeedbackExtraDescriptionRequest request
     ) {
         Long userId= 10L;
 
-        return ResponseEntity.ok(ApiResponse.success(feedbackService.responseExtraDescription(userId, extraDescriptionId, request)));
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.responseExtraDescription(userId, feedbackId, extraDescriptionId, request)));
     }
 
     @Operation(summary = "상품 관리자의 피드백 반영", description = "상품 관리자가 요청받은 피드백을 반영")

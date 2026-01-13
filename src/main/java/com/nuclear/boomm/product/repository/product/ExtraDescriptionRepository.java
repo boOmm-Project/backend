@@ -10,4 +10,6 @@ public interface ExtraDescriptionRepository extends JpaRepository<ExtraDescripti
     Optional<ExtraDescription> findByExtraDescriptionId(Long extraDescriptionId);
 
     List<ExtraDescription> findAllByProductId(Long productId);
+
+    Optional<ExtraDescription> findByExtraDescriptionIdAndFeedbackId(Long extraDescriptionId, Long feedbackId);
 }
