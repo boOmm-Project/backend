@@ -159,12 +159,8 @@ public class ProductService {
 
     @Transactional(rollbackFor = Exception.class)
     public ProductResponse deleteUnReleasedProduct(Long productId) {
-        Product product = productRepository.findByProductId(productId)
+        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-
-        if (product.isReleased()) {
-            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
-        }
 
         deleteProductFiles(productId);
 
