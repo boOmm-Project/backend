@@ -10,6 +10,7 @@ import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.service.FeedbackService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,7 @@ public class FeedbackController {
     @PatchMapping("/{id}/content")
     public ResponseEntity<ApiResponse<FeedbackResponse>> updateFeedback(
             @PathVariable("id") Long feedbackId,
-            @RequestBody FeedbackUpdateRequest request
+            @RequestBody @Valid FeedbackUpdateRequest request
             ) {
         Long userId = 10L;
 
@@ -72,7 +73,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> requestExtraDescription(
             @PathVariable("feedback-id") Long feedbackId,
             @PathVariable("product-id") Long productId,
-            @RequestBody FeedbackExtraDescriptionRequest request
+            @RequestBody @Valid FeedbackExtraDescriptionRequest request
     ) {
         Long userId = 1L;
 
@@ -83,7 +84,7 @@ public class FeedbackController {
     @PatchMapping("/{extra-description-id}/descriptions")
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> responseExtraDescription(
             @PathVariable("extra-description-id") Long extraDescriptionId,
-            @RequestBody FeedbackExtraDescriptionRequest request
+            @RequestBody @Valid FeedbackExtraDescriptionRequest request
     ) {
         Long userId= 10L;
 
@@ -95,7 +96,7 @@ public class FeedbackController {
     public ResponseEntity<ApiResponse<ProductResponse>> feedbackReflection(
             @PathVariable("feedback-id") Long feedbackId,
             @PathVariable("product-id") Long productId,
-            @RequestBody ProductRequest request
+            @RequestBody @Valid ProductRequest request
     ) {
         Long userId = 1L;
 

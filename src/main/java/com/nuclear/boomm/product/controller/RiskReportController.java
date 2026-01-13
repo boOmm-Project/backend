@@ -8,6 +8,7 @@ import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
 import com.nuclear.boomm.product.service.RiskReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ public class RiskReportController {
     public ResponseEntity<ApiResponse<RiskReportDetailResponse>> feedbackRiskReport(
             @PathVariable("report-id") Long reportId,
             @PathVariable("compliance-id") Long complianceId,
-            @RequestBody RiskReportFeedbackRequest request
+            @RequestBody @Valid RiskReportFeedbackRequest request
     ) {
         return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId, request)));
     }
@@ -61,7 +62,7 @@ public class RiskReportController {
     @PatchMapping("/{report-id}")
     public ResponseEntity<ApiResponse<RiskReportResponse>> updateRiskReport(
             @PathVariable("report-id") Long reportId,
-            @RequestBody RiskReportUpdateRequest request
+            @RequestBody @Valid RiskReportUpdateRequest request
     ) {
         Long userId = 1L;
 

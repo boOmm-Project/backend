@@ -78,7 +78,9 @@ public class ProductController {
 
     @Operation(summary = "출시 상품 상세 조회", description = "출시된 상품에 대한 정보 상세 조회")
     @GetMapping("/details/{id}")
-    public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getProductDetails(@PathVariable("id") Long productId) {
+    public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getProductDetails(
+            @PathVariable("id") Long productId
+    ) {
 
         return ResponseEntity.ok(ApiResponse.success(productService.getProductDetails(productId)));
     }
@@ -86,7 +88,9 @@ public class ProductController {
     @Operation(summary = "출시 전 상품 삭제", description = "상태가 출시 전인 상품 삭제")
 //    @PreAuthorize("hasAnyRole('PRODUCT_DEVELOPER')")
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(@PathVariable("id") Long productId) {
+    public ResponseEntity<ApiResponse<ProductResponse>> deleteProduct(
+            @PathVariable("id") Long productId
+    ) {
 
         return ResponseEntity.ok(ApiResponse.success(productService.deleteUnReleasedProduct(productId)));
     }
