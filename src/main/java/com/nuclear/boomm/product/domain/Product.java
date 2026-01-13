@@ -108,4 +108,8 @@ public class Product extends BaseEntity {
 
         this.isReleased = true;
     }
+
+    public void approve() {
+        this.isDone = true;
+    }
 }

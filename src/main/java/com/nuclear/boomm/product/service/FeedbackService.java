@@ -125,4 +125,19 @@ public class FeedbackService {
                 feedbackRepository.searchAllFeedbackByUserIdWithProduct(userId)
         );
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public ProductResponse approveProduct(Long userId, Long productId) {
+        // 해당 상품의 이해관계자가 userId의 사용자가 맞는지 검증
+        if (!feedbackRepository.existsByProduct_ProductIdAndWriterId(productId, userId)) {
+            throw new CustomException(ErrorCode.UNAUTHORIZED);
+        }
+
+        // 상품 승인
+        Product product = productRepository.findByProductId(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        product.approve();
+
+        return ProductResponse.from(product);
+    }
 }

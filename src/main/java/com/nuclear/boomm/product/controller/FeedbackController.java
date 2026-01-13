@@ -32,9 +32,9 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @Operation(summary = "피드백 생성", description = "이해관계자를 지정해 상품에 대한 피드백 생성")
-    @PostMapping("/{id}")
+    @PostMapping("/{product-id}")
     public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
-            @PathVariable("id") Long productId
+            @PathVariable("product-id") Long productId
     ) {
         Long userId = 10L;
 
@@ -42,9 +42,9 @@ public class FeedbackController {
     }
 
     @Operation(summary = "이해관계자의 피드백 업데이트", description = "이해관계자의 요청받은 상품에 대한 피드백 업데이트")
-    @PatchMapping("/{id}/content")
+    @PatchMapping("/{feedback-id}/content")
     public ResponseEntity<ApiResponse<FeedbackResponse>> updateFeedback(
-            @PathVariable("id") Long feedbackId,
+            @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid FeedbackUpdateRequest request
             ) {
         Long userId = 10L;
@@ -101,5 +101,15 @@ public class FeedbackController {
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.reflectFeedback(userId, feedbackId, productId, request)));
+    }
+
+    @Operation(summary = "상품 승인", description = "이해관계자가 해당 상품에 대해 승인하 컴플라이언스로 이관")
+    @PatchMapping("/{product-id}")
+    public ResponseEntity<ApiResponse<ProductResponse>> approveProduct(
+            @PathVariable("product-id") Long productId
+    ) {
+        Long userId = 10L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.approveProduct(userId, productId)));
     }
 }
