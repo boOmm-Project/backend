@@ -1,13 +1,17 @@
 package com.nuclear.boomm.product.service;
 
 import com.nuclear.boomm.common.error.ErrorCode;
+import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
+import com.nuclear.boomm.product.dto.request.feedback.RiskReportFeedbackRequest;
 import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
+import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
+import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;
@@ -42,6 +46,8 @@ class RiskReportServiceTests {
     private ProductRepository productRepository;
     @Mock
     private ProductFileRepository productFileRepository;
+    @Mock
+    private FeedbackRepository feedbackRepository;
 
     private Long productManagerId;
     private Long complianceId;
@@ -54,6 +60,7 @@ class RiskReportServiceTests {
     private BigDecimal lossRatioForecast;
     private String competitorProductComparison;
     private RiskReportUpdateRequest riskReportUpdateRequest;
+    private RiskReportFeedbackRequest riskReportFeedbackRequest;
 
     private Product product;
 
@@ -100,6 +107,10 @@ class RiskReportServiceTests {
         riskReportUpdateRequest = new RiskReportUpdateRequest(
                 competitorProductComparison,
                 lossRatioForecast
+        );
+
+        riskReportFeedbackRequest = new RiskReportFeedbackRequest(
+                "description"
         );
     }
 
@@ -222,5 +233,45 @@ class RiskReportServiceTests {
                 riskReportService.updateRiskReport(productManagerId, reportId, riskReportUpdateRequest)
         );
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("위험 보고서 피드백 전송 - 성공")
+    void feedbackRiskReport_Success() {
+        // given
+        given(riskReportRepository.findByReportIdAndComplianceId(reportId, complianceId)).willReturn(Optional.of(riskReport));
+
+        Long feedbackId = 30L;
+
+        Feedback feedback = Feedback.builder()
+                .status(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE)
+                .description("description")
+                .writerId(complianceId)
+                .product(product)
+                .role("COMPLIANCE")
+                .build();
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+        given(feedbackRepository.save(any(Feedback.class))).willReturn(feedback);
+
+        // when
+        Long response = riskReportService.feedbackRiskReport(reportId, complianceId, riskReportFeedbackRequest);
+
+        // then
+        assertEquals(feedbackId, response);
+        assertEquals("description", feedback.getDescription());
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 전송 - 실패 - RISK_REPORT_NOT_FOUND")
+    void feedbackRiskReport_Failure_RISK_REPORT_NOT_FOUND() {
+        // given
+        given(riskReportRepository.findByReportIdAndComplianceId(reportId, complianceId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.feedbackRiskReport(reportId, complianceId, riskReportFeedbackRequest)
+        );
+        assertEquals(ErrorCode.RISK_REPORT_NOT_FOUND, exception.getErrorCode());
+        verify(riskReportRepository, times(1)).findByReportIdAndComplianceId(reportId, complianceId);
     }
 }
