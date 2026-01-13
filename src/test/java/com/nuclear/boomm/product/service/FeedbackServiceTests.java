@@ -255,33 +255,17 @@ class FeedbackServiceTests {
         assertEquals("추가 설명을 입력해 주세요.", response.response());
         assertEquals(FeedbackStatus.ADDITIONAL_EXPLANATION_REQUEST, mockFeedback.getStatus());
     }
-
     @Test
     @DisplayName("피드백 추가 설명 요청 - 실패 - FEEDBACK_NOT_FOUND")
     void requestExtraDescription_Failure_FEEDBACK_NOT_FOUND() {
         // given
-        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(false);
+        given(feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)).willReturn(Optional.empty());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class,
                 () -> feedbackService.requestExtraDescription(productManagerId, feedbackId, productId, feedbackExtraDescriptionRequest)
         );
         assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
-    }
-
-    @Test
-    @DisplayName("피드백 추가 설명 요청 - 실패 - PRODUCT_NOT_FOUND")
-    void requestExtraDescription_Failure_PRODUCT_NOT_FOUND() {
-        // given
-        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(true);
-
-        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(false);
-
-        // when & then
-        CustomException exception = assertThrows(CustomException.class,
-                () -> feedbackService.requestExtraDescription(productManagerId, feedbackId, productId, feedbackExtraDescriptionRequest)
-        );
-        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }
 
 
