@@ -137,16 +137,22 @@ public class FeedbackService {
     @Transactional(rollbackFor = Exception.class)
     public ProductResponse approveProduct(Long userId, Long productId) {
         // 해당 상품의 이해관계자가 userId의 사용자가 맞는지 검증
-        if (!feedbackRepository.existsByProduct_ProductIdAndWriterId(productId, userId)) {
+        List<Feedback> feedbacks = feedbackRepository.findAllByProduct_ProductIdAndWriterId(productId, userId);
+        if (feedbacks.isEmpty()) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);
         }
 
-        // 상품 승인
-        Product product = productRepository.findByProductId(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
-        product.approve();
+        // 해당 상품의 모든 피드백 상태 변경
+        feedbacks.forEach(feedback -> {
+            feedback.getProduct().approve();
+            feedback.updateStatus(FeedbackStatus.APPROVAL);
+        });
 
-        return ProductResponse.from(product);
+        // 상품 승인
+        Product approvedProduct = feedbacks.get(0).getProduct();
+        approvedProduct.release();
+
+        return ProductResponse.from(approvedProduct);
     }
 
     @Transactional(readOnly = true)
