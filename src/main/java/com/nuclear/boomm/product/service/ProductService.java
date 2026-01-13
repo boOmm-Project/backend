@@ -55,7 +55,7 @@ public class ProductService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ProductCoverageResponse save(    // 이거 임시저장이 안 됨
+    public ProductCoverageResponse save(
             Long userId,
             ProductCoverageRequest request,
             List<MultipartFile> files
@@ -144,7 +144,7 @@ public class ProductService {
     }
 
     public ProductCoverageFileResponse getProductDetails(Long productId) {
-        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductId(productId)
+        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedFalse(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
 
         List<ProductFileResponse> productFileList = ProductFileResponse.from(productFileRepository.findAllByProductId(productId));

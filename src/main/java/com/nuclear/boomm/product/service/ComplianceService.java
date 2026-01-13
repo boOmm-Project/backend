@@ -6,6 +6,7 @@ import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +14,7 @@ public class ComplianceService {
 
     private final RiskReportRepository riskReportRepository;
 
+    @Transactional
     public Long permitRelease(Long userId, Long productId) {
         // 사용자 검증
         RiskReport riskReport = riskReportRepository.findByProduct_ProductIdAndComplianceId(productId, userId)
