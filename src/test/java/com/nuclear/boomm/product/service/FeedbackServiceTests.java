@@ -344,19 +344,25 @@ class FeedbackServiceTests {
     @DisplayName("상품 승인 - 성공")
     void approveProduct_Success() {
         // given
-        given(feedbackRepository.existsByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(true);
-
         Product product = Product.builder()
                 .isDone(false)
                 .build();
         ReflectionTestUtils.setField(product, "productId", productId);
 
-        given(productRepository.findByProductId(productId)).willReturn(Optional.of(product));
+        Feedback mockFeedback = Feedback.builder()
+                .product(product)
+                .writerId(stakeholderId)
+                .build();
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+
+        given(feedbackRepository.findAllByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(List.of(mockFeedback));
 
         // when
         ProductResponse response = feedbackService.approveProduct(stakeholderId, productId);
 
+        // then
         assertEquals(productId, response.productId());
+        assertEquals(FeedbackStatus.APPROVAL, mockFeedback.getStatus());
         assertTrue(response.isDone());
     }
 
