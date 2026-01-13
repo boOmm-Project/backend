@@ -70,7 +70,7 @@ public class FeedbackController {
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")
-    @PostMapping("/{feedback-id}/{product-id}/description-requests")
+    @PostMapping("/{feedback-id}/{product-id}/{role}/description-requests")
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> requestExtraDescription(
             @PathVariable("feedback-id") Long feedbackId,
             @PathVariable("product-id") Long productId,

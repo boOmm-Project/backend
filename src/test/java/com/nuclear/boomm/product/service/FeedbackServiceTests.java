@@ -234,9 +234,13 @@ class FeedbackServiceTests {
     @DisplayName("피드백 추가 설명 요청 - 성공")
     void requestExtraDescription_Success() {
         // given
-        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(true);
+        Feedback mockFeedback = Feedback.builder()
+                .product(product)
+                .writerId(stakeholderId)
+                .build();
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
 
-        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(true);
+        given(feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)).willReturn(Optional.of(mockFeedback));
 
         given(extraDescriptionRepository.save(any(ExtraDescription.class))).willAnswer(invocation -> extraDescription);
 

@@ -1,5 +1,6 @@
 package com.nuclear.boomm.product.domain;
 
+import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.error.CustomException;
 import com.nuclear.boomm.common.error.ErrorCode;
 import jakarta.persistence.Column;
@@ -49,6 +50,20 @@ public class ExtraDescription {
         }
 
         this.response = description;
+    }
+
+    public static ExtraDescription create(
+            FeedbackExtraDescriptionRequest request,
+            Long feedbackId,
+            Long productId,
+            Long creatorId
+    ) {
+        return ExtraDescription.builder()
+                .feedbackId(feedbackId)
+                .productId(productId)
+                .request(request.description())
+                .creatorId(creatorId)
+                .build();
     }
 
     public void updateIsResolved(boolean isResolved) {

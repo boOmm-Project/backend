@@ -60,21 +60,23 @@ public class FeedbackService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public FeedbackExtraDescriptionResponse requestExtraDescription(Long userId, Long feedbackId, Long productId, FeedbackExtraDescriptionRequest request) {
-        if (!feedbackRepository.existsByFeedbackId(feedbackId)) {
-            throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
-        } else if (!productRepository.existsByProductIdAndUserId(productId, userId)) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
+    public FeedbackExtraDescriptionResponse requestExtraDescription(
+            Long userId,
+            Long feedbackId,
+            Long productId,
+            FeedbackExtraDescriptionRequest request
+    ) {
+        // 사용자 검증
+        Feedback feedback = feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
 
+        // Feedback 상태 변경
+        feedback.updateStatus(FeedbackStatus.ADDITIONAL_EXPLANATION_REQUEST);
+
+        // ExtraDescription 생성, 저장, 반환
         return FeedbackExtraDescriptionResponse.from(
                 extraDescriptionRepository.save(
-                        ExtraDescription.builder()
-                                .feedbackId(feedbackId)
-                                .productId(productId)
-                                .request(request.description())
-                                .creatorId(userId)
-                                .build()
+                        ExtraDescription.create(request, feedbackId, productId, userId)
                 )
         );
     }
