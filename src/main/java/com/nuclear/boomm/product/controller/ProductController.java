@@ -90,4 +90,6 @@ public class ProductController {
 
         return ResponseEntity.ok(ApiResponse.success(productService.deleteUnReleasedProduct(productId)));
     }
+
+    // 상품 승인
 }

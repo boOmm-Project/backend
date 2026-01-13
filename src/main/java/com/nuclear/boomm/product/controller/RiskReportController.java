@@ -67,5 +67,4 @@ public class RiskReportController {
 
         return ResponseEntity.ok(ApiResponse.success(riskReportService.updateRiskReport(userId, reportId, request)));
     }
-    // 컴플 기본항목피드백 전송, 위험보고서피드백전송, 상품 출시
 }

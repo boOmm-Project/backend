@@ -55,7 +55,7 @@ public class ProductService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ProductCoverageResponse save(
+    public ProductCoverageResponse save(    // 이거 임시저장이 안 됨
             Long userId,
             ProductCoverageRequest request,
             List<MultipartFile> files
