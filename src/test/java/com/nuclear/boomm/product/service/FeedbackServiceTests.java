@@ -29,6 +29,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -332,5 +333,31 @@ class FeedbackServiceTests {
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> feedbackService.reflectFeedback(productManagerId, feedbackId, productId, releasedProductRequest));
         assertEquals(ErrorCode.PRODUCT_IS_RELEASED, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("상품 승인 - 성공")
+    void approveProduct_Success() {
+        // given
+        given(feedbackRepository.existsByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(true);
+
+        Product product = Product.builder()
+                .isDone(false)
+                .build();
+        ReflectionTestUtils.setField(product, "productId", productId);
+
+        given(productRepository.findByProductId(productId)).willReturn(Optional.of(product));
+
+        // when
+        ProductResponse response = feedbackService.approveProduct(stakeholderId, productId);
+
+        assertEquals(productId, response.productId());
+        assertTrue(response.isDone());
+    }
+    @Test
+    @DisplayName("상품 승인 - 실패 - UNAUTHORIZED")
+    void approveProduct_Failure_UNAUTHORIZED() {
+        // given
     }
 }
