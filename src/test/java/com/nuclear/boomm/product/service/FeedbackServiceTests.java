@@ -141,6 +141,7 @@ class FeedbackServiceTests {
         assertEquals(productId, response.productId());
         assertEquals(stakeholderId, response.writerId());
     }
+
     @Test
     @DisplayName("피드백 생성 - 실패 - 잘못된 productId")
     void createFeedback_Failure_INVALID_PRODUCT_ID() {
@@ -168,6 +169,7 @@ class FeedbackServiceTests {
         assertEquals("reqDescription", response.description());
         assertEquals(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE_PENDING, response.status());
     }
+
     @Test
     @DisplayName("이해관계자 피드백 업데이트 - 실패 - INVALID INPUT")
     void updateFeedback_Failure_InvalidInput() {
@@ -213,6 +215,7 @@ class FeedbackServiceTests {
         assertEquals(feedbackId, response.get(0).feedbackId());
         assertEquals("피드백 사항을 작성해 주세요.", response.get(0).description());
     }
+
     @Test
     @DisplayName("상품 관리자 상품 피드백 조회 - 실패 - PRODUCT_NOT_FOUND")
     void getAllProductManagerFeedbacks_Failure_PRODUCT_NOT_FOUND() {
@@ -246,6 +249,7 @@ class FeedbackServiceTests {
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
         assertEquals("추가 설명을 입력해 주세요.", response.response());
     }
+
     @Test
     @DisplayName("피드백 추가 설명 요청 - 실패 - FEEDBACK_NOT_FOUND")
     void requestExtraDescription_Failure_FEEDBACK_NOT_FOUND() {
@@ -258,6 +262,7 @@ class FeedbackServiceTests {
         );
         assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
     }
+
     @Test
     @DisplayName("피드백 추가 설명 요청 - 실패 - PRODUCT_NOT_FOUND")
     void requestExtraDescription_Failure_PRODUCT_NOT_FOUND() {
@@ -291,6 +296,7 @@ class FeedbackServiceTests {
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
     }
+
     @Test
     @DisplayName("피드백 추가 설명 전송 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
     void responseExtraDescription_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
@@ -317,11 +323,12 @@ class FeedbackServiceTests {
         assertEquals(1L, response.category());
         assertEquals("changedTargetCustomer", response.targetCustomer());
         assertEquals(12, response.period());
-        assertEquals("changedSalesChannel",  response.salesChannel());
+        assertEquals("changedSalesChannel", response.salesChannel());
         assertEquals(productManagerId, response.userId());
         assertEquals(true, response.isDone());
         assertEquals(false, response.isReleased());
     }
+
     @Test
     @DisplayName("피드백 반영 - 실패 - PRODUCT_IS_RELEASED")
     void reflectFeedback_Failure_PRODUCT_IS_RELEASED() {
@@ -359,5 +366,12 @@ class FeedbackServiceTests {
     @DisplayName("상품 승인 - 실패 - UNAUTHORIZED")
     void approveProduct_Failure_UNAUTHORIZED() {
         // given
+        given(feedbackRepository.existsByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                feedbackService.approveProduct(stakeholderId, productId)
+        );
+        assertEquals(ErrorCode.UNAUTHORIZED, exception.getErrorCode());
     }
 }
