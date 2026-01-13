@@ -253,6 +253,7 @@ class FeedbackServiceTests {
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
         assertEquals("추가 설명을 입력해 주세요.", response.response());
+        assertEquals(FeedbackStatus.ADDITIONAL_EXPLANATION_REQUEST, mockFeedback.getStatus());
     }
 
     @Test
