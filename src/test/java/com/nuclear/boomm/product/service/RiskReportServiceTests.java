@@ -192,6 +192,13 @@ class RiskReportServiceTests {
         // given
         given(riskReportRepository.findByReportId(reportId)).willReturn(Optional.of(riskReport));
 
+        Feedback mockFeedback = Feedback.builder()
+                .status(FeedbackStatus.APPROVAL)
+                .build();
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", 10L);
+
+        given(feedbackRepository.findByProduct_ProductIdAndRole(productId, "COMPLIANCE")).willReturn(Optional.of(mockFeedback));
+
         // when
         RiskReportResponse response = riskReportService.updateRiskReport(productManagerId, reportId, riskReportUpdateRequest);
 
@@ -200,6 +207,8 @@ class RiskReportServiceTests {
         assertEquals(productId, response.productId());
         assertEquals(lossRatioForecast, response.lossRatioForecast());
         assertEquals(competitorProductComparison, response.competitorProductComparison());
+
+        assertEquals(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE_PENDING, mockFeedback.getStatus());
 
         verify(riskReportRepository, times(1)).findByReportId(reportId);
     }

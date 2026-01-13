@@ -48,14 +48,6 @@ public class RiskReportService {
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         }
 
-        // 위험 보고서 피드백 생성 및 저장
-        Feedback reportFeedback = Feedback.builder()
-                .status(FeedbackStatus.RISK_REPORT_FEEDBACK_PENDING)
-                .writerId(complianceId)
-                .product(product)
-                .build();
-        feedbackRepository.save(reportFeedback);
-
         // RiskReport 생성 및 저장 후 반환
         return RiskReportResponse.from(riskReportRepository.save(
                 RiskReport.builder()
@@ -108,11 +100,16 @@ public class RiskReportService {
         // reportId로 위험 보고서 조회
         RiskReport report = riskReportRepository.findByReportId(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));
+        Feedback reportFeedback = feedbackRepository.findByProduct_ProductIdAndRole(report.getProduct().getProductId(), "COMPLIANCE")
+                .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
 
         // 위험 보고서의 상품에 대한 권한 확인
         if (!report.getProduct().getUserId().equals(userId)) {
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
         }
+
+        // 위험 보고서 피드백 상태 변경
+        reportFeedback.updateStatus(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE_PENDING);
 
         // 위험 보고서 업데이트 및 결과 반환
         return RiskReportResponse.from(report.update(request));
