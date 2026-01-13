@@ -6,6 +6,7 @@ import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.request.product.ProductRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionDetailResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
@@ -141,6 +142,7 @@ public class FeedbackService {
         return ProductResponse.from(product);
     }
 
+    @Transactional(readOnly = true)
     public List<FeedbackExtraDescriptionResponse> getAllExtraDescriptions(Long userId, Long productId) {
         // TODO: Role로 검증하는 로직 추가
 
@@ -148,5 +150,15 @@ public class FeedbackService {
         List<ExtraDescription> descriptions = extraDescriptionRepository.findAllByProductId(productId);
 
         return FeedbackExtraDescriptionResponse.from(descriptions);
+    }
+
+    public FeedbackExtraDescriptionDetailResponse getExtraDescriptionDetails(Long userId, Long extraDescriptionId) {
+        // TODO: Role로 검증하는 로직 추가
+
+        // 추가 설명 조회
+        ExtraDescription description = extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)
+                .orElseThrow(() -> new CustomException(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND));
+
+        return FeedbackExtraDescriptionDetailResponse.from(description);
     }
 }

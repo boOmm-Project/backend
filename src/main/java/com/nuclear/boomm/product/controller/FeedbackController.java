@@ -4,6 +4,7 @@ import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.request.product.ProductRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionDetailResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
@@ -111,6 +112,16 @@ public class FeedbackController {
         Long userId = 1L;
 
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllExtraDescriptions(userId, productId)));
+    }
+
+    @Operation(summary = "피드백 추가 설명 상세 조회", description = "피드백 추가 설명에 대한 상세 정보 조회")
+    @GetMapping("/{extra-description-id}")
+    public ResponseEntity<ApiResponse<FeedbackExtraDescriptionDetailResponse>> getExtraDescriptionDetials(
+            @PathVariable("extra-description-id") Long extraDescriptionId
+    ) {
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getExtraDescriptionDetails(userId, extraDescriptionId)));
     }
 
     @Operation(summary = "상품 승인", description = "이해관계자가 해당 상품에 대해 승인하 컴플라이언스로 이관")
