@@ -140,4 +140,13 @@ public class FeedbackService {
 
         return ProductResponse.from(product);
     }
+
+    public List<FeedbackExtraDescriptionResponse> getAllExtraDescriptions(Long userId, Long productId) {
+        // TODO: Role로 검증하는 로직 추가
+
+        // 추가 설명 리스트 조회
+        List<ExtraDescription> descriptions = extraDescriptionRepository.findAllByProductId(productId);
+
+        return FeedbackExtraDescriptionResponse.from(descriptions);
+    }
 }

@@ -103,6 +103,16 @@ public class FeedbackController {
         return ResponseEntity.ok(ApiResponse.success(feedbackService.reflectFeedback(userId, feedbackId, productId, request)));
     }
 
+    @Operation(summary = "피드백 추가 설명 리스트 조회", description = "이해관계자나 컴플라이언스가 작성한 피드백의 추가 설명 리스트 조회")
+    @GetMapping("/{product-id}/extra-description")
+    public ResponseEntity<ApiResponse<List<FeedbackExtraDescriptionResponse>>> getAllExtraDescriptions(
+            @PathVariable("product-id") Long productId
+    ) {
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllExtraDescriptions(userId, productId)));
+    }
+
     @Operation(summary = "상품 승인", description = "이해관계자가 해당 상품에 대해 승인하 컴플라이언스로 이관")
     @PatchMapping("/{product-id}")
     public ResponseEntity<ApiResponse<ProductResponse>> approveProduct(
