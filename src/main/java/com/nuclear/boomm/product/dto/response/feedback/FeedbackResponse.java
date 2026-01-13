@@ -20,6 +20,9 @@ public record FeedbackResponse(
         @NotNull
         Long productId,
 
+        @NotBlank
+        String productName,
+
         @NotNull
         Long writerId
 ) {
@@ -29,6 +32,7 @@ public record FeedbackResponse(
                 feedback.getStatus(),
                 feedback.getDescription(),
                 feedback.getProduct().getProductId(),
+                feedback.getProduct().getProductName(),
                 feedback.getWriterId()
         );
     }

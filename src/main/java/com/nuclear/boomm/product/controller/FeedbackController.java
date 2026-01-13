@@ -34,7 +34,7 @@ public class FeedbackController {
 
     @Operation(summary = "피드백 생성", description = "이해관계자를 지정해 상품에 대한 피드백 생성")
     @PostMapping("/{product-id}")
-    public ResponseEntity<ApiResponse<Long>> createFeedback(
+    public ResponseEntity<ApiResponse<FeedbackResponse>> createFeedback(
             @PathVariable("product-id") Long productId
     ) {
         // 권한: 이해 관계자

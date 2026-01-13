@@ -136,10 +136,12 @@ class FeedbackServiceTests {
         given(feedbackRepository.save(any(Feedback.class))).willAnswer(invocation -> feedback);
 
         // when
-        Long response = feedbackService.createFeedback(stakeholderId, productId);
+        FeedbackResponse response = feedbackService.createFeedback(stakeholderId, productId);
 
         // then
-        assertEquals(feedbackId, response);
+        assertEquals(feedbackId, response.feedbackId());
+        assertEquals(productId, response.productId());
+        assertEquals("임시 상품", response.productName());
     }
 
     @Test
