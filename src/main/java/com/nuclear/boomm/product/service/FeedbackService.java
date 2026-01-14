@@ -76,14 +76,18 @@ public class FeedbackService {
         // Feedback 상태 변경
         feedback.updateStatus(FeedbackStatus.ADDITIONAL_EXPLANATION_REQUEST);
 
-        //
-
-        // ExtraDescription 생성, 저장, 반환
-        return FeedbackExtraDescriptionResponse.from(
-                extraDescriptionRepository.save(
-                        ExtraDescription.create(request, feedbackId, productId, userId)
+        // ExtraDescription 생성
+        ExtraDescription savedExtraDescription = extraDescriptionRepository.save(
+                ExtraDescription.create(
+                        request,
+                        feedbackId,
+                        productId,
+                        userId
                 )
         );
+
+        // ExtraDescription 생성, 저장, 반환
+        return FeedbackExtraDescriptionResponse.from(savedExtraDescription);
     }
 
     @Transactional(rollbackFor = Exception.class)
