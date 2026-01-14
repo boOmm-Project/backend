@@ -136,14 +136,16 @@ public class FeedbackService {
         return FeedbackResponse.from(feedbackRepository.findAllByWriterId(userId));
     }
 
-    public List<FeedbackResponse> getProductManagerFeedback(Long userId) {
-        if (!productRepository.existsByUserId(userId)) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+    public List<FeedbackResponse> getAllProductManagerFeedbacks(Long userId) {
+        // 피드백 조회
+        List<Feedback> feedbacks = feedbackRepository.searchAllFeedbackByUserIdWithProduct(userId);
+
+        // 사용자 검증
+        if (feedbacks.isEmpty()) {
+            throw new CustomException(ErrorCode.FEEDBACK_NOT_FOUND);
         }
 
-        return FeedbackResponse.from(
-                feedbackRepository.searchAllFeedbackByUserIdWithProduct(userId)
-        );
+        return FeedbackResponse.from(feedbacks);
     }
 
     @Transactional(rollbackFor = Exception.class)

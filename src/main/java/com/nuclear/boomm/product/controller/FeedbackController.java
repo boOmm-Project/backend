@@ -70,7 +70,7 @@ public class FeedbackController {
         // 권한: 상품 관리자
         Long userId= 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(feedbackService.getProductManagerFeedback(userId)));
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllProductManagerFeedbacks(userId)));
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")

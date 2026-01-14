@@ -209,7 +209,7 @@ class FeedbackServiceTests {
         given(feedbackRepository.searchAllFeedbackByUserIdWithProduct(productManagerId)).willReturn(List.of(feedback));
 
         // when
-        List<FeedbackResponse> response = feedbackService.getProductManagerFeedback(productManagerId);
+        List<FeedbackResponse> response = feedbackService.getAllProductManagerFeedbacks(productManagerId);
 
         // then
         assertEquals(productId, response.get(0).productId());
@@ -226,7 +226,7 @@ class FeedbackServiceTests {
 
         // when & then
         CustomException exception = assertThrows(CustomException.class,
-                () -> feedbackService.getProductManagerFeedback(productManagerId));
+                () -> feedbackService.getAllProductManagerFeedbacks(productManagerId));
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }
 
