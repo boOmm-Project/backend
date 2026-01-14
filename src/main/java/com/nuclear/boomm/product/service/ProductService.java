@@ -63,12 +63,14 @@ public class ProductService {
     public ProductCoverageResponse save(
             Long userId,
             ProductCoverageRequest request,
-            List<MultipartFile> files
+            List<MultipartFile> files,
+            Long productId
     ) {
-        Long productId = request.product().productId();
-
+        // 사용자 검증
         Product product = productRepository.findByProductIdAndUserId(productId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+
+        // 상품 업데이트
         product.update(request.product());
 
         // minIO에 있는 해당 상품 관련 파일들 삭제
@@ -86,7 +88,10 @@ public class ProductService {
                 .map(CoverageRequest::id)
                 .toList();
 
+        // 상품에 해당하는 담보 조회
         List<Coverage> coverages = coverageRepository.findByProductIdAndCoverageIdIn(productId, coverageIds);
+
+        // 상품의 담보 중 사용자가 요청하지 않은 담보 전부 삭제
         coverageRepository.deleteAllByProductIdAndCoverageIdNotIn(productId, coverageIds);
 
         // 검색을 위해 List -> Map 자료형으로 변경
@@ -104,16 +109,8 @@ public class ProductService {
                 responseCoverages.add(coverage);
             } else {
                 // DB에 값이 없는 경우 -> save 필요
-                Coverage newCoverage = Coverage.builder()
-                        .category(coverageRequest.category())
-                        .productId(coverageRequest.productId())
-                        .title(coverageRequest.title())
-                        .description(coverageRequest.description())
-                        .minCoverageLimit(coverageRequest.minCoverageLimit())
-                        .maxCoverageLimit(coverageRequest.maxCoverageLimit())
-                        .isMandatory(coverageRequest.isMandatory())
-                        .damageCalStandard(coverageRequest.damageCalStandard())
-                        .build();
+                Coverage newCoverage = Coverage.create(coverageRequest);
+
                 coverageRepository.save(newCoverage);
 
                 responseCoverages.add(newCoverage);

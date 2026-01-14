@@ -45,16 +45,17 @@ public class ProductController {
     }
 
     @Operation(summary = "상품 저장", description = "개발 중인 상품을 완료 상태로 저장 혹은 임시 저장")
-    @PostMapping(value = "/save", consumes =  MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/{product-id}/save", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResponse<ProductCoverageResponse>> saveProduct(
             @Parameter(content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE))
             @RequestPart("request") ProductCoverageRequest request,
-            @RequestPart("file") List<MultipartFile> files
-            ) {
+            @RequestPart("file") List<MultipartFile> files,
+            @PathVariable("product-id") Long productId
+    ) {
         // 권한: 상품 관리자
         Long userId = 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(productService.save(userId, request, files)));
+        return ResponseEntity.ok(ApiResponse.success(productService.save(userId, request, files, productId)));
     }
 
     @Operation(summary = "출시 상품 조회", description = "출시된 상품 목록 전체 조회")

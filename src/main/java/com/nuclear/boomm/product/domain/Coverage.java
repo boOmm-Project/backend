@@ -68,6 +68,19 @@ public class Coverage extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String damageCalStandard = "피해 산정 기준";
 
+    public static Coverage create(CoverageRequest coverageRequest) {
+        return Coverage.builder()
+                .category(coverageRequest.category())
+                .productId(coverageRequest.productId())
+                .title(coverageRequest.title())
+                .description(coverageRequest.description())
+                .minCoverageLimit(coverageRequest.minCoverageLimit())
+                .maxCoverageLimit(coverageRequest.maxCoverageLimit())
+                .isMandatory(coverageRequest.isMandatory())
+                .damageCalStandard(coverageRequest.damageCalStandard())
+                .build();
+    }
+
     public void update(CoverageRequest request) {
         this.title = request.title();
         this.description = request.description();
