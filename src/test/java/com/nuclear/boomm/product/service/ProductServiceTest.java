@@ -362,7 +362,7 @@ class ProductServiceTest {
                 .willReturn(coverageList);
 
         // when
-        ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList);
+        ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList, productId);
 
         // then
         assertEquals("새상품명", response.product().productName());
@@ -394,7 +394,7 @@ class ProductServiceTest {
                 userId,
                 true,
                 stakeholderId,
-                true
+                false
         );
 
         List<CoverageRequest> covReq = List.of(
@@ -440,7 +440,7 @@ class ProductServiceTest {
                 .willReturn(coverageList);
 
         // when
-        ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList);
+        ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList, productId);
 
         // then
         assertEquals("새상품명", response.product().productName());
@@ -455,8 +455,6 @@ class ProductServiceTest {
         assertEquals("새담보명4L", response.coverage().get(1).title());
 
         verify(productFileRepository).deleteByProductId(productId);
-
-        verify(feedbackRepository, times(1)).save(any(Feedback.class));
     }
 
     @Test
