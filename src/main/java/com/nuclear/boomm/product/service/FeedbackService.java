@@ -46,10 +46,16 @@ public class FeedbackService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public FeedbackResponse updateFeedback(Long userId, Long feedbackId, FeedbackUpdateRequest request) {
+    public FeedbackResponse updateFeedback(
+            Long userId,
+            Long feedbackId,
+            FeedbackUpdateRequest request
+    ) {
+        // 사용자 검증
         Feedback feedback = feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.INVALID_INPUT_VALUE));
 
+        // 피드백 업데이트
         feedback.updateDescription(request.description());
         feedback.updateStatus(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE_PENDING);
 
@@ -69,6 +75,8 @@ public class FeedbackService {
 
         // Feedback 상태 변경
         feedback.updateStatus(FeedbackStatus.ADDITIONAL_EXPLANATION_REQUEST);
+
+        //
 
         // ExtraDescription 생성, 저장, 반환
         return FeedbackExtraDescriptionResponse.from(
