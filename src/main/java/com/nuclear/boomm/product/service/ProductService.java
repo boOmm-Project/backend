@@ -47,12 +47,16 @@ public class ProductService {
     private final FileService fileService;
 
     @Transactional(rollbackFor = Exception.class)
-    public Long createProduct(Long userId) {
+    public ProductResponse createProduct(Long userId) {
+        // 상품 생성
         Product product = Product.builder()
                 .userId(userId)
                 .build();
 
-        return productRepository.save(product).getProductId();
+        // 상품 저장
+        Product savedProduct = productRepository.save(product);
+
+        return ProductResponse.from(savedProduct);
     }
 
     @Transactional(rollbackFor = Exception.class)

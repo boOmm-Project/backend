@@ -37,7 +37,7 @@ public class ProductController {
 
     @Operation(summary = "상품 생성", description = "해당 사용자의 고유번호로 새로운 상품 생성")
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<Long>> createProduct() {
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct() {
         // 권한: 상품 관리자
         Long userId = 1L;
 
