@@ -37,7 +37,10 @@ public enum ErrorCode {
     PRODUCT_IS_NOT_DONE(HttpStatus.BAD_REQUEST, "해당 상품은 이해관계자의 승인을 받지 않았습니다."),
 
     // 접근 권한 부족
-    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다.");
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
+
+    // 파일 포맷 오류
+    INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 포맷이 올바르지 않습니다.");
 
     private final HttpStatus status;
     private final String message;
