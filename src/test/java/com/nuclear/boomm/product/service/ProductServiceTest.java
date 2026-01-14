@@ -519,10 +519,10 @@ class ProductServiceTest {
         given(productRepository.findByProductIdAndIsReleasedFalse(productId)).willReturn(Optional.of(product));
 
         // when
-        ProductResponse response = productService.getUnReleasedProductDetails(productId);
+        ProductCoverageFileResponse response = productService.getUnReleasedProductDetails(productId);
 
         // then
-        assertEquals(productId, response.productId());
+        assertEquals(productId, response.productResponse().productId());
     }
     @Test
     @DisplayName("출시 전 상품 상세조회 - 실패 - PRODUCT_NOT_FOUND")

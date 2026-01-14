@@ -49,9 +49,7 @@ public class ProductService {
     @Transactional(rollbackFor = Exception.class)
     public ProductResponse createProduct(Long userId) {
         // 상품 생성
-        Product product = Product.builder()
-                .userId(userId)
-                .build();
+        Product product = Product.builder().userId(userId).build();
 
         // 상품 저장
         Product savedProduct = productRepository.save(product);
@@ -60,15 +58,9 @@ public class ProductService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public ProductCoverageResponse save(
-            Long userId,
-            ProductCoverageRequest request,
-            List<MultipartFile> files,
-            Long productId
-    ) {
+    public ProductCoverageResponse save(Long userId, ProductCoverageRequest request, List<MultipartFile> files, Long productId) {
         // 사용자 검증
-        Product product = productRepository.findByProductIdAndUserId(productId, userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        Product product = productRepository.findByProductIdAndUserId(productId, userId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         // 상품 업데이트
         product.update(request.product());
@@ -83,10 +75,7 @@ public class ProductService {
         uploadProductFiles(userId, productId, files);
 
         // 상품에 대한 담보 업데이트
-        List<Long> coverageIds = request.coverage()
-                .stream()
-                .map(CoverageRequest::id)
-                .toList();
+        List<Long> coverageIds = request.coverage().stream().map(CoverageRequest::id).toList();
 
         // 상품에 해당하는 담보 조회
         List<Coverage> coverages = coverageRepository.findByProductIdAndCoverageIdIn(productId, coverageIds);
@@ -95,8 +84,7 @@ public class ProductService {
         coverageRepository.deleteAllByProductIdAndCoverageIdNotIn(productId, coverageIds);
 
         // 검색을 위해 List -> Map 자료형으로 변경
-        Map<Long, Coverage> coverageMap = coverages.stream()
-                .collect(Collectors.toMap(Coverage::getCoverageId, Function.identity()));
+        Map<Long, Coverage> coverageMap = coverages.stream().collect(Collectors.toMap(Coverage::getCoverageId, Function.identity()));
 
         // 업데이트 진행
         List<Coverage> responseCoverages = new ArrayList<>();
@@ -122,47 +110,30 @@ public class ProductService {
             product.updateIsDone(true);
         }
 
-        return ProductCoverageResponse.from(
-                product,
-                responseCoverages
-        );
+        return ProductCoverageResponse.from(product, responseCoverages);
     }
 
     public List<ProductResponse> getReleasedProducts() {
-        return productRepository
-                .findAllByIsReleasedTrue()
-                .stream()
-                .map(Product::from)
-                .toList();
+        return productRepository.findAllByIsReleasedTrue().stream().map(Product::from).toList();
     }
 
     public List<ProductResponse> getNotReleasedProducts() {
-
-        return productRepository
-                .findAllByIsReleasedFalse()
-                .stream()
-                .map(Product::from)
-                .toList();
+        return productRepository.findAllByIsReleasedFalse().stream().map(Product::from).toList();
     }
 
     public ProductCoverageFileResponse getProductDetails(Long productId) {
-        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedTrue(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
+        // 사용자 검증
+        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedTrue(productId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
 
         List<ProductFileResponse> productFileList = ProductFileResponse.from(productFileRepository.findAllByProductId(productId));
         List<CoverageResponse> coverageResponseList = CoverageResponse.from(coverageRepository.findAllByProductId(productId));
 
-        return new ProductCoverageFileResponse(
-                productResponse,
-                coverageResponseList,
-                productFileList
-        );
+        return new ProductCoverageFileResponse(productResponse, coverageResponseList, productFileList);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public ProductResponse deleteUnReleasedProduct(Long productId) {
-        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         deleteProductFiles(productId);
 
@@ -180,11 +151,7 @@ public class ProductService {
     @Transactional(rollbackFor = Exception.class)
     public void uploadProductFiles(Long userId, Long productId, List<MultipartFile> files) {
         try {
-            List<ProductFile> productFileList = fileService.uploadFiles(
-                    userId,
-                    productId,
-                    files
-            );
+            List<ProductFile> productFileList = fileService.uploadFiles(userId, productId, files);
             productFileRepository.saveAll(productFileList);
         } catch (IOException e) {
             log.error("파일 업로드 실패: productId: {}", productId, e);
@@ -193,21 +160,20 @@ public class ProductService {
         }
     }
 
-    public ProductResponse getUnReleasedProductDetails(Long productId) {
+    public ProductCoverageFileResponse getUnReleasedProductDetails(Long productId) {
         // 사용자 검증 & 상품 조회
-        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedFalse(productId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
 
-        return ProductResponse.from(product);
+        List<ProductFileResponse> productFileList = ProductFileResponse.from(productFileRepository.findAllByProductId(productId));
+        List<CoverageResponse> coverageResponseList = CoverageResponse.from(coverageRepository.findAllByProductId(productId));
+
+        return new ProductCoverageFileResponse(productResponse, coverageResponseList, productFileList);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void deleteProductFiles(Long productId) {
         try {
-            fileService.deleteFiles(productFileRepository.findAllByProductId(productId)
-                    .stream()
-                    .map(ProductFile::getUuidName)
-                    .toList());
+            fileService.deleteFiles(productFileRepository.findAllByProductId(productId).stream().map(ProductFile::getUuidName).toList());
         } catch (Exception e) {
             log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
         }

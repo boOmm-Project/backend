@@ -86,7 +86,7 @@ public class ProductController {
 
     @Operation(summary = "출시 전 상품 상세 조회", description = "출시 전 상품에 대한 정보 상세 조회")
     @GetMapping("/{product-id}/details/un-released")
-    public ResponseEntity<ApiResponse<ProductResponse>> getUnReleasedProductDetails(
+    public ResponseEntity<ApiResponse<ProductCoverageFileResponse>> getUnReleasedProductDetails(
             @PathVariable("product-id") Long productId
     ) {
         // 권한: 상품 관리자, 이해 관계자, 컴플라이언스
