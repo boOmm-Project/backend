@@ -120,7 +120,7 @@ class RiskReportServiceTests {
     @DisplayName("상품에 대한 위험 보고서 생성 - 성공")
     void createRiskReport_Success() {
         // given
-        given(productRepository.findByProductId(productId)).willReturn(Optional.of(product));
+        given(productRepository.findByProductIdAndUserId(productId, productManagerId)).willReturn(Optional.of(product));
 
         given(riskReportRepository.save(any(RiskReport.class))).willReturn(riskReport);
 
@@ -133,7 +133,7 @@ class RiskReportServiceTests {
         assertEquals(lossRatioForecast, response.lossRatioForecast());
         assertEquals(competitorProductComparison, response.competitorProductComparison());
 
-        verify(productRepository, times(1)).findByProductId(productId);
+        verify(productRepository, times(1)).findByProductIdAndUserId(productId, productManagerId);
         verify(riskReportRepository, times(1)).save(any(RiskReport.class));
     }
     @Test
