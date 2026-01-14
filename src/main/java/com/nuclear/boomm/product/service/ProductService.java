@@ -133,16 +133,17 @@ public class ProductService {
 
     @Transactional(rollbackFor = Exception.class)
     public ProductResponse deleteUnReleasedProduct(Long productId) {
-        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
+        // 사용자 검증
+        Product product = productRepository.findByProductIdAndIsReleasedFalse(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
+        // 상품 관련 파일 삭제
         deleteProductFiles(productId);
 
-        productFileRepository.deleteAllByProductId(productId);
-        coverageRepository.deleteAllByProductId(productId);
-        feedbackRepository.deleteAllByProduct_ProductId(productId);
-        riskReportRepository.deleteAllByProduct_ProductId(productId);
-        systemAndRegulationPrep.deleteAllByProductId(productId);
+        // DB에서 상품 관련 데이터 삭제
+        deleteAllFromRepositories(productId);
 
+        // 상품 자체 삭제
         productRepository.delete(product);
 
         return ProductResponse.from(product);
@@ -177,5 +178,13 @@ public class ProductService {
         } catch (Exception e) {
             log.warn("삭제 대상 파일 없음 (무시하고 진행): {}", e.getMessage());
         }
+    }
+
+    private void deleteAllFromRepositories(Long productId) {
+        productFileRepository.deleteAllByProductId(productId);
+        coverageRepository.deleteAllByProductId(productId);
+        feedbackRepository.deleteAllByProduct_ProductId(productId);
+        riskReportRepository.deleteAllByProduct_ProductId(productId);
+        systemAndRegulationPrep.deleteAllByProductId(productId);
     }
 }
