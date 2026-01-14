@@ -43,16 +43,13 @@ public class RiskReportService {
         return RiskReportResponse.from(report);
     }
 
-    public RiskReportDetailResponse getRiskReportDetails(Long userId, Long reportId, Long complianceId) {
+    public RiskReportDetailResponse getRiskReportDetails(Long userId, Long reportId) {
         RiskReport report = riskReportRepository.findByReportId(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));
 
         // 사용자가 볼 권한이 있는 사람(해당 상품 관리자, 해당 컴플라이언스)인지 검증
-        if (!report.getProduct().getUserId().equals(userId)) {
+        if (!report.getProduct().getUserId().equals(userId) && !report.getComplianceId().equals(userId)) {  // 상품 관리자나 컴플라이언스가 아닌 경우
             throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-        if (!report.getComplianceId().equals(complianceId)) {
-            throw new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND);
         }
 
         // 위험 보고서에 속한 파일 데이터 리스트로 가져오기

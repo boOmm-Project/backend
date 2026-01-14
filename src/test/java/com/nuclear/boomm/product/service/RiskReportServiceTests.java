@@ -155,7 +155,7 @@ class RiskReportServiceTests {
         given(productFileRepository.findAllByProductId(productId)).willReturn(productFileList);
 
         // when
-        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, reportId, complianceId);
+        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, reportId);
 
         // then
         assertEquals(reportId, response.reportId());
@@ -181,7 +181,7 @@ class RiskReportServiceTests {
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
-                riskReportService.getRiskReportDetails(productManagerId, reportId, complianceId)
+                riskReportService.getRiskReportDetails(productManagerId, reportId)
         );
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
     }

@@ -42,13 +42,12 @@ public class RiskReportController {
     @Operation(summary = "위험 보고서 조회", description = "위험 보고서의 세부 내용 조회")
     @GetMapping("/{report-id}/{compliance-id}")
     public ResponseEntity<ApiResponse<RiskReportDetailResponse>> getRiskReport(
-            @PathVariable("report-id") Long reportId,
-            @PathVariable("compliance-id") Long complianceId
+            @PathVariable("report-id") Long reportId
     ) {
         // 권한: 상품 관리자, 컴플라이언스
         Long userId = 1L;
 
-        return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, reportId, complianceId)));
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.getRiskReportDetails(userId, reportId)));
     }
 
     @Operation(summary = "위험 보고서 피드백 생성", description = "해당 상품의 위험 보고서에 대한 피드백 생성")
