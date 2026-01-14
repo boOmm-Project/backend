@@ -123,7 +123,11 @@ public class ProductService {
 
     public ProductCoverageFileResponse getProductDetails(Long productId) {
         // 사용자 검증
-        ProductResponse productResponse = ProductResponse.from(productRepository.findByProductIdAndIsReleasedTrue(productId).orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)));
+        ProductResponse productResponse = ProductResponse.from(productRepository
+                .findByProductIdAndIsReleasedTrue(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND)
+                )
+        );
 
         List<ProductFileResponse> productFileList = ProductFileResponse.from(productFileRepository.findAllByProductId(productId));
         List<CoverageResponse> coverageResponseList = CoverageResponse.from(coverageRepository.findAllByProductId(productId));

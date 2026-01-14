@@ -491,7 +491,14 @@ class ProductServiceTest {
     @DisplayName("상품 하나의 상세 정보 전달")
     void selectProductDetails() {
         // given
-        given(productRepository.findByProductId(productId)).willReturn(Optional.of(product));
+        Product mockProduct = Product.builder()
+                .userId(userId)
+                .isDone(true)
+                .isReleased(true)
+                .build();
+        ReflectionTestUtils.setField(mockProduct, "productId", productId);
+
+        given(productRepository.findByProductIdAndIsReleasedTrue(productId)).willReturn(Optional.of(mockProduct));
         given(productFileRepository.findAllByProductId(productId)).willReturn(productFileList);
         given(coverageRepository.findAllByProductId(productId)).willReturn(coverageList);
 
@@ -499,7 +506,7 @@ class ProductServiceTest {
         ProductCoverageFileResponse response = productService.getProductDetails(productId);
 
         // then
-        verify(productRepository, times(1)).findByProductId(productId);
+        verify(productRepository, times(1)).findByProductIdAndIsReleasedTrue(productId);
         verify(productFileRepository, times(1)).findAllByProductId(productId);
         verify(coverageRepository, times(1)).findAllByProductId(productId);
 
