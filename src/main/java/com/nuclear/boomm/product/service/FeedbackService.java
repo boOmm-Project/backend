@@ -115,15 +115,18 @@ public class FeedbackService {
 
     @Transactional(rollbackFor = Exception.class)
     public ProductResponse reflectFeedback(Long userId, Long feedbackId, Long productId, ProductRequest request) {
+        // 사용자 검증
         Product product = productRepository.findByProductIdAndUserId(productId, userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PRODUCT_NOT_FOUND));
 
         Feedback feedback = feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));
 
+        // 피드백 반영
         product.update(request);
         product.updateIsDone(request.isDone());
 
+        // 피드백 상태 변경
         feedback.updateStatus(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE);
 
         return ProductResponse.from(product);
