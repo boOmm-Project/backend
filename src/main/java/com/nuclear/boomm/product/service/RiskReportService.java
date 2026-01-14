@@ -31,14 +31,6 @@ public class RiskReportService {
     private final ProductFileRepository productFileRepository;
     private final FeedbackRepository feedbackRepository;
 
-    /**
-     * 상품에 대한 위험 보고서 생성
-     *
-     * @param userId    상품 관리자 고유 번호
-     * @param productId 상품 고유 번호
-     * @return RiskReportResponse    Dto로 변환된 RiskReport
-     * @throws CustomException(ErrorCode.PRODUCT_NOT_FOUND) 해당 상품이 상품 관리자가 생성한 상품이 아닐 경우, 해당 번호의 상품이 없을 경우
-     */
     @Transactional(rollbackFor = Exception.class)
     public RiskReportResponse createRiskReport(Long userId, Long productId, Long complianceId) {
         // 전달받은 productId로 Product 조회
@@ -59,15 +51,6 @@ public class RiskReportService {
         ));
     }
 
-    /**
-     * 상품에 대한 위험 보고서 세부사항 조회
-     *
-     * @param userId   상품 관리자 고유 번호
-     * @param reportId 위험 보고서 고유 번호
-     * @return RiskReportDetailResponse    Dto로 변환된 RiskReport
-     * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
-     * @throws CustomException(ErrorCode.PRODUCT_NOT_FOUND)     권한 없거나 상품 없음
-     */
     public RiskReportDetailResponse getRiskReportDetails(Long userId, Long reportId, Long complianceId) {
         RiskReport report = riskReportRepository.findByReportId(reportId)
                 .orElseThrow(() -> new CustomException(ErrorCode.RISK_REPORT_NOT_FOUND));
@@ -86,17 +69,6 @@ public class RiskReportService {
         return RiskReportDetailResponse.from(report, fileList);
     }
 
-    /**
-     * 위험 보고서 피드백 반영(업데이트)
-     *
-     * @param userId   상품 관리자 고유 번호
-     * @param reportId 위험 보고서 고유 번호
-     * @param request  위험 보고서 변경 사항
-     * @return RiskReportResponse    Dto로 변환된 RiskReport
-     * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
-     * @throws CustomException(ErrorCode.PRODUCT_NOT_FOUND)     권한 없거나 상품 없음
-     *
-     */
     @Transactional(rollbackFor = Exception.class)
     public RiskReportResponse updateRiskReport(Long userId, Long reportId, RiskReportUpdateRequest request) {
         // reportId로 위험 보고서 조회
@@ -117,14 +89,6 @@ public class RiskReportService {
         return RiskReportResponse.from(report.update(request));
     }
 
-    /**
-     * 위험 보고서 피드백 전송
-     *
-     * @param reportId 위험 보고서 고유 번호
-     * @param complianceId  컴플라이언스 고유 번호
-     * @param request   피드백 사항
-     * @throws CustomException(ErrorCode.RISK_REPORT_NOT_FOUND) 권한 없거나 위험 보고서 없음
-     */
     @Transactional(rollbackFor = Exception.class)
     public Long feedbackRiskReport(Long reportId, Long complianceId, Long feedbackId, RiskReportFeedbackRequest request) {
         // 사용자 검증
