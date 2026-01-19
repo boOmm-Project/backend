@@ -18,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -79,6 +81,12 @@ public class Coverage extends BaseEntity {
                 .isMandatory(coverageRequest.isMandatory())
                 .damageCalStandard(coverageRequest.damageCalStandard())
                 .build();
+    }
+
+    public static List<Coverage> create(List<CoverageRequest> coverageRequests) {
+        return coverageRequests.stream()
+                .map(Coverage::create)
+                .toList();
     }
 
     public void update(CoverageRequest request) {

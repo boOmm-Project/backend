@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -164,8 +165,12 @@ public class ProductService {
     }
 
     private List<Coverage> updateCoverages(List<CoverageRequest> coverages, Long productId) {
-        // coverages의 id에 따라 값 업데이트
+        // productId에 맞는 Coverage 조회
         List<Coverage> coverageList = coverageRepository.findAllByProductId(productId);
+
+        // Coverage 리스트 Map화
+        Map<Long, Coverage> coverageMap = coverageList.stream()
+                .collect(Collectors.toMap(Coverage::getCoverageId, Function.identity()));
 
         // 담보 없으면 예외 발생
         if (coverageList.isEmpty()) {
@@ -180,7 +185,20 @@ public class ProductService {
         for (Coverage coverage : coverageList) {
             // coverageId로 값 찾아서 업데이트
             coverage.update(coverageRequestMap.get(coverage.getCoverageId()));
+
+            // 요청 Map에서 업데이트한 key-value 제거
+            coverageRequestMap.remove(coverage.getCoverageId());
+
+            // DB Map에서 업데이트한 key-value 제거
+            coverageMap.remove(coverage.getCoverageId());
         }
+
+        // coverageId = 0인 신규 추가인 담보 저장
+        List<CoverageRequest> coverageRequests = new ArrayList<>(coverageRequestMap.values());
+        coverageRepository.saveAll(Coverage.create(coverageRequests));
+
+        // 요청에 없는 담보 삭제
+        coverageRepository.deleteAllByCoverageIdIn(coverageMap.keySet());
 
         return coverageList;
     }
