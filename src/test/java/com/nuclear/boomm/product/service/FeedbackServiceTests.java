@@ -101,7 +101,6 @@ class FeedbackServiceTests {
         );
 
         productRequest = new ProductRequest(
-                productId,
                 "changedProductName",
                 1L,
                 "changedTargetCustomer",
@@ -114,7 +113,6 @@ class FeedbackServiceTests {
         );
 
         releasedProductRequest = new ProductRequest(
-                productId,
                 "changedProductName",
                 1L,
                 "changedTargetCustomer",

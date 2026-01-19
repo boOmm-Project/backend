@@ -1,5 +1,6 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.domain.Coverage;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
@@ -11,9 +12,8 @@ import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageFileResponse;
 import com.nuclear.boomm.product.dto.response.wrapper.ProductCoverageResponse;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.common.error.ErrorCode;
-import com.nuclear.boomm.product.repository.product.CoverageRepository;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
+import com.nuclear.boomm.product.repository.product.CoverageRepository;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;
@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -74,43 +73,15 @@ public class ProductService {
         // 새롭게 요청받은 상품 관련 파일들 minIO에 업로드
         uploadProductFiles(userId, productId, files);
 
-        // 상품에 대한 담보 업데이트
-        List<Long> coverageIds = request.coverage().stream().map(CoverageRequest::id).toList();
-
-        // 상품에 해당하는 담보 조회
-        List<Coverage> coverages = coverageRepository.findByProductIdAndCoverageIdIn(productId, coverageIds);
-
-        // 상품의 담보 중 사용자가 요청하지 않은 담보 전부 삭제
-        coverageRepository.deleteAllByProductIdAndCoverageIdNotIn(productId, coverageIds);
-
-        // 검색을 위해 List -> Map 자료형으로 변경
-        Map<Long, Coverage> coverageMap = coverages.stream().collect(Collectors.toMap(Coverage::getCoverageId, Function.identity()));
-
-        // 업데이트 진행
-        List<Coverage> responseCoverages = new ArrayList<>();
-        for (CoverageRequest coverageRequest : request.coverage()) {
-            Coverage coverage = coverageMap.get(coverageRequest.id());
-
-            if (coverage != null) {
-                // DB에 값이 있는 경우 -> update 필요
-                coverage.update(coverageRequest);
-                responseCoverages.add(coverage);
-            } else {
-                // DB에 값이 없는 경우 -> save 필요
-                Coverage newCoverage = Coverage.create(coverageRequest);
-
-                coverageRepository.save(newCoverage);
-
-                responseCoverages.add(newCoverage);
-            }
-        }
+        // 담보 업데이트
+        List<Coverage> updatedCoverages = updateCoverages(request.coverage(), productId);
 
         if (request.product().isDone()) {
             // product의 isDone true로 변경
             product.updateIsDone(true);
         }
 
-        return ProductCoverageResponse.from(product, responseCoverages);
+        return ProductCoverageResponse.from(product, updatedCoverages);
     }
 
     public List<ProductResponse> getReleasedProducts() {
@@ -190,5 +161,27 @@ public class ProductService {
         feedbackRepository.deleteAllByProduct_ProductId(productId);
         riskReportRepository.deleteAllByProduct_ProductId(productId);
         systemAndRegulationPrep.deleteAllByProductId(productId);
+    }
+
+    private List<Coverage> updateCoverages(List<CoverageRequest> coverages, Long productId) {
+        // coverages의 id에 따라 값 업데이트
+        List<Coverage> coverageList = coverageRepository.findAllByProductId(productId);
+
+        // 담보 없으면 예외 발생
+        if (coverageList.isEmpty()) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
+        }
+
+        // 요청 리스트 Map으로 변환
+        Map<Long, CoverageRequest> coverageRequestMap = coverages.stream()
+                .collect(Collectors.toMap(CoverageRequest::coverageId, Function.identity()));
+
+        // 값 업데이트
+        for (Coverage coverage : coverageList) {
+            // coverageId로 값 찾아서 업데이트
+            coverage.update(coverageRequestMap.get(coverage.getCoverageId()));
+        }
+
+        return coverageList;
     }
 }

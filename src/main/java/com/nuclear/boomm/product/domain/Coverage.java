@@ -87,5 +87,6 @@ public class Coverage extends BaseEntity {
         this.minCoverageLimit = request.minCoverageLimit();
         this.maxCoverageLimit = request.maxCoverageLimit();
         this.isMandatory = request.isMandatory();
+        this.damageCalStandard = request.damageCalStandard();
     }
 }

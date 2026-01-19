@@ -99,7 +99,6 @@ class ProductServiceTest {
 
         // request
         productRequest = new ProductRequest(
-                productId,
                 "상품",
                 3L,
                 "고객",
@@ -307,7 +306,6 @@ class ProductServiceTest {
     void saveProduct() {
         // given
         ProductRequest proReq = new ProductRequest(
-                productId,
                 "새상품명",
                 1L,
                 "새고객",
@@ -321,7 +319,7 @@ class ProductServiceTest {
 
         List<CoverageRequest> covReq = List.of(
                 new CoverageRequest(
-                        2L,
+                        cov1.getCoverageId(),
                         CoverageCategory.MANDATORY_BASIC_COVERAGE,
                         productId,
                         "새담보명",
@@ -332,7 +330,7 @@ class ProductServiceTest {
                         "새 피해산정기준"
                 ),
                 new CoverageRequest(
-                        4L,
+                        cov2.getCoverageId(),
                         CoverageCategory.MANDATORY_BASIC_COVERAGE,
                         productId,
                         "새담보명4L",
@@ -352,14 +350,11 @@ class ProductServiceTest {
                 new MockMultipartFile("files", "test.jpg", "image/png", "content".getBytes())
         );
 
+        given(coverageRepository.findAllByProductId(productId))
+                .willReturn(List.of(cov1, cov2));
+
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
-
-        given(coverageRepository.save(any(Coverage.class)))
-                .willAnswer(invocation -> invocation.getArgument(0));
-
-        given(coverageRepository.findByProductIdAndCoverageIdIn(productId, List.of(2L, 4L)))
-                .willReturn(coverageList);
 
         // when
         ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList, productId);
@@ -372,7 +367,7 @@ class ProductServiceTest {
         assertEquals(userId, response.product().userId());
 
         assertEquals(2, response.coverage().size());
-        assertEquals(2L, response.coverage().get(0).id());
+        assertEquals(1L, response.coverage().get(0).id());
         assertEquals("새담보명4L", response.coverage().get(1).title());
 
         verify(productFileRepository).deleteByProductId(productId);
@@ -385,7 +380,6 @@ class ProductServiceTest {
     void draftProduct() {
         // given
         ProductRequest proReq = new ProductRequest(
-                productId,
                 "새상품명",
                 1L,
                 "새고객",
@@ -399,7 +393,7 @@ class ProductServiceTest {
 
         List<CoverageRequest> covReq = List.of(
                 new CoverageRequest(
-                        2L,
+                        cov1.getCoverageId(),
                         CoverageCategory.MANDATORY_BASIC_COVERAGE,
                         productId,
                         "새담보명",
@@ -410,7 +404,7 @@ class ProductServiceTest {
                         "새 피해산정기준"
                 ),
                 new CoverageRequest(
-                        4L,
+                        cov2.getCoverageId(),
                         CoverageCategory.MANDATORY_BASIC_COVERAGE,
                         productId,
                         "새담보명4L",
@@ -430,14 +424,11 @@ class ProductServiceTest {
                 new MockMultipartFile("files", "test.jpg", "image/png", "content".getBytes())
         );
 
+        given(coverageRepository.findAllByProductId(productId))
+                .willReturn(List.of(cov1, cov2));
+
         given(productRepository.findByProductIdAndUserId(productId, userId))
                 .willReturn(Optional.of(product));
-
-        given(coverageRepository.save(any(Coverage.class)))
-                .willAnswer(invocation -> invocation.getArgument(0));
-
-        given(coverageRepository.findByProductIdAndCoverageIdIn(productId, List.of(2L, 4L)))
-                .willReturn(coverageList);
 
         // when
         ProductCoverageResponse response = productService.save(userId, proCovReq, multipartFileList, productId);
@@ -449,7 +440,7 @@ class ProductServiceTest {
 
         assertEquals(userId, response.product().userId());
 
-        assertEquals(2L, response.coverage().get(0).id());
+        assertEquals(1L, response.coverage().get(0).id());
         assertEquals(2, response.coverage().size());
         assertEquals("새담보명", response.coverage().get(0).title());
         assertEquals("새담보명4L", response.coverage().get(1).title());
