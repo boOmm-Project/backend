@@ -40,7 +40,7 @@ public class RiskReportController {
     }
 
     @Operation(summary = "위험 보고서 조회", description = "위험 보고서의 세부 내용 조회")
-    @GetMapping("/{report-id}/{compliance-id}")
+    @GetMapping("/{report-id}")
     public ResponseEntity<ApiResponse<RiskReportDetailResponse>> getRiskReport(
             @PathVariable("report-id") Long reportId
     ) {

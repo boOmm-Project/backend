@@ -158,7 +158,6 @@ public class FeedbackService {
 
         // 해당 상품의 모든 피드백 상태 변경
         feedbacks.forEach(feedback -> {
-            feedback.getProduct().approve();
             feedback.updateStatus(FeedbackStatus.APPROVAL);
         });
 
