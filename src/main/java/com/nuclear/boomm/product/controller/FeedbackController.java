@@ -38,9 +38,9 @@ public class FeedbackController {
             @PathVariable("product-id") Long productId
     ) {
         // 권한: 이해 관계자
-        Long userId = 10L;
+        Long stakeholderId = 10L;
 
-        return ResponseEntity.ok(ApiResponse.success(feedbackService.createFeedback(userId, productId)));
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.createFeedback(stakeholderId, productId)));
     }
 
     @Operation(summary = "이해관계자의 피드백 업데이트", description = "이해관계자의 요청받은 상품에 대한 피드백 업데이트")

@@ -28,7 +28,7 @@ public class RiskReportController {
     private final RiskReportService riskReportService;
 
     @Operation(summary = "위험 보고서 생성", description = "상품 관리자가 위험 보고서를 생성")
-    @PostMapping("/{product-id}/{compliance-id}")
+    @PostMapping("/create/{product-id}/{compliance-id}")
     public ResponseEntity<ApiResponse<RiskReportResponse>> createRiskReport(
             @PathVariable("product-id") Long productId,
             @PathVariable("compliance-id") Long complianceId

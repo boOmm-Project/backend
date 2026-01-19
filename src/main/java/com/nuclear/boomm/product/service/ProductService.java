@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -172,30 +171,27 @@ public class ProductService {
         Map<Long, Coverage> coverageMap = coverageList.stream()
                 .collect(Collectors.toMap(Coverage::getCoverageId, Function.identity()));
 
-        // 담보 없으면 예외 발생
-        if (coverageList.isEmpty()) {
-            throw new CustomException(ErrorCode.PRODUCT_NOT_FOUND);
-        }
-
-        // 요청 리스트 Map으로 변환
+        // 요청 리스트 중 coverageId!=0(이미 DB에 존재하는 담보)인 값들을 Map으로 변환
         Map<Long, CoverageRequest> coverageRequestMap = coverages.stream()
+                .filter(coverageRequest -> coverageRequest.coverageId() != 0)
                 .collect(Collectors.toMap(CoverageRequest::coverageId, Function.identity()));
+
+        // 요청 리스트 중 coverageId==0(신규 담보)인 값들을 따로 분리
+        List<CoverageRequest> coverageRequests = coverages.stream()
+                .filter(coverageRequest -> coverageRequest.coverageId() == 0)
+                .collect(Collectors.toList());
+
+        // coverageId = 0인 신규 추가인 담보 저장
+        coverageRepository.saveAll(Coverage.create(coverageRequests));
 
         // 값 업데이트
         for (Coverage coverage : coverageList) {
             // coverageId로 값 찾아서 업데이트
             coverage.update(coverageRequestMap.get(coverage.getCoverageId()));
 
-            // 요청 Map에서 업데이트한 key-value 제거
-            coverageRequestMap.remove(coverage.getCoverageId());
-
             // DB Map에서 업데이트한 key-value 제거
             coverageMap.remove(coverage.getCoverageId());
         }
-
-        // coverageId = 0인 신규 추가인 담보 저장
-        List<CoverageRequest> coverageRequests = new ArrayList<>(coverageRequestMap.values());
-        coverageRepository.saveAll(Coverage.create(coverageRequests));
 
         // 요청에 없는 담보 삭제
         coverageRepository.deleteAllByCoverageIdIn(coverageMap.keySet());
