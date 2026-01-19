@@ -34,23 +34,29 @@ public class SystemAndRegulationPrep extends BaseEntity {
     @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean isConfirmed;    // 금융감독원 인가
 
+    @Column(nullable = false)
+    private Long productId;
+
     @Builder
-    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed) {
+    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed, Long productId) {
         this.policyAndDescription = policyAndDescription;
         this.isConfirmed = isConfirmed;
+        this.productId = productId;
     }
 
     @Builder(builderMethodName = "withSystemDevelopmentReq")
-    public SystemAndRegulationPrep(String systemDevelopmentReq, String policyAndDescription, boolean isConfirmed) {
+    public SystemAndRegulationPrep(String systemDevelopmentReq, String policyAndDescription, boolean isConfirmed, Long productId) {
         this.systemDevelopmentReq = systemDevelopmentReq;
         this.policyAndDescription = policyAndDescription;
         this.isConfirmed = isConfirmed;
+        this.productId = productId;
     }
 
     @Builder(builderMethodName = "withUnderwritingGuidelines")
-    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed, String underwritingGuidelines) {
+    public SystemAndRegulationPrep(String policyAndDescription, boolean isConfirmed, String underwritingGuidelines, Long productId) {
         this.policyAndDescription = policyAndDescription;
         this.underwritingGuidelines = underwritingGuidelines;
         this.isConfirmed = isConfirmed;
+        this.productId = productId;
     }
 }

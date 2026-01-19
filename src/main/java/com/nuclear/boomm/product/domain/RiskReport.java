@@ -3,42 +3,43 @@ package com.nuclear.boomm.product.domain;
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
-@Table(name = "risk_report")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class RiskReport extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reportId;
 
-    @Column(nullable = false)
-    private Long productId; // product 테이블 pk 참조
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id",  nullable = false, unique = true)
+    private Product product;
 
-    @Column(nullable = false, unique = true)
-    private Long productFileId; // product_file 테이블 pk 참조
+    @Builder.Default
+    @Column(nullable = false, precision = 10, scale = 4)
+    private BigDecimal lossRatioForecast = BigDecimal.ZERO;
 
-    @Column(nullable = false)
-    private Double lossRatioForecast;
-
+    @Builder.Default
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String competitorProductComparison;
+    private String competitorProductComparison = "경쟁사 상품 비교";
 
-    @Builder
-    public RiskReport(Long productId, Long productFileId, Double lossRatioForecast, String competitorProductComparison) {
-        this.productId = productId;
-        this.productFileId = productFileId;
-        this.lossRatioForecast = lossRatioForecast;
-        this.competitorProductComparison = competitorProductComparison;
-    }
+    @Column(nullable = false)
+    private Long complianceId;
 }
