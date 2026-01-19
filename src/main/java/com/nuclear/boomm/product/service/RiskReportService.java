@@ -79,7 +79,7 @@ public class RiskReportService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Long feedbackRiskReport(Long reportId, Long complianceId, Long feedbackId, RiskReportFeedbackRequest request) {
+    public Long feedbackRiskReport(Long complianceId, Long feedbackId, RiskReportFeedbackRequest request) {
         // 사용자 검증
         Feedback feedback = feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, complianceId)
                 .orElseThrow(() -> new CustomException(ErrorCode.FEEDBACK_NOT_FOUND));

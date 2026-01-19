@@ -63,16 +63,15 @@ public class RiskReportController {
     }
 
     @Operation(summary = "위험 보고서에 대한 피드백 전송", description = "컴플라이언스가 상품에 대한 위험 보고서 피드백 전송")
-    @PatchMapping("/{report-id}/{feedback-id}")
+    @PatchMapping("/{feedback-id}")
     public ResponseEntity<ApiResponse<Long>> feedbackRiskReport(
-            @PathVariable("report-id") Long reportId,
             @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid RiskReportFeedbackRequest request
     ) {
         // 권한: 컴플라이언스
         Long complianceId = 100L;
 
-        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, request)));
+        return ResponseEntity.ok(ApiResponse.success(riskReportService.feedbackRiskReport(complianceId, feedbackId, request)));
     }
 
     @Operation(summary = "위험 보고서 피드백 업데이트", description = "피드백 내용을 위험 보고서에 업데이트")

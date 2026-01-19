@@ -271,7 +271,7 @@ class RiskReportServiceTests {
         given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, complianceId)).willReturn(Optional.of(feedback));
 
         // when
-        Long response = riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, riskReportFeedbackRequest);
+        Long response = riskReportService.feedbackRiskReport(complianceId, feedbackId, riskReportFeedbackRequest);
 
         // then
         assertEquals(feedbackId, response);
@@ -288,7 +288,7 @@ class RiskReportServiceTests {
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
-                riskReportService.feedbackRiskReport(reportId, complianceId, feedbackId, riskReportFeedbackRequest)
+                riskReportService.feedbackRiskReport(complianceId, feedbackId, riskReportFeedbackRequest)
         );
         assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
         verify(feedbackRepository, times(1)).findByFeedbackIdAndWriterId(feedbackId, complianceId);
