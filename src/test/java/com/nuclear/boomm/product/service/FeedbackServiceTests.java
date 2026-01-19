@@ -276,7 +276,7 @@ class FeedbackServiceTests {
                 .product(product)
                 .writerId(stakeholderId)
                 .build();
-        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", feedbackId);
 
         given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(Optional.of(mockFeedback));
 
@@ -350,7 +350,7 @@ class FeedbackServiceTests {
                 .product(product)
                 .writerId(stakeholderId)
                 .build();
-        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", feedbackId);
 
         given(feedbackRepository.findAllByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(List.of(mockFeedback));
 
