@@ -187,4 +187,11 @@ public class FeedbackService {
 
         return FeedbackExtraDescriptionDetailResponse.from(description);
     }
+
+    public List<FeedbackResponse> getAllComplianceFeedbacks(Long userId, Long productId) {
+        // productId로 피드백 조회
+        List<Feedback> reportFeedbacks = feedbackRepository.findAllByProduct_ProductId(productId);
+
+        return FeedbackResponse.from(reportFeedbacks);
+    }
 }

@@ -73,6 +73,17 @@ public class FeedbackController {
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllProductManagerFeedbacks(userId)));
     }
 
+    @Operation(summary = "위험 보고서 피드백 조회", description = "해당 상품의 위험 보고서에 대한 피드백 조회")
+    @GetMapping("/{product-id}/compliance")// role이랑 productId
+    public ResponseEntity<ApiResponse<List<FeedbackResponse>>> getAllComplianceFeedbacks(
+            @PathVariable("product-id") Long productId
+    ) {
+        // 권한: 상품 관리자, 컴플라이언스
+        Long userId = 1L;
+
+        return ResponseEntity.ok(ApiResponse.success(feedbackService.getAllComplianceFeedbacks(userId, productId)));
+    }
+
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")
     @PostMapping("/{feedback-id}/{product-id}/{role}/description-requests")
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> requestExtraDescription(
