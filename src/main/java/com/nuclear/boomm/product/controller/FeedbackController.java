@@ -145,7 +145,7 @@ public class FeedbackController {
         return ResponseEntity.ok(ApiResponse.success(feedbackService.getExtraDescriptionDetails(userId, extraDescriptionId)));
     }
 
-    @Operation(summary = "상품 승인", description = "이해관계자가 해당 상품에 대해 승인하 컴플라이언스로 이관")
+    @Operation(summary = "상품 승인", description = "이해관계자가 해당 상품에 대해 승인하여 컴플라이언스로 이관")
     @PatchMapping("/{product-id}")
     public ResponseEntity<ApiResponse<ProductResponse>> approveProduct(
             @PathVariable("product-id") Long productId
