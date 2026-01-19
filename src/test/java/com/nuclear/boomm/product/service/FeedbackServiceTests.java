@@ -202,8 +202,6 @@ class FeedbackServiceTests {
     @DisplayName("상품 관리자 상품 피드백 조회 - 성공")
     void getAllProductManagerFeedbacks_Success() {
         // given
-        given(productRepository.existsByUserId(productManagerId)).willReturn(true);
-
         given(feedbackRepository.searchAllFeedbackByUserIdWithProduct(productManagerId)).willReturn(List.of(feedback));
 
         // when
@@ -217,15 +215,15 @@ class FeedbackServiceTests {
     }
 
     @Test
-    @DisplayName("상품 관리자 상품 피드백 조회 - 실패 - PRODUCT_NOT_FOUND")
-    void getAllProductManagerFeedbacks_Failure_PRODUCT_NOT_FOUND() {
+    @DisplayName("상품 관리자 상품 피드백 조회 - 실패 - FEEDBACK_NOT_FOUND")
+    void getAllProductManagerFeedbacks_Failure_FEEDBACK_NOT_FOUND() {
         // given
-        given(productRepository.existsByUserId(productManagerId)).willReturn(false);
+        given(feedbackRepository.searchAllFeedbackByUserIdWithProduct(productManagerId)).willReturn(List.of());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class,
                 () -> feedbackService.getAllProductManagerFeedbacks(productManagerId));
-        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+        assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
     }
 
 
@@ -369,7 +367,7 @@ class FeedbackServiceTests {
     @DisplayName("상품 승인 - 실패 - UNAUTHORIZED")
     void approveProduct_Failure_UNAUTHORIZED() {
         // given
-        given(feedbackRepository.existsByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(false);
+        given(feedbackRepository.findAllByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(List.of());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
