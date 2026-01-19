@@ -85,7 +85,7 @@ public class FeedbackController {
     }
 
     @Operation(summary = "피드백에 대한 추가 설명 요청", description = "상품 관리자의 피드백에 대한 추가 설명 요청")
-    @PostMapping("/{feedback-id}/{product-id}/{role}/description-requests")
+    @PostMapping("/{feedback-id}/{product-id}/description-requests")
     public ResponseEntity<ApiResponse<FeedbackExtraDescriptionResponse>> requestExtraDescription(
             @PathVariable("feedback-id") Long feedbackId,
             @PathVariable("product-id") Long productId,
@@ -136,7 +136,7 @@ public class FeedbackController {
 
     @Operation(summary = "피드백 추가 설명 상세 조회", description = "피드백 추가 설명에 대한 상세 정보 조회")
     @GetMapping("/{extra-description-id}")
-    public ResponseEntity<ApiResponse<FeedbackExtraDescriptionDetailResponse>> getExtraDescriptionDetials(
+    public ResponseEntity<ApiResponse<FeedbackExtraDescriptionDetailResponse>> getExtraDescriptionDetails(
             @PathVariable("extra-description-id") Long extraDescriptionId
     ) {
         // 권한: 상품 관리자, 이해 관계자, 컴플라이언스
