@@ -40,7 +40,10 @@ public enum ErrorCode {
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
 
     // 파일 포맷 오류
-    INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 포맷이 올바르지 않습니다.");
+    INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 포맷이 올바르지 않습니다."),
+
+    // 파일 삭제 오류
+    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭젝되지 않았습니다.");
 
     private final HttpStatus status;
     private final String message;

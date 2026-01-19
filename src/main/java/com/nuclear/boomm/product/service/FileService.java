@@ -45,6 +45,10 @@ public class FileService {
 
     // 다중 파일 삭제
     public void deleteFiles(List<String> uuidNames) {
+        if (uuidNames == null || uuidNames.isEmpty()) {
+            throw new CustomException(ErrorCode.FILE_DELETE_ERROR);
+        }
+
         for (String uuidName : uuidNames) {
             DeleteObjectRequest request = DeleteObjectRequest.builder()
                     .bucket(bucket)
