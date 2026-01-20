@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface DraftContractRepository extends JpaRepository<DraftContract, Long> {
 
-    Optional<DraftContract> findByUserId(Long userId);
+    Optional<DraftContract> findTopByUserIdOrderByIdDesc(Long userId);
 }

@@ -52,7 +52,7 @@ class ContractServiceTests {
                 false);
 
         // 이전 임시 저장 내역이 비어있도록 반환
-        when(draftRepository.findByUserId(anyLong())).thenReturn(Optional.empty());
+        when(draftRepository.findTopByUserIdOrderByIdDesc(anyLong())).thenReturn(Optional.empty());
 
         DraftContract newDraft = req.toEntity();
         DraftContract savedDraft = spy(newDraft);
@@ -87,7 +87,7 @@ class ContractServiceTests {
                 new BigDecimal("30000"), false
         );
 
-        when(draftRepository.findByUserId(userId)).thenReturn(Optional.of(existingDraft));
+        when(draftRepository.findTopByUserIdOrderByIdDesc(userId)).thenReturn(Optional.of(existingDraft));
 
         when(draftRepository.save(any(DraftContract.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -102,7 +102,7 @@ class ContractServiceTests {
         assertThat(existingDraft.getMedicalHistory()).isEqualTo("비염 있음");
         System.out.println("변경된 치료 이력 : " + existingDraft.getMedicalHistory());
 
-        verify(draftRepository).findByUserId(userId);
+        verify(draftRepository).findTopByUserIdOrderByIdDesc(userId);
         verify(draftRepository).save(existingDraft);
         System.out.println("계약 가입자 아이디 : " + userId);
     }
@@ -127,7 +127,7 @@ class ContractServiceTests {
         );
 
         DraftContract draft = DraftContract.builder().userId(userId).build();
-        when(draftRepository.findByUserId(userId)).thenReturn(Optional.of(draft));
+        when(draftRepository.findTopByUserIdOrderByIdDesc(userId)).thenReturn(Optional.of(draft));
         when(draftRepository.save(any(DraftContract.class))).thenAnswer(i -> i.getArgument(0));
 
         // when
@@ -164,7 +164,7 @@ class ContractServiceTests {
                 .processingStatus(null)
                 .build();
 
-        when(draftRepository.findByUserId(userId)).thenReturn(Optional.of(draft));
+        when(draftRepository.findTopByUserIdOrderByIdDesc(userId)).thenReturn(Optional.of(draft));
         when(draftRepository.save(any(DraftContract.class))).thenAnswer(i -> i.getArgument(0));
 
         // when
