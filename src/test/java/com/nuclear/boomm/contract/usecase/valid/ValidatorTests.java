@@ -35,6 +35,16 @@ class ValidatorTests {
     }
 
     @Test
+    @DisplayName("시작일 유효하지 않은 경우 오류 메시지 출력")
+    void should_ThrowException_When_Request_Is_Invalid() {
+        CustomException exception = assertThrows(CustomException.class,
+                () -> validator.validateForSubmit(null));
+
+        System.out.println("null 입력 에러: " + exception.getErrorCode().getMessage());
+        assertThat(exception.getErrorCode().getMessage()).isEqualTo(ErrorCode.CONTRACT_REQUEST_IS_INVALID.getMessage());
+    }
+
+    @Test
     @DisplayName("상품 미선택시 오류 메시지 출력")
     void should_ThrowException_When_ProductId_Is_Null() {
         assertValidationFailure(
