@@ -2,7 +2,7 @@ package com.nuclear.boomm.contract.usecase.valid;
 
 import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.contract.domain.DraftContract;
-import com.nuclear.boomm.product.error.CustomException;
+import com.nuclear.boomm.contract.error.CustomException;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
