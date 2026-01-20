@@ -21,7 +21,7 @@ public class ContractService {
     public Long saveDraftAndSubmit(ContractRequest req) {
 
         // 이전 작성 내역이 있는지 확인
-        DraftContract draft = draftRepository.findByUserId(req.userId())
+        DraftContract draft = draftRepository.findTopByUserIdOrderByIdDesc(req.userId())
                 .orElseGet(req::toEntity);
 
         // 입력 값 임시 저장용 테이블에 저장/업데이트
@@ -38,6 +38,8 @@ public class ContractService {
             // 심사 요청 완료시 상태 변경
             saved.changeProcessingStatus(ProcessingStatus.UPLOADED);
         }
+
+        DraftContract savedDraft = draftRepository.save(saved);
 
         return saved.getId();
     }
