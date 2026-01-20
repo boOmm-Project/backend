@@ -46,7 +46,10 @@ public enum ErrorCode {
     CONTRACT_PREMIUM_NOT_CALCULATED(HttpStatus.BAD_REQUEST, "보험료 산출이 완료되지 않았습니다."),
 
     // 신규 계약 시작일 유효하지 않음
-    CONTRACT_INVALID_START_DATE(HttpStatus.BAD_REQUEST, "보험 시작일은 오늘 이후부터 가능합니다.");
+    CONTRACT_INVALID_START_DATE(HttpStatus.BAD_REQUEST, "보험 시작일은 오늘 이후부터 가능합니다."),
+
+    // 심사 요청시 값이 유효하지 않음
+    CONTRACT_REQUEST_IS_INVALID(HttpStatus.BAD_REQUEST, "심사 요청이 유효하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;

@@ -13,6 +13,12 @@ public class ContractValidatorImpl implements Validator {
 
     @Override
     public void validateForSubmit(DraftContract draft) {
+
+        // 요청 유효성 검증
+        if(draft == null) {
+            throw new CustomException(ErrorCode.CONTRACT_REQUEST_IS_INVALID);
+        }
+
         // 상품 미선택
         if (draft.getProductId() == null) {
             throw new CustomException(ErrorCode.CONTRACT_PRODUCT_NOT_SELECTED);
