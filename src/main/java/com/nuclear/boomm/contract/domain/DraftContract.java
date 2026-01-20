@@ -30,10 +30,9 @@ public class DraftContract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long userId;
 
-    @Column(nullable = false)
     private Long productId;
 
     // 임시 저장용 필드(null 허용)
