@@ -42,8 +42,9 @@ public class ContractService {
         return saved.getId();
     }
 
-    public ContractResponse processReviewResult(ReviewRequest req) {
-        return null;
-    }
+//    public ContractResponse processReviewResult(ReviewRequest req) {
+//        TODO: 신규 계약 메소드 관련 로직 추가
+//        return null;
+//    }
 
 }
