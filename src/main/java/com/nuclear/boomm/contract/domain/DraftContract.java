@@ -4,7 +4,9 @@ import com.nuclear.boomm.contract.dto.request.ContractRequest;
 import com.nuclear.boomm.contract.enums.ContractStatus;
 import com.nuclear.boomm.contract.enums.ProcessingStatus;
 import com.nuclear.boomm.underwriting.enums.InsurancePurpose;
+import com.nuclear.boomm.vehicle.domain.VehicleInfo;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -51,6 +53,9 @@ public class DraftContract {
 
     @Enumerated(EnumType.STRING)
     private ProcessingStatus processingStatus;
+
+    @Embedded
+    private VehicleInfo vehicleInfo;
 
     public void updateDraftInfo(ContractRequest req) {
         this.productId = req.productId();

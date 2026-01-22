@@ -39,10 +39,9 @@ public class ContractService {
             saved.changeProcessingStatus(ProcessingStatus.UPLOADED);
         }
 
-        DraftContract savedDraft = draftRepository.save(saved);
-
         return saved.getId();
     }
+
 
 //    public ContractResponse processReviewResult(ReviewRequest req) {
 //        TODO: 신규 계약 메소드 관련 로직 추가

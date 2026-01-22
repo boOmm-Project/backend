@@ -33,23 +33,11 @@ public enum ErrorCode {
     // 위험 보고서 찾을 수 없음
     RISK_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위험 보고서를 찾을 수 없거나 권한이 없습니다."),
 
-    // 신규 계약 가입 상품 미선택
-    CONTRACT_PRODUCT_NOT_SELECTED(HttpStatus.BAD_REQUEST, "가입하실 보험 상품을 선택하지 않았습니다."),
+    // 필수 항목 미선택
+    REQUIRED_OPTION_NOT_SELECTED(HttpStatus.BAD_REQUEST, "필수 항목이 선택되지 않았습니다."),
 
-    // 신규 계약 보험 가입 목적 미기입
-    CONTRACT_PURPOSE_MISSING(HttpStatus.BAD_REQUEST, "보험 가입 목적을 선택하지 않았습니다."),
-
-    // 신규 계약 치료 이력 미기입
-    CONTRACT_MEDICAL_HISTORY_MISSING(HttpStatus.BAD_REQUEST, "과거 치료 이력을 기입하지 않았습니다."),
-
-    // 신규 계약 보험료 미산출
-    CONTRACT_PREMIUM_NOT_CALCULATED(HttpStatus.BAD_REQUEST, "보험료 산출이 완료되지 않았습니다."),
-
-    // 신규 계약 시작일 유효하지 않음
-    CONTRACT_INVALID_START_DATE(HttpStatus.BAD_REQUEST, "보험 시작일은 오늘 이후부터 가능합니다."),
-
-    // 심사 요청시 값이 유효하지 않음
-    CONTRACT_REQUEST_IS_INVALID(HttpStatus.BAD_REQUEST, "심사 요청이 유효하지 않습니다.");
+    // 필수 항목 미기입
+    REQUIRED_INPUT_MISSING(HttpStatus.BAD_REQUEST, "필수 항목이 기입되지 않았습니다.");
 
     private final HttpStatus status;
     private final String message;
