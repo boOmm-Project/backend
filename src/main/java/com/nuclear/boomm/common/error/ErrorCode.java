@@ -31,7 +31,13 @@ public enum ErrorCode {
     EXTRA_DESCRIPTION_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 추가 설명을 찾을 수 없거나 권한이 없습니다."),
 
     // 위험 보고서 찾을 수 없음
-    RISK_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위험 보고서를 찾을 수 없거나 권한이 없습니다.");
+    RISK_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위험 보고서를 찾을 수 없거나 권한이 없습니다."),
+
+    // 필수 항목 미선택
+    REQUIRED_OPTION_NOT_SELECTED(HttpStatus.BAD_REQUEST, "필수 항목이 선택되지 않았습니다."),
+
+    // 필수 항목 미기입
+    REQUIRED_INPUT_MISSING(HttpStatus.BAD_REQUEST, "필수 항목이 기입되지 않았습니다.");
 
     private final HttpStatus status;
     private final String message;
