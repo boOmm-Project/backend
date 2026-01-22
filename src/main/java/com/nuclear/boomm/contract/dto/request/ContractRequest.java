@@ -34,6 +34,22 @@ public record ContractRequest(
         boolean isSubmitAction    // true: 심사 신청, false: 임시 저장
 ) {
     public DraftContract toEntity() {
+        VehicleInfo vehicle = hasVehicleInfo()
+                ? VehicleInfo.builder()
+                .vehicleNumber(vehicleNumber)
+                .vin(vin)
+                .vehicleType(vehicleType)
+                .manufacturer(manufacturer)
+                .modelName(modelName)
+                .modelYear(modelYear)
+                .fuelType(fuelType)
+                .usePurpose(usePurpose)
+                .displacement(displacement)
+                .seatCount(seatCount)
+                .firstRegistrationDate(firstRegistrationDate)
+                .build()
+                : null;
+
         return DraftContract.builder()
                 .userId(userId)
                 .productId(productId)
@@ -42,20 +58,11 @@ public record ContractRequest(
                 .recentHospitalization(recentHospitalization)
                 .startDate(startDate)
                 .totalPremium(totalPremium)
-                .vehicleInfo(VehicleInfo.builder()
-                                .vehicleNumber(vehicleNumber)
-                                .vin(vin)
-                                .vehicleType(vehicleType)
-                                .manufacturer(manufacturer)
-                                .modelName(modelName)
-                                .modelYear(modelYear)
-                                .fuelType(fuelType)
-                                .usePurpose(usePurpose)
-                                .displacement(displacement)
-                                .seatCount(seatCount)
-                                .firstRegistrationDate(firstRegistrationDate)
-                        .build()
-                )
+                .vehicleInfo(vehicle)
                 .build();
+    }
+
+    private boolean hasVehicleInfo() {
+        return vehicleNumber != null || vin != null || vehicleType != null;
     }
 }
