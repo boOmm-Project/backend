@@ -24,9 +24,6 @@ import java.time.LocalDate;
 @Getter
 @Builder
 public class VehicleInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "vehicle_number", length = 20)
     private String vehicleNumber;       // 차량 번호
