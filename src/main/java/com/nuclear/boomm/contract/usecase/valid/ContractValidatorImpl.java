@@ -14,9 +14,6 @@ public class ContractValidatorImpl implements Validator {
 
     @Override
     public void validateCarInfoForSubmit(DraftContract draft) {
-        // 보험 가입자 정보 유효성 검증
-        validateForSubmit(draft);
-
         VehicleInfo vehicle = draft.getVehicleInfo();
 
         // 차량 정보 기입 유효성 검증

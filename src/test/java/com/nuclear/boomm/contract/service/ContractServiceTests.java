@@ -6,6 +6,9 @@ import com.nuclear.boomm.contract.enums.ProcessingStatus;
 import com.nuclear.boomm.contract.repository.DraftContractRepository;
 import com.nuclear.boomm.contract.usecase.valid.Validator;
 import com.nuclear.boomm.underwriting.enums.InsurancePurpose;
+import com.nuclear.boomm.vehicle.enums.FuelType;
+import com.nuclear.boomm.vehicle.enums.UsePurpose;
+import com.nuclear.boomm.vehicle.enums.VehicleType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,6 +23,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.spy;
@@ -41,15 +46,23 @@ class ContractServiceTests {
     void should_Create_New_Draft_When_No_Existing_Record() {
         // given
         Long userId = 1L;
-        ContractRequest req = new ContractRequest(
-                userId,
-                10L, // productId
-                InsurancePurpose.PROTECTION, // 보험 목적
-                "과거 수술 이력 없음", // 질병 이력
-                false, // 최근 입원 여부
-                LocalDate.now().plusDays(7), // 시작일
-                new BigDecimal("50000"), // 보험료
-                false);
+        BigDecimal premium = new BigDecimal("50000");
+        LocalDate startDate = LocalDate.now().plusDays(7);
+
+        ContractRequest req = ContractRequest.builder()
+                .userId(1L)
+                .productId(10L)
+                .insurancePurpose(InsurancePurpose.PROTECTION)
+                .medicalHistory("과거 수술 이력 없음")
+                .recentHospitalization(false)
+                .startDate(LocalDate.now().plusDays(7))
+                .totalPremium(new BigDecimal("50000"))
+                .vehicleNumber("123가4567")
+                .vin("VIN123456789")
+                .vehicleType(VehicleType.PASSENGER)
+                .modelName("아반떼")
+                .isSubmitAction(false)
+                .build();
 
         // 이전 임시 저장 내역이 비어있도록 반환
         when(draftRepository.findTopByUserIdOrderByIdDesc(anyLong())).thenReturn(Optional.empty());
@@ -81,11 +94,12 @@ class ContractServiceTests {
                 .medicalHistory("과거 수술 이력 없음")
                 .build();
 
-        ContractRequest req = new ContractRequest(
-                userId, 10L, InsurancePurpose.PROTECTION,
-                "비염 있음", false, LocalDate.now(),
-                new BigDecimal("30000"), false
-        );
+        ContractRequest req = ContractRequest.builder()
+                .userId(userId)
+                .medicalHistory("비염 있음")
+                .productId(10L)
+                .insurancePurpose(InsurancePurpose.PROTECTION)
+                .build();
 
         when(draftRepository.findTopByUserIdOrderByIdDesc(userId)).thenReturn(Optional.of(existingDraft));
 
@@ -115,16 +129,16 @@ class ContractServiceTests {
         BigDecimal premium = new BigDecimal("50000");
         LocalDate startDate = LocalDate.of(2026, 2, 1);
 
-        ContractRequest req = new ContractRequest(
-                userId,
-                10L,
-                InsurancePurpose.PROTECTION,
-                "비염 및 약복용 중",
-                true,
-                startDate,
-                premium,
-                false
-        );
+        ContractRequest req = ContractRequest.builder()
+                .userId(userId)
+                .productId(10L)
+                .insurancePurpose(InsurancePurpose.PROTECTION)
+                .medicalHistory("비염 및 약 복용 중")
+                .recentHospitalization(true)
+                .startDate(startDate)
+                .totalPremium(premium)
+                .isSubmitAction(false)
+                .build();
 
         DraftContract draft = DraftContract.builder().userId(userId).build();
         when(draftRepository.findTopByUserIdOrderByIdDesc(userId)).thenReturn(Optional.of(draft));
@@ -134,7 +148,7 @@ class ContractServiceTests {
         contractService.saveDraftAndSubmit(req);
 
         // then
-        assertThat(draft.getMedicalHistory()).isEqualTo("비염 및 약복용 중");
+        assertThat(draft.getMedicalHistory()).isEqualTo("비염 및 약 복용 중");
         System.out.println("치료 이력 : " + draft.getMedicalHistory());
         assertThat(draft.isRecentHospitalization()).isTrue();
         System.out.println("최근 5년 내 입원/수술 여부 : " +  draft.isRecentHospitalization());
@@ -152,12 +166,17 @@ class ContractServiceTests {
     void should_Change_Status_To_Uploaded_When_Submitted() {
         // given
         Long userId = 1L;
-        ContractRequest req = new ContractRequest(
-                userId, 10L, InsurancePurpose.PROTECTION,
-                "특이사항 없음", false, LocalDate.now(),
-                new BigDecimal("30000"),
-                true
-        );
+
+        ContractRequest req = ContractRequest.builder()
+                .userId(userId)
+                .productId(10L)
+                .insurancePurpose(InsurancePurpose.PROTECTION)
+                .medicalHistory("특이사항 없음")
+                .recentHospitalization(false)
+                .startDate(LocalDate.now())
+                .totalPremium(new BigDecimal("30000"))
+                .isSubmitAction(true)
+                .build();
 
         DraftContract draft = DraftContract.builder()
                 .userId(userId)
@@ -174,5 +193,27 @@ class ContractServiceTests {
         assertThat(draft.getProcessingStatus()).isEqualTo(ProcessingStatus.UPLOADED);
         System.out.println("현재 심사 상태 : " +  draft.getProcessingStatus());
         verify(validator).validateForSubmit(draft);
+    }
+
+    @Test
+    void shouldExecuteVehicleValidationWhenInsuranceTypeIsCar() {
+        // given
+        ContractRequest req = ContractRequest.builder()
+                .userId(1L)
+                .productId(10L)
+                .vehicleNumber("12아")
+                .isSubmitAction(true)
+                .build();
+
+        DraftContract draft = req.toEntity();
+        given(draftRepository.findTopByUserIdOrderByIdDesc(any())).willReturn(Optional.of(draft));
+        given(draftRepository.save(any())).willReturn(draft);
+
+        // when
+        contractService.saveDraftAndSubmit(req);
+
+        // then
+        verify(validator, times(1)).validateCarInfoForSubmit(any());
+        verify(validator, times(1)).validateForSubmit(any());
     }
 }

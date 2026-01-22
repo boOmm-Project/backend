@@ -32,6 +32,11 @@ public class ContractService {
 
         // 심사 요청 버튼 클릭시
         if(req.isSubmitAction()) {
+
+            if(draft.isCarInsurance()) {
+                validator.validateCarInfoForSubmit(saved);
+            }
+
             // 유효값 검증 로직 추가(throw 에러)
             validator.validateForSubmit(saved);
 

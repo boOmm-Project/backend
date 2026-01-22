@@ -69,4 +69,8 @@ public class DraftContract {
     public void changeProcessingStatus(ProcessingStatus processingStatus) {
         this.processingStatus = processingStatus;
     }
+
+    public boolean isCarInsurance() {
+        return this.vehicleInfo != null;
+    }
 }
