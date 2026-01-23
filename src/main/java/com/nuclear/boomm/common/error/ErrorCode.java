@@ -44,6 +44,11 @@ public enum ErrorCode {
 
     // 파일 삭제 오류
     FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭제되지 않았습니다.");
+    // 필수 항목 미선택
+    REQUIRED_OPTION_NOT_SELECTED(HttpStatus.BAD_REQUEST, "필수 항목이 선택되지 않았습니다."),
+
+    // 필수 항목 미기입
+    REQUIRED_INPUT_MISSING(HttpStatus.BAD_REQUEST, "필수 항목이 기입되지 않았습니다.");
 
     private final HttpStatus status;
     private final String message;
