@@ -1,9 +1,9 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.common.error.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -46,8 +46,19 @@ public class Feedback extends BaseEntity {
     private Long writerId;    // user 테이블 pk 참조. 피드백을 작성한 사람
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id",  nullable = false)
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @Column(nullable = false)
+    private String role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
+
+    public static Feedback create(Long userId, Product product, String role) {
+        return Feedback.builder()
+                .writerId(userId)
+                .role(role)
+                .product(product)
+                .build();
+    }
 
     public void updateDescription(String description) {
         if (description == null || description.isBlank()) {
@@ -64,7 +75,4 @@ public class Feedback extends BaseEntity {
 
         this.status = feedbackStatus;
     }
-
-//    @Column(nullable = false)
-//    private Role role;  // 나중에 상준님이 Role enum 추가하시면 변경해야함
 }

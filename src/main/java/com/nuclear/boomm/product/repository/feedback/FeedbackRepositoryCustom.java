@@ -8,4 +8,5 @@ import java.util.Optional;
 public interface FeedbackRepositoryCustom {
     List<Feedback> searchAllFeedbackByUserIdWithProduct(Long userId);
     Optional<Feedback> findByFeedbackIdAndWriterId(Long feedbackId, Long userId);
+    List<Feedback> findAllByProduct_ProductIdAndWriterId(Long productId, Long userId);
 }
