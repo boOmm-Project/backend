@@ -43,7 +43,7 @@ public enum ErrorCode {
     INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 포맷이 올바르지 않습니다."),
 
     // 파일 삭제 오류
-    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭젝되지 않았습니다.");
+    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭제되지 않았습니다.");
 
     private final HttpStatus status;
     private final String message;

@@ -63,7 +63,7 @@ public class RiskReportController {
     }
 
     @Operation(summary = "위험 보고서에 대한 피드백 전송", description = "컴플라이언스가 상품에 대한 위험 보고서 피드백 전송")
-    @PatchMapping("/{feedback-id}")
+    @PatchMapping("/{feedback-id}/feedback")
     public ResponseEntity<ApiResponse<Long>> feedbackRiskReport(
             @PathVariable("feedback-id") Long feedbackId,
             @RequestBody @Valid RiskReportFeedbackRequest request
@@ -75,7 +75,7 @@ public class RiskReportController {
     }
 
     @Operation(summary = "위험 보고서 피드백 업데이트", description = "피드백 내용을 위험 보고서에 업데이트")
-    @PatchMapping("/{report-id}")
+    @PatchMapping("/{report-id}/report")
     public ResponseEntity<ApiResponse<RiskReportResponse>> updateRiskReport(
             @PathVariable("report-id") Long reportId,
             @RequestBody @Valid RiskReportUpdateRequest request
