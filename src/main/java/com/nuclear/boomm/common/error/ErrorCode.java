@@ -43,7 +43,7 @@ public enum ErrorCode {
     INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 포맷이 올바르지 않습니다."),
 
     // 파일 삭제 오류
-    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭제되지 않았습니다.");
+    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭제되지 않았습니다."),
     // 필수 항목 미선택
     REQUIRED_OPTION_NOT_SELECTED(HttpStatus.BAD_REQUEST, "필수 항목이 선택되지 않았습니다."),
 
