@@ -37,7 +37,6 @@ class ValidatorTests {
                 .startDate(LocalDate.now().plusDays(7))
                 .totalPremium(new BigDecimal("50000"))
                 .vehicleInfo(VehicleInfo.builder()
-                        .id(1L)
                         .vehicleNumber("12가1234")
                         .displacement(3000)
                         .seatCount(9)
