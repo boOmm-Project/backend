@@ -37,7 +37,10 @@ public enum ErrorCode {
     REQUIRED_OPTION_NOT_SELECTED(HttpStatus.BAD_REQUEST, "필수 항목이 선택되지 않았습니다."),
 
     // 필수 항목 미기입
-    REQUIRED_INPUT_MISSING(HttpStatus.BAD_REQUEST, "필수 항목이 기입되지 않았습니다.");
+    REQUIRED_INPUT_MISSING(HttpStatus.BAD_REQUEST, "필수 항목이 기입되지 않았습니다."),
+
+    // 보험 가입 요청 유효하지 않은 경우
+    REQUIRED_IS_INVALID(HttpStatus.BAD_REQUEST, "요청이 유효하지 않습니다.");
 
     private final HttpStatus status;
     private final String message;
