@@ -1,17 +1,18 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.domain.ExtraDescription;
 import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackExtraDescriptionRequest;
 import com.nuclear.boomm.product.dto.request.feedback.FeedbackUpdateRequest;
 import com.nuclear.boomm.product.dto.request.product.ProductRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionDetailResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackExtraDescriptionResponse;
 import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.ProductResponse;
 import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.common.error.ErrorCode;
 import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
 import com.nuclear.boomm.product.repository.product.ExtraDescriptionRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
@@ -29,6 +30,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -99,7 +101,6 @@ class FeedbackServiceTests {
         );
 
         productRequest = new ProductRequest(
-                productId,
                 "changedProductName",
                 1L,
                 "changedTargetCustomer",
@@ -112,7 +113,6 @@ class FeedbackServiceTests {
         );
 
         releasedProductRequest = new ProductRequest(
-                productId,
                 "changedProductName",
                 1L,
                 "changedTargetCustomer",
@@ -129,7 +129,7 @@ class FeedbackServiceTests {
     @DisplayName("피드백 생성 - 성공")
     void createFeedback_Success() {
         // given
-        given(productRepository.existsByProductId(productId)).willReturn(true);
+        given(productRepository.findByProductIdAndUserId(productId, stakeholderId)).willReturn(Optional.of(product));
 
         given(feedbackRepository.save(any(Feedback.class))).willAnswer(invocation -> feedback);
 
@@ -137,14 +137,16 @@ class FeedbackServiceTests {
         FeedbackResponse response = feedbackService.createFeedback(stakeholderId, productId);
 
         // then
+        assertEquals(feedbackId, response.feedbackId());
         assertEquals(productId, response.productId());
-        assertEquals(stakeholderId, response.writerId());
+        assertEquals("임시 상품", response.productName());
     }
+
     @Test
     @DisplayName("피드백 생성 - 실패 - 잘못된 productId")
     void createFeedback_Failure_INVALID_PRODUCT_ID() {
         // given
-        given(productRepository.existsByProductId(productId)).willReturn(false);
+        given(productRepository.findByProductIdAndUserId(productId, stakeholderId)).willReturn(Optional.empty());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> feedbackService.createFeedback(stakeholderId, productId));
@@ -167,6 +169,7 @@ class FeedbackServiceTests {
         assertEquals("reqDescription", response.description());
         assertEquals(FeedbackStatus.STAKEHOLDER_FEEDBACK_UPDATE_PENDING, response.status());
     }
+
     @Test
     @DisplayName("이해관계자 피드백 업데이트 - 실패 - INVALID INPUT")
     void updateFeedback_Failure_InvalidInput() {
@@ -199,12 +202,10 @@ class FeedbackServiceTests {
     @DisplayName("상품 관리자 상품 피드백 조회 - 성공")
     void getAllProductManagerFeedbacks_Success() {
         // given
-        given(productRepository.existsByUserId(productManagerId)).willReturn(true);
-
         given(feedbackRepository.searchAllFeedbackByUserIdWithProduct(productManagerId)).willReturn(List.of(feedback));
 
         // when
-        List<FeedbackResponse> response = feedbackService.getProductManagerFeedback(productManagerId);
+        List<FeedbackResponse> response = feedbackService.getAllProductManagerFeedbacks(productManagerId);
 
         // then
         assertEquals(productId, response.get(0).productId());
@@ -212,16 +213,17 @@ class FeedbackServiceTests {
         assertEquals(feedbackId, response.get(0).feedbackId());
         assertEquals("피드백 사항을 작성해 주세요.", response.get(0).description());
     }
+
     @Test
-    @DisplayName("상품 관리자 상품 피드백 조회 - 실패 - PRODUCT_NOT_FOUND")
-    void getAllProductManagerFeedbacks_Failure_PRODUCT_NOT_FOUND() {
+    @DisplayName("상품 관리자 상품 피드백 조회 - 실패 - FEEDBACK_NOT_FOUND")
+    void getAllProductManagerFeedbacks_Failure_FEEDBACK_NOT_FOUND() {
         // given
-        given(productRepository.existsByUserId(productManagerId)).willReturn(false);
+        given(feedbackRepository.searchAllFeedbackByUserIdWithProduct(productManagerId)).willReturn(List.of());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class,
-                () -> feedbackService.getProductManagerFeedback(productManagerId));
-        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+                () -> feedbackService.getAllProductManagerFeedbacks(productManagerId));
+        assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
     }
 
 
@@ -229,9 +231,13 @@ class FeedbackServiceTests {
     @DisplayName("피드백 추가 설명 요청 - 성공")
     void requestExtraDescription_Success() {
         // given
-        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(true);
+        Feedback mockFeedback = Feedback.builder()
+                .product(product)
+                .writerId(stakeholderId)
+                .build();
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
 
-        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(true);
+        given(feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)).willReturn(Optional.of(mockFeedback));
 
         given(extraDescriptionRepository.save(any(ExtraDescription.class))).willAnswer(invocation -> extraDescription);
 
@@ -244,12 +250,13 @@ class FeedbackServiceTests {
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
         assertEquals("추가 설명을 입력해 주세요.", response.response());
+        assertEquals(FeedbackStatus.ADDITIONAL_EXPLANATION_REQUEST, mockFeedback.getStatus());
     }
     @Test
     @DisplayName("피드백 추가 설명 요청 - 실패 - FEEDBACK_NOT_FOUND")
     void requestExtraDescription_Failure_FEEDBACK_NOT_FOUND() {
         // given
-        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(false);
+        given(feedbackRepository.findByFeedbackIdAndProduct_ProductId(feedbackId, productId)).willReturn(Optional.empty());
 
         // when & then
         CustomException exception = assertThrows(CustomException.class,
@@ -257,44 +264,38 @@ class FeedbackServiceTests {
         );
         assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
     }
-    @Test
-    @DisplayName("피드백 추가 설명 요청 - 실패 - PRODUCT_NOT_FOUND")
-    void requestExtraDescription_Failure_PRODUCT_NOT_FOUND() {
-        // given
-        given(feedbackRepository.existsByFeedbackId(feedbackId)).willReturn(true);
-
-        given(productRepository.existsByProductIdAndUserId(productId, productManagerId)).willReturn(false);
-
-        // when & then
-        CustomException exception = assertThrows(CustomException.class,
-                () -> feedbackService.requestExtraDescription(productManagerId, feedbackId, productId, feedbackExtraDescriptionRequest)
-        );
-        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
-    }
 
 
     @Test
     @DisplayName("피드백 추가 설명 전송 - 성공")
     void responseExtraDescription_Success() {
         // given
-        given(feedbackRepository.existsByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(true);
+        given(extraDescriptionRepository.findByExtraDescriptionIdAndFeedbackId(extraDescriptionId, feedbackId)).willReturn(Optional.of(extraDescription));
 
-        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.of(extraDescription));
+        Feedback mockFeedback = Feedback.builder()
+                .product(product)
+                .writerId(stakeholderId)
+                .build();
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", feedbackId);
+
+        given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, stakeholderId)).willReturn(Optional.of(mockFeedback));
 
         // when
-        FeedbackExtraDescriptionResponse response = feedbackService.responseExtraDescription(stakeholderId, extraDescriptionId, feedbackExtraDescriptionRequest);
+        FeedbackExtraDescriptionResponse response = feedbackService.responseExtraDescription(stakeholderId, feedbackId, extraDescriptionId, feedbackExtraDescriptionRequest);
 
         // then
         assertEquals(feedbackId, response.feedbackId());
         assertEquals(productManagerId, response.creatorId());
         assertEquals(productId, response.productId());
         assertEquals(feedbackExtraDescriptionRequest.description(), response.request());
+        assertEquals(FeedbackStatus.ADDITIONAL_EXPLANATION_UPDATE_PENDING, mockFeedback.getStatus());
     }
+
     @Test
     @DisplayName("피드백 추가 설명 전송 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
     void responseExtraDescription_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
         // when & then
-        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, extraDescriptionId, feedbackExtraDescriptionRequest));
+        CustomException exception = assertThrows(CustomException.class, () -> feedbackService.responseExtraDescription(stakeholderId, feedbackId, extraDescriptionId, feedbackExtraDescriptionRequest));
         assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
     }
 
@@ -316,11 +317,12 @@ class FeedbackServiceTests {
         assertEquals(1L, response.category());
         assertEquals("changedTargetCustomer", response.targetCustomer());
         assertEquals(12, response.period());
-        assertEquals("changedSalesChannel",  response.salesChannel());
+        assertEquals("changedSalesChannel", response.salesChannel());
         assertEquals(productManagerId, response.userId());
         assertEquals(true, response.isDone());
         assertEquals(false, response.isReleased());
     }
+
     @Test
     @DisplayName("피드백 반영 - 실패 - PRODUCT_IS_RELEASED")
     void reflectFeedback_Failure_PRODUCT_IS_RELEASED() {
@@ -332,5 +334,87 @@ class FeedbackServiceTests {
         // when & then
         CustomException exception = assertThrows(CustomException.class, () -> feedbackService.reflectFeedback(productManagerId, feedbackId, productId, releasedProductRequest));
         assertEquals(ErrorCode.PRODUCT_IS_RELEASED, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("상품 승인 - 성공")
+    void approveProduct_Success() {
+        // given
+        Product product = Product.builder()
+                .isDone(false)
+                .build();
+        ReflectionTestUtils.setField(product, "productId", productId);
+
+        Feedback mockFeedback = Feedback.builder()
+                .product(product)
+                .writerId(stakeholderId)
+                .build();
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", feedbackId);
+
+        given(feedbackRepository.findAllByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(List.of(mockFeedback));
+
+        // when
+        ProductResponse response = feedbackService.approveProduct(stakeholderId, productId);
+
+        // then
+        assertEquals(productId, response.productId());
+        assertEquals(FeedbackStatus.APPROVAL, mockFeedback.getStatus());
+        assertTrue(response.isDone());
+    }
+
+    @Test
+    @DisplayName("상품 승인 - 실패 - UNAUTHORIZED")
+    void approveProduct_Failure_UNAUTHORIZED() {
+        // given
+        given(feedbackRepository.findAllByProduct_ProductIdAndWriterId(productId, stakeholderId)).willReturn(List.of());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                feedbackService.approveProduct(stakeholderId, productId)
+        );
+        assertEquals(ErrorCode.UNAUTHORIZED, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("추가 설명 리스트 조회 - 성공")
+    void getAllExtraDescriptions_Success() {
+        // given
+        given(extraDescriptionRepository.findAllByProductId(productId)).willReturn(List.of(extraDescription));
+
+        // when
+        List<FeedbackExtraDescriptionResponse> responses = feedbackService.getAllExtraDescriptions(productManagerId, productId);
+
+        // then
+        assertEquals(1, responses.size());
+        assertEquals("추가 설명을 입력해 주세요.", responses.get(0).response());
+    }
+
+
+    @Test
+    @DisplayName("추가 설명 상세 조회 - 성공")
+    void getAllExtraDescriptionDetails_Success() {
+        // given
+        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.of(extraDescription));
+
+        // when
+        FeedbackExtraDescriptionDetailResponse response = feedbackService.getExtraDescriptionDetails(productManagerId, extraDescriptionId);
+
+        // then
+        assertEquals("추가 설명을 입력해 주세요.", response.response());
+    }
+
+    @Test
+    @DisplayName("추가 설명 상세 조회 - 실패 - EXTRA_DESCRIPTION_NOT_FOUND")
+    void getAllExtraDescriptionDetails_Failure_EXTRA_DESCRIPTION_NOT_FOUND() {
+        // given
+        given(extraDescriptionRepository.findByExtraDescriptionId(extraDescriptionId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                feedbackService.getExtraDescriptionDetails(productManagerId, extraDescriptionId)
+        );
+        assertEquals(ErrorCode.EXTRA_DESCRIPTION_NOT_FOUND, exception.getErrorCode());
     }
 }

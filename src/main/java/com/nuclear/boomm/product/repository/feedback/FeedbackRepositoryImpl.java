@@ -36,4 +36,16 @@ public class FeedbackRepositoryImpl implements FeedbackRepositoryCustom {
                 .fetchOne()
         );
     }
+
+    @Override
+    public List<Feedback> findAllByProduct_ProductIdAndWriterId(Long productId, Long userId) {
+        return queryFactory
+                .selectFrom(feedback)
+                .join(feedback.product, product).fetchJoin()
+                .where(
+                        feedback.product.productId.eq(productId),
+                        feedback.writerId.eq(userId)
+                )
+                .fetch();
+    }
 }

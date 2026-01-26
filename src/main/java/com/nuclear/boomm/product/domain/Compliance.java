@@ -8,6 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +16,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "compliance")
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Compliance extends BaseEntity {
 
     @Id
@@ -27,10 +30,4 @@ public class Compliance extends BaseEntity {
 
     @Column(nullable = false)
     private Long productId;     // product 테이블 pk 참조
-
-    @Builder
-    public Compliance(Long userId, Long productId) {
-        this.userId = userId;
-        this.productId = productId;
-    }
 }
