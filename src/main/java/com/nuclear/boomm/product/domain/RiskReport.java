@@ -1,6 +1,7 @@
 package com.nuclear.boomm.product.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
+import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,7 +30,7 @@ public class RiskReport extends BaseEntity {
     private Long reportId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id",  nullable = false, unique = true)
+    @JoinColumn(name = "product_id", nullable = false, unique = true)
     private Product product;
 
     @Builder.Default
@@ -42,4 +43,18 @@ public class RiskReport extends BaseEntity {
 
     @Column(nullable = false)
     private Long complianceId;
+
+    public static RiskReport create(Product product, Long complianceId) {
+        return RiskReport.builder()
+                .product(product)
+                .complianceId(complianceId)
+                .build();
+    }
+
+    public RiskReport update(RiskReportUpdateRequest request) {
+        this.lossRatioForecast = request.lossRatioForecast();
+        this.competitorProductComparison = request.competitorProductComparison();
+
+        return this;
+    }
 }

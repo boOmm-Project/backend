@@ -33,6 +33,17 @@ public enum ErrorCode {
     // 위험 보고서 찾을 수 없음
     RISK_REPORT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 위험 보고서를 찾을 수 없거나 권한이 없습니다."),
 
+    // 상품이 이해관계자의 승인을 받지 않음
+    PRODUCT_IS_NOT_DONE(HttpStatus.BAD_REQUEST, "해당 상품은 이해관계자의 승인을 받지 않았습니다."),
+
+    // 접근 권한 부족
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "접근 권한이 없습니다."),
+
+    // 파일 포맷 오류
+    INVALID_FILE_FORMAT(HttpStatus.BAD_REQUEST, "파일 포맷이 올바르지 않습니다."),
+
+    // 파일 삭제 오류
+    FILE_DELETE_ERROR(HttpStatus.BAD_REQUEST, "파일이 정상적으로 삭제되지 않았습니다.");
     // 필수 항목 미선택
     REQUIRED_OPTION_NOT_SELECTED(HttpStatus.BAD_REQUEST, "필수 항목이 선택되지 않았습니다."),
 

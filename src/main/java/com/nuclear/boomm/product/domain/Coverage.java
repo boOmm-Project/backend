@@ -18,6 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Entity
 @Getter
@@ -68,11 +70,31 @@ public class Coverage extends BaseEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String damageCalStandard = "피해 산정 기준";
 
+    public static Coverage create(CoverageRequest coverageRequest) {
+        return Coverage.builder()
+                .category(coverageRequest.category())
+                .productId(coverageRequest.productId())
+                .title(coverageRequest.title())
+                .description(coverageRequest.description())
+                .minCoverageLimit(coverageRequest.minCoverageLimit())
+                .maxCoverageLimit(coverageRequest.maxCoverageLimit())
+                .isMandatory(coverageRequest.isMandatory())
+                .damageCalStandard(coverageRequest.damageCalStandard())
+                .build();
+    }
+
+    public static List<Coverage> create(List<CoverageRequest> coverageRequests) {
+        return coverageRequests.stream()
+                .map(Coverage::create)
+                .toList();
+    }
+
     public void update(CoverageRequest request) {
         this.title = request.title();
         this.description = request.description();
         this.minCoverageLimit = request.minCoverageLimit();
         this.maxCoverageLimit = request.maxCoverageLimit();
         this.isMandatory = request.isMandatory();
+        this.damageCalStandard = request.damageCalStandard();
     }
 }

@@ -1,12 +1,18 @@
 package com.nuclear.boomm.product.service;
 
+import com.nuclear.boomm.common.error.ErrorCode;
+import com.nuclear.boomm.product.domain.Feedback;
 import com.nuclear.boomm.product.domain.Product;
 import com.nuclear.boomm.product.domain.ProductFile;
 import com.nuclear.boomm.product.domain.RiskReport;
+import com.nuclear.boomm.product.dto.request.feedback.RiskReportFeedbackRequest;
+import com.nuclear.boomm.product.dto.request.product.RiskReportUpdateRequest;
+import com.nuclear.boomm.product.dto.response.feedback.FeedbackResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportDetailResponse;
 import com.nuclear.boomm.product.dto.response.product.RiskReportResponse;
+import com.nuclear.boomm.product.enums.FeedbackStatus;
 import com.nuclear.boomm.product.error.CustomException;
-import com.nuclear.boomm.common.error.ErrorCode;
+import com.nuclear.boomm.product.repository.feedback.FeedbackRepository;
 import com.nuclear.boomm.product.repository.product.ProductFileRepository;
 import com.nuclear.boomm.product.repository.product.ProductRepository;
 import com.nuclear.boomm.product.repository.product.RiskReportRepository;
@@ -41,6 +47,8 @@ class RiskReportServiceTests {
     private ProductRepository productRepository;
     @Mock
     private ProductFileRepository productFileRepository;
+    @Mock
+    private FeedbackRepository feedbackRepository;
 
     private Long productManagerId;
     private Long complianceId;
@@ -52,6 +60,8 @@ class RiskReportServiceTests {
     private RiskReportResponse riskReportResponse;
     private BigDecimal lossRatioForecast;
     private String competitorProductComparison;
+    private RiskReportUpdateRequest riskReportUpdateRequest;
+    private RiskReportFeedbackRequest riskReportFeedbackRequest;
 
     private Product product;
 
@@ -94,6 +104,15 @@ class RiskReportServiceTests {
                         .build()
         );
         ReflectionTestUtils.setField(productFileList.get(0), "fileId", 1L);
+
+        riskReportUpdateRequest = new RiskReportUpdateRequest(
+                competitorProductComparison,
+                lossRatioForecast
+        );
+
+        riskReportFeedbackRequest = new RiskReportFeedbackRequest(
+                "description"
+        );
     }
 
 
@@ -101,7 +120,7 @@ class RiskReportServiceTests {
     @DisplayName("상품에 대한 위험 보고서 생성 - 성공")
     void createRiskReport_Success() {
         // given
-        given(productRepository.findByProductId(productId)).willReturn(Optional.of(product));
+        given(productRepository.findByProductIdAndUserId(productId, productManagerId)).willReturn(Optional.of(product));
 
         given(riskReportRepository.save(any(RiskReport.class))).willReturn(riskReport);
 
@@ -114,7 +133,7 @@ class RiskReportServiceTests {
         assertEquals(lossRatioForecast, response.lossRatioForecast());
         assertEquals(competitorProductComparison, response.competitorProductComparison());
 
-        verify(productRepository, times(1)).findByProductId(productId);
+        verify(productRepository, times(1)).findByProductIdAndUserId(productId, productManagerId);
         verify(riskReportRepository, times(1)).save(any(RiskReport.class));
     }
     @Test
@@ -131,12 +150,12 @@ class RiskReportServiceTests {
     @DisplayName("상품에 대한 위험 보고서 세부사항 조회 - 성공")
     void getRiskReportDetails_Success() {
         // given
-        given(riskReportRepository.findByProduct_ProductId(productId)).willReturn(Optional.of(riskReport));
+        given(riskReportRepository.findByReportId(reportId)).willReturn(Optional.of(riskReport));
 
         given(productFileRepository.findAllByProductId(productId)).willReturn(productFileList);
 
         // when
-        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, productId, complianceId);
+        RiskReportDetailResponse response = riskReportService.getRiskReportDetails(productManagerId, reportId);
 
         // then
         assertEquals(reportId, response.reportId());
@@ -149,23 +168,183 @@ class RiskReportServiceTests {
     @DisplayName("상품에 대한 위험 보고서 세부사항 조회 - 실패 - PRODUCT_NOT_FOUND")
     void getRiskReportDetails_Failure_PRODUCT_NOT_FOUND() {
         // given
-        given(riskReportRepository.findByProduct_ProductId(productId)).willReturn(Optional.of(riskReport));
-
         Product product = Product.builder()
                 .userId(99L)
                 .build();
 
         RiskReport report = RiskReport.builder()
                 .product(product)
+                .complianceId(999L)
                 .build();
 
-        given(riskReportRepository.findByProduct_ProductId(productId))
+        given(riskReportRepository.findByReportId(reportId))
                 .willReturn(Optional.of(report));
 
         // when & then
         CustomException exception = assertThrows(CustomException.class, () ->
-                riskReportService.getRiskReportDetails(productManagerId, productId, complianceId)
+                riskReportService.getRiskReportDetails(productManagerId, reportId)
         );
         assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("위험 보고서 피드백 반영 - 성공")
+    void updateRiskReport_Success() {
+        // given
+        given(riskReportRepository.findByReportId(reportId)).willReturn(Optional.of(riskReport));
+
+        Feedback mockFeedback = Feedback.builder()
+                .status(FeedbackStatus.APPROVAL)
+                .build();
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", 10L);
+
+        given(feedbackRepository.findByProduct_ProductIdAndRole(productId, "COMPLIANCE")).willReturn(Optional.of(mockFeedback));
+
+        // when
+        RiskReportResponse response = riskReportService.updateRiskReport(productManagerId, reportId, riskReportUpdateRequest);
+
+        // then
+        assertEquals(reportId, response.reportId());
+        assertEquals(productId, response.productId());
+        assertEquals(lossRatioForecast, response.lossRatioForecast());
+        assertEquals(competitorProductComparison, response.competitorProductComparison());
+
+        assertEquals(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE_PENDING, mockFeedback.getStatus());
+
+        verify(riskReportRepository, times(1)).findByReportId(reportId);
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 반영 - 실패 - RISK_REPORT_NOT_FOUND")
+    void updateRiskReport_Failure_RISK_REPORT_NOT_FOUND() {
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.updateRiskReport(productManagerId, reportId, riskReportUpdateRequest)
+        );
+        assertEquals(ErrorCode.RISK_REPORT_NOT_FOUND, exception.getErrorCode());
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 반영 - 실패 - PRODUCT_NOT_FOUND")
+    void updateRiskReport_Failure_RISK_PRODUCT_NOT_FOUND() {
+        // given
+        Product mockProduct = Product.builder()
+                .userId(99L)
+                .build();
+        ReflectionTestUtils.setField(mockProduct, "productId", 99L);
+
+        RiskReport report = RiskReport.builder()
+                .product(mockProduct)
+                .build();
+        ReflectionTestUtils.setField(report, "reportId", reportId);
+        given(riskReportRepository.findByReportId(reportId)).willReturn(Optional.of(report));
+
+        Feedback feedback = Feedback.builder()
+                .build();
+        Long feedbackId = 1L;
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+
+        given(feedbackRepository.findByProduct_ProductIdAndRole(99L, "COMPLIANCE")).willReturn(Optional.of(feedback));
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.updateRiskReport(productManagerId, reportId, riskReportUpdateRequest)
+        );
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+    }
+
+
+    @Test
+    @DisplayName("위험 보고서 피드백 전송 - 성공")
+    void feedbackRiskReport_Success() {
+        // given
+        Long feedbackId = 30L;
+
+        Feedback feedback = Feedback.builder()
+                .status(FeedbackStatus.RISK_REPORT_FEEDBACK_UPDATE)
+                .description("description")
+                .writerId(complianceId)
+                .product(product)
+                .role("COMPLIANCE")
+                .build();
+        ReflectionTestUtils.setField(feedback, "feedbackId", feedbackId);
+
+        given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, complianceId)).willReturn(Optional.of(feedback));
+
+        // when
+        Long response = riskReportService.feedbackRiskReport(complianceId, feedbackId, riskReportFeedbackRequest);
+
+        // then
+        assertEquals(feedbackId, response);
+        assertEquals("description", feedback.getDescription());
+        assertEquals(FeedbackStatus.RISK_REPORT_FEEDBACK_PENDING, feedback.getStatus());
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 전송 - 실패 - FEEDBACK_NOT_FOUND")
+    void feedbackRiskReport_Failure_FEEDBACK_NOT_FOUND() {
+        // given
+        Long feedbackId = 30L;
+
+        given(feedbackRepository.findByFeedbackIdAndWriterId(feedbackId, complianceId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.feedbackRiskReport(complianceId, feedbackId, riskReportFeedbackRequest)
+        );
+        assertEquals(ErrorCode.FEEDBACK_NOT_FOUND, exception.getErrorCode());
+        verify(feedbackRepository, times(1)).findByFeedbackIdAndWriterId(feedbackId, complianceId);
+    }
+
+
+    @Test
+    @DisplayName("위험 보고서 피드백 생성 - 성공")
+    void createRiskReportFeedback_Success() {
+        // given
+        given(riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)).willReturn(true);
+
+        given(productRepository.findById(productId)).willReturn(Optional.of(product));
+
+        Long feedbackId = 30L;
+        Feedback mockFeedback = Feedback.builder()
+                .writerId(complianceId)
+                .role("COMPLIANCE")
+                .product(product)
+                .build();
+        ReflectionTestUtils.setField(mockFeedback, "feedbackId", feedbackId);
+        given(feedbackRepository.save(any(Feedback.class))).willAnswer(invocation -> mockFeedback);
+
+        // when
+        FeedbackResponse response = riskReportService.createRiskReportFeedback(complianceId, productId, reportId);
+
+        // then
+        assertEquals(complianceId, response.writerId());
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 생성 - 실패 - RISK_REPORT_NOT_FOUND")
+    void createRiskReportFeedback_Failure_RISK_REPORT_NOT_FOUND() {
+        // given
+        given(riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)).willReturn(false);
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.createRiskReportFeedback(complianceId, productId, reportId)
+        );
+        assertEquals(ErrorCode.RISK_REPORT_NOT_FOUND, exception.getErrorCode());
+        verify(riskReportRepository, times(1)).existsByReportIdAndComplianceId(reportId, complianceId);
+    }
+    @Test
+    @DisplayName("위험 보고서 피드백 생성 - 실패 - PRODUCT_NOT_FOUND")
+    void createRiskReportFeedback_Failure_PRODUCT_NOT_FOUND() {
+        // given
+        given(riskReportRepository.existsByReportIdAndComplianceId(reportId, complianceId)).willReturn(true);
+
+        given(productRepository.findById(productId)).willReturn(Optional.empty());
+
+        // when & then
+        CustomException exception = assertThrows(CustomException.class, () ->
+                riskReportService.createRiskReportFeedback(complianceId, productId, reportId)
+        );
+        assertEquals(ErrorCode.PRODUCT_NOT_FOUND, exception.getErrorCode());
+        verify(riskReportRepository, times(1)).existsByReportIdAndComplianceId(reportId, complianceId);
+        verify(productRepository, times(1)).findById(productId);
     }
 }
