@@ -86,14 +86,14 @@ public class UnderWritingController {
         return ResponseEntity.ok(null);
     }
 
-    @PostMapping("/cases/{id}/fss/send")
+    @PostMapping("/cases/{id}/fss/send") // 금감원 전송 요청
     public ResponseEntity<?> sendToFss(
             @PathVariable Long id
     ) {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/cases/{id}/fss/status")
+    @GetMapping("/cases/{id}/fss/status") // 금감원 전송 상태 조회
     public ResponseEntity<?> getFssStatus(
             @PathVariable Long id
     ) {
