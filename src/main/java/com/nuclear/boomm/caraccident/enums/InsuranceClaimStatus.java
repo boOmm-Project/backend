@@ -1,23 +1,26 @@
 package com.nuclear.boomm.caraccident.enums;
 
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
 public enum InsuranceClaimStatus {
-    WRITING, // 작성 중
+    WRITING_ACCIDENT("사고 내역 입력"),
+    WRITING_UPLOAD("파일 업로드"),
+    WRITING_SUBMIT("제출 완료"),
 
-    RECEIVED, // 접수대기
+    RECEIPT_PROCESSING("접수 중"),
+    RECEIPT_REQUEST_FIX("접수 보완 요청"),
+    RECEIPT_REJECT("접수 거절"),
+    RECEIPT_COMPLETE("접수 완료"),
 
-    RECEIPT_REVIEW, // 접수 검토중
+    REVIEW_PROCESSING("심사 중"),
+    REVIEW_REQUEST_FIX("심사 보완 요청"),
+    REVIEW_REJECT("심사 거절"),
+    REVIEW_COMPLETE("심사 완료");
 
-    RECEIPT_COMPLEMENT, // 접수 보완요청
+    private final String description;
 
-    RECEIPT_COMPLETE, // 접수 완료
-
-    REVIEW_PENDING, // 심사 대기
-
-    REVIEW_IN_PROGRESS, // 심사 진행중
-
-    REVIEW_COMPLEMENT, // 심사 보완요청
-
-    REVIEW_REJECT, // 심사 거절
-
-    REVIEW_COMPLETE // 심사 완료
+    public String getDescription() {
+        return description;
+    }
 }

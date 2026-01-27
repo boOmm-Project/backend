@@ -145,7 +145,7 @@ class AccidentIntakeServiceTests {
                 .incidentDate(LocalDateTime.now())
                 .insuredPersonId(userId)
                 .policyNumber("gdgd")
-                .intakeStatus(InsuranceClaimStatus.RECEIVED)
+                .intakeStatus(InsuranceClaimStatus.WRITING_UPLOAD)
                 .build();
 
         ReflectionTestUtils.setField(intakeEntity,"id", intakeId);
