@@ -20,22 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/intake")
-@Tag(name="intake", description = "사고 접수와 관련된 APi입니다.")
+@RequestMapping("api/v1/intake")
+@Tag(name="자동차 사고접수", description = "사고 접수와 관련된 API입니다.")
 public class AccidentIntakeController {
     private final AccidentIntakeService intakeService;
 
-    @Operation(summary = "자동차 사고 접수 엔티티입니다.")
+    @Operation(summary = "자동차 사고 계약사항 확인 후 작성")
     @PostMapping()
     public ResponseEntity<ApiResponse<AccidentIntakeIdDTO>> acceptIntake(@Valid @RequestBody AccidentIntakeDTO dto) {
         Long userId = 1L;
         String username = "홍길동";
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(intakeService.acceptIntake(dto, userId, username));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(intakeService.acceptIntake(dto, userId, username)));
 
     }
 
-    @Operation(summary = "자동차 사고 접수 내용 작성 입니다.")
+    @Operation(summary = "자동차 사고 접수 사고사항 작성")
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> updateDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeDescriptionDTO dto) {
         Long userId = 1L;

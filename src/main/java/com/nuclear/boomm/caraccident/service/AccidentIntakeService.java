@@ -21,7 +21,7 @@ public class AccidentIntakeService {
     private final AccidentIntakeRepository accidentIntakeRepository;
 
     @Transactional
-    public ApiResponse<AccidentIntakeIdDTO> acceptIntake(AccidentIntakeDTO dto, Long userId, String username) {
+    public AccidentIntakeIdDTO acceptIntake(AccidentIntakeDTO dto, Long userId, String username) {
         if (dto.incidentDate().isAfter(LocalDateTime.now())) {
             throw new RuntimeException("사고 일자가 미래일 수는 없습니다.");
         }
@@ -36,7 +36,7 @@ public class AccidentIntakeService {
 
 
 
-        return ApiResponse.success(AccidentIntakeIdDTO.from(accidentIntakeRepository.save(entity).getId()));
+        return AccidentIntakeIdDTO.from(accidentIntakeRepository.save(entity).getId());
     }
 
     // TODO: 내용 입력
