@@ -1,7 +1,7 @@
 package com.nuclear.boomm.caraccident.controller;
 
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
-import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDescriptionDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescriptionDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
 import com.nuclear.boomm.caraccident.service.AccidentIntakeService;
 import com.nuclear.boomm.common.ApiResponse;
@@ -37,10 +37,10 @@ public class AccidentIntakeController {
 
     @Operation(summary = "자동차 사고 접수 사고사항 작성")
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> updateDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeDescriptionDTO dto) {
+    public ResponseEntity<ApiResponse<Void>> updateDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeDamageDescriptionDTO dto) {
         Long userId = 1L;
         String username = "홍길동";
-
-        return ResponseEntity.ok(intakeService.updateDescription(dto, id, userId, username));
+        intakeService.updateDescription(dto, id, userId, username);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 }

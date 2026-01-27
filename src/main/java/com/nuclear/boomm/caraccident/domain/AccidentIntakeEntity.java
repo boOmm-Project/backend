@@ -115,8 +115,14 @@ public class AccidentIntakeEntity extends BaseEntity {
     }
 
     public void updateDescription(AccidentIntakeDamageDescriptionDTO dto) {
+        this.accidentType = dto.accidentType();
+        this.zipCode = dto.zipCode();
+        this.accidentPlace = dto.accidentPlace();
+        this.detailPlace = dto.detailPlace();
+        this.isReport = dto.isReport();
+        this.policeStation = dto.policeStation();
         this.accidentDescription = dto.accidentDescription();
-        this.damageDescription = dto.damageDescription();
+
     }
 
 
