@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record AccidentIntakeDamageDescriptionDTO(
+public record AccidentIntakeAccidentDescriptionDTO(
 
         @NotNull(message = "사고 유형이 없을수는 없습니다.")
         @Schema(description = "사고 유형에 대해서 작성해주세요", allowableValues = {"CAR_TO_CAR","SOLO_DRIVING","CAR_TO_PERSON","OTHER"})

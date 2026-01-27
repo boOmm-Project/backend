@@ -1,7 +1,7 @@
 package com.nuclear.boomm.caraccident.domain;
 
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
-import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescriptionDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeAccidentDescriptionDTO;
 import com.nuclear.boomm.caraccident.enums.AccidentType;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
@@ -114,7 +114,7 @@ public class AccidentIntakeEntity extends BaseEntity {
         this.intakeStatus = intakeStatus;
     }
 
-    public void updateDescription(AccidentIntakeDamageDescriptionDTO dto) {
+    public void updateDescription(AccidentIntakeAccidentDescriptionDTO dto) {
         this.accidentType = dto.accidentType();
         this.zipCode = dto.zipCode();
         this.accidentPlace = dto.accidentPlace();
