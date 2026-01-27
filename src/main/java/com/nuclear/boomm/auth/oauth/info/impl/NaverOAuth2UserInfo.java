@@ -33,7 +33,7 @@ public class NaverOAuth2UserInfo implements OAuth2UserInfo {
 
     @Override
     public String getPhone(){
-        return (String) attributes.get("moblie");   // naver는 키 값이 "mobile"이다.
+        return (String) attributes.get("mobile");   // naver는 키 값이 "mobile"이다.
     }
 
 

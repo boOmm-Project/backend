@@ -43,7 +43,7 @@ public class User extends BaseEntity {      // user는 DB예약어일 수 있어
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Role role;
+    private Role role = Role.USER;
 
     // 네이버가 줄 수도 있고 안 줄 수도 있는 정보 (Nullable = true 처리)
     // 네이버는 출생연도(YYYY)와 생일(MM-DD)을 따로 줌.

@@ -40,7 +40,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 userPrincipal.getUser().getRoleKey()
         );
 
-        log.info("생성된 토큰() : ", accessToken);
+        log.info("생성된 토큰 : {}", accessToken);
 
         // 토큰에 쿼리 파라미터를 붙여 FE로 Redirect
         String targetUrl = UriComponentsBuilder.fromUriString(FRONTEND_URL + REDIRECT_PATH) // UriComponentsBuilder은 URL을 안전하게 조립해주고, 파라미터를 알아서 처리해주는 도구.

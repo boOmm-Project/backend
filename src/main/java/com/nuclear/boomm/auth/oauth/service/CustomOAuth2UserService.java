@@ -4,6 +4,7 @@ import com.nuclear.boomm.auth.oauth.factory.OAuth2UserInfoFactory;
 import com.nuclear.boomm.auth.oauth.info.OAuth2UserInfo;
 import com.nuclear.boomm.auth.oauth.security.UserPrincipal;
 import com.nuclear.boomm.user.domain.User;
+import com.nuclear.boomm.user.enums.Role;
 import com.nuclear.boomm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                         .phone(userInfo.getPhone())
                         .provider(userInfo.getProvider())
                         .providerId(userInfo.getProviderId())
+                        .role(Role.USER)
                         .build());
 
         return userRepository.save(user);
