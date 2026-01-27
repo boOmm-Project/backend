@@ -2,6 +2,7 @@ package com.nuclear.boomm.caraccident.controller;
 
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeAccidentDescriptionDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescriptionDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
 import com.nuclear.boomm.caraccident.service.AccidentIntakeService;
 import com.nuclear.boomm.common.ApiResponse;
@@ -36,11 +37,25 @@ public class AccidentIntakeController {
     }
 
     @Operation(summary = "자동차 사고 접수 사고사항 작성")
-    @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<Void>> updateDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeAccidentDescriptionDTO dto) {
+    @PatchMapping("/accident/{id}")
+    public ResponseEntity<ApiResponse<Void>> updateAccidentDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeAccidentDescriptionDTO dto) {
         Long userId = 1L;
         String username = "홍길동";
         intakeService.updateDescription(dto, id, userId, username);
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "자동차 사고 접수 피해사항 작성")
+    @PatchMapping("/damage/{id}")
+    public ResponseEntity<ApiResponse<?>> updateDamageDescription(@PathVariable Long id, @Valid @RequestBody AccidentIntakeDamageDescriptionDTO dto) {
+        Long userId = 1L;
+        String username = "홍길동";
+        if(dto.isChecked()){
+            intakeService.updateDamageDescription(dto,id, userId, username);
+            return ResponseEntity.ok(ApiResponse.success(null));
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error("둘 중 하나라도 값이 있어야 합니다."));
+        }
     }
 }

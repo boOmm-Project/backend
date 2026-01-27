@@ -1,5 +1,6 @@
 package com.nuclear.boomm.caraccident.domain;
 
+import com.nuclear.boomm.caraccident.dto.request.BrokenObjectDTO;
 import com.nuclear.boomm.caraccident.enums.BrokenObejctType;
 import com.nuclear.boomm.caraccident.enums.PhoneType;
 import com.nuclear.boomm.common.BaseEntity;
@@ -15,7 +16,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -60,5 +60,14 @@ public class BrokenObjectEntity extends BaseEntity {
 
     public void assignAccidentIntake(AccidentIntakeEntity accidentIntake) {
         this.accidentIntake = accidentIntake;
+    }
+
+    public static BrokenObjectEntity from(BrokenObjectDTO brokenObjectDTO) {
+        return BrokenObjectEntity.builder()
+                .brokenObejctType(brokenObjectDTO.brokenObejctType())
+                .name(brokenObjectDTO.name())
+                .phoneType(brokenObjectDTO.phoneType())
+                .repairPlace(brokenObjectDTO.repairPlace())
+                .build();
     }
 }

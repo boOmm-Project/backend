@@ -1,5 +1,6 @@
 package com.nuclear.boomm.caraccident.domain;
 
+import com.nuclear.boomm.caraccident.dto.request.InjuryPersonDTO;
 import com.nuclear.boomm.caraccident.enums.InjuryPersonType;
 import com.nuclear.boomm.caraccident.enums.PhoneType;
 import com.nuclear.boomm.common.BaseEntity;
@@ -59,5 +60,15 @@ public class InjuryPersonEntity extends BaseEntity {
 
     public void assignAccidentIntake(AccidentIntakeEntity accidentIntake) {
         this.accidentIntake = accidentIntake;
+    }
+
+    public static InjuryPersonEntity from(InjuryPersonDTO dto){
+        return InjuryPersonEntity.builder()
+                .injuryPersonType(dto.injuryPersonType())
+                .name(dto.name())
+                .phoneType(dto.phoneType())
+                .phoneNumber(dto.phoneNumber())
+                .hospitalName(dto.hospitalName())
+                .build();
     }
 }

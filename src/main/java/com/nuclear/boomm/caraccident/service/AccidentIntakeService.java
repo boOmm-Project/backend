@@ -1,11 +1,17 @@
 package com.nuclear.boomm.caraccident.service;
 
 import com.nuclear.boomm.caraccident.domain.AccidentIntakeEntity;
+import com.nuclear.boomm.caraccident.domain.BrokenObjectEntity;
+import com.nuclear.boomm.caraccident.domain.InjuryPersonEntity;
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeAccidentDescriptionDTO;
+import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescriptionDTO;
+import com.nuclear.boomm.caraccident.dto.request.BrokenObjectDTO;
+import com.nuclear.boomm.caraccident.dto.request.InjuryPersonDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
 import com.nuclear.boomm.caraccident.exception.IntakeNotFoundException;
 import com.nuclear.boomm.caraccident.repository.AccidentIntakeRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,4 +55,25 @@ public class AccidentIntakeService {
         accidentIntakeRepository.save(entity);
     }
 
+    @Transactional
+    public void updateDamageDescription(@Valid AccidentIntakeDamageDescriptionDTO dto, Long intakeId, Long userId, String username) {
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId,userId,username).orElseThrow(
+                ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
+
+        entity.getBrokenObjects().clear();
+
+        if (dto.brokenList() != null) {
+
+
+            for (BrokenObjectDTO object : dto.brokenList()) {
+                entity.addBrokenObject(BrokenObjectEntity.from(object));
+            }
+        }
+        entity.getInjuryPersons().clear();
+        if (dto.personList() != null) {
+            for (InjuryPersonDTO object : dto.personList()) {
+                entity.addInjuryPerson(InjuryPersonEntity.from(object));
+            }
+        }
+    }
 }
