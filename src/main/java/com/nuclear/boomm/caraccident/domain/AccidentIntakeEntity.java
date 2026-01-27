@@ -61,6 +61,9 @@ public class AccidentIntakeEntity extends BaseEntity {
     @Column(nullable = false)
     private String insuranceClaimPersonName; // 보험금청구 접수자 이름
 
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
     @Column(name="accident_type")
     @Enumerated(EnumType.STRING)
     private AccidentType accidentType;
