@@ -2,6 +2,7 @@ package com.nuclear.boomm.caraccident.domain;
 
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDTO;
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDescriptionDTO;
+import com.nuclear.boomm.caraccident.enums.AccidentType;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import jakarta.persistence.Column;
@@ -38,6 +39,12 @@ public class AccidentIntakeEntity extends BaseEntity {
     @Column(nullable = false)
     private LocalDateTime incidentDate; // 사고 일자
 
+    @Column(name = "accident_place", length = 600)
+    private String accidentPlace; // 사고 장소
+
+    @Column(name = "detail_place")
+    private String detailPlace; // 사고 상세 주소
+
     @Column(nullable = false)
     private String policyNumber; // 증권번호
 
@@ -46,6 +53,16 @@ public class AccidentIntakeEntity extends BaseEntity {
 
     @Column(nullable = false)
     private String insuranceClaimPersonName; // 보험금청구 접수자 이름
+
+    @Column(name="accident_type")
+    @Enumerated(EnumType.STRING)
+    private AccidentType accidentType;
+
+    @Column(name="is_report")
+    private Boolean isReport;
+
+    @Column(name = "police_station")
+    private String policeStation;
 
     @Enumerated(EnumType.STRING)
     private InsuranceClaimStatus intakeStatus; // 진행 상태
