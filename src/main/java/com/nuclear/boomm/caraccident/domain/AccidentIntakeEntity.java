@@ -5,6 +5,7 @@ import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDescriptionDTO;
 import com.nuclear.boomm.caraccident.enums.AccidentType;
 import com.nuclear.boomm.common.BaseEntity;
 import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -12,6 +13,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -19,6 +21,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -73,6 +77,13 @@ public class AccidentIntakeEntity extends BaseEntity {
     @Column(columnDefinition = "TEXT")
     private String supplimentText;
 
+    @OneToMany(mappedBy = "accidentIntake", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<BrokenObjectEntity> brokenObjects = new ArrayList<>();
+
+    @OneToMany(mappedBy = "accidentIntake", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InjuryPersonEntity> injuryPersons = new ArrayList<>();
+
+
     public AccidentIntakeEntity updateStatus(InsuranceClaimStatus status) {
         this.intakeStatus = status;
         return this;
@@ -111,6 +122,16 @@ public class AccidentIntakeEntity extends BaseEntity {
                 .insuranceClaimPersonName(name)
                 .intakeStatus(InsuranceClaimStatus.WRITING_ACCIDENT)
                 .build();
+    }
+
+    public void addInjuryPerson(InjuryPersonEntity person) {
+        this.injuryPersons.add(person);
+        person.assignAccidentIntake(this); // 자식 엔티티에 있는 메서드 호출
+    }
+
+    public void addBrokenObject(BrokenObjectEntity object) {
+        this.brokenObjects.add(object);
+        object.assignAccidentIntake(this); // 자식 엔티티에 있는 메서드 호출
     }
 
 }
