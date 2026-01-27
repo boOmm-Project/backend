@@ -6,7 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public record CoverageRequest(
-        Long id,
+        @NotNull
+        Long coverageId,
 
         @NotNull
         CoverageCategory category,
@@ -44,19 +45,5 @@ public record CoverageRequest(
                 coverage.isMandatory(),
                 coverage.getDamageCalStandard()
         );
-    }
-
-    public static Coverage toEntity(CoverageRequest request) {
-        return Coverage.builder()
-                .coverageId(request.id())
-                .category(request.category())
-                .productId(request.productId())
-                .title(request.title())
-                .description(request.description())
-                .minCoverageLimit(request.minCoverageLimit())
-                .maxCoverageLimit(request.maxCoverageLimit())
-                .isMandatory(request.isMandatory())
-                .damageCalStandard(request.damageCalStandard())
-                .build();
     }
 }

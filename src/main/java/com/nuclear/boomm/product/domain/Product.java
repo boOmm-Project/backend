@@ -97,4 +97,19 @@ public class Product extends BaseEntity {
                 product.isReleased()
         );
     }
+
+    public void release() {
+        if (!isDone) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_NOT_DONE);
+        }
+        if (isReleased) {
+            throw new CustomException(ErrorCode.PRODUCT_IS_RELEASED);
+        }
+
+        this.isReleased = true;
+    }
+
+    public void approve() {
+        this.isDone = true;
+    }
 }

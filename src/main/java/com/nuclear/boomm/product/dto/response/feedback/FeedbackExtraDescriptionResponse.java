@@ -3,6 +3,8 @@ package com.nuclear.boomm.product.dto.response.feedback;
 import com.nuclear.boomm.product.domain.ExtraDescription;
 import jakarta.validation.constraints.NotNull;
 
+import java.util.List;
+
 public record FeedbackExtraDescriptionResponse(
         @NotNull
         Long feedbackId,
@@ -31,5 +33,11 @@ public record FeedbackExtraDescriptionResponse(
                 extraDescription.getIsResolved(),
                 extraDescription.getCreatorId()
         );
+    }
+
+    public static List<FeedbackExtraDescriptionResponse> from(List<ExtraDescription> extraDescriptions) {
+        return extraDescriptions.stream()
+                .map(FeedbackExtraDescriptionResponse::from)
+                .toList();
     }
 }
