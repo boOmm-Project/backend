@@ -2,7 +2,10 @@ package com.nuclear.boomm.underwriting.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 
+import com.nuclear.boomm.underwriting.enums.UnderWritingStatus;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
@@ -19,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "underwriting_review")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 
-public class UnderWritingReviewEntity extends BaseEntity {
+public class UnderWriting extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,7 +46,7 @@ public class UnderWritingReviewEntity extends BaseEntity {
     private boolean fssadmission; //금감원담당자
 
     @Builder
-    public UnderWritingReviewEntity(Long fileId, Long userId, Long productId, Long contractmanagerId) {
+    public UnderWriting(Long fileId, Long userId, Long productId, Long contractmanagerId) {
         this.fileId = fileId;
         this.userId = userId;
         this.productId = productId;
@@ -58,6 +61,16 @@ public class UnderWritingReviewEntity extends BaseEntity {
     public void fssadmission(boolean FSSadmission) {
         this.fssadmission = fssadmission;
     }
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UnderWritingStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private RejectReason rejectreason;
+
+
 
 }
 
