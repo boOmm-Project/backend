@@ -81,5 +81,12 @@ public class AccidentIntakeService {
         accidentIntakeRepository.save(entity);
     }
 
+    @Transactional
+    public void submitIntake(Long intakeId, Long userId, String username) {
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId,userId,username).orElseThrow(
+                ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
 
+        entity.changeStatus(InsuranceClaimStatus.WRITING_SUBMIT);
+        accidentIntakeRepository.save(entity);
+    }
 }

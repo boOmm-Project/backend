@@ -102,4 +102,13 @@ public class AccidentIntakeController {
         fileService.deleteFiles(userId, id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "자동차 사고 접수 제출 완료")
+    @PatchMapping("/done/{id}")
+    public ResponseEntity<ApiResponse<String>> submitIntake(@PathVariable Long id){
+        Long userId = 1L;
+        String username = "홍길동";
+        intakeService.submitIntake(id,userId,username);
+        return ResponseEntity.ok(ApiResponse.success("제출완료되었습니다."));
+    }
 }
