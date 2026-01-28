@@ -34,6 +34,9 @@ public class AccidentFileEntity {
     @Column(nullable = false)
     private Long accidentIntakeId;
 
+    @Column
+    private Boolean isUsed;
+
     @Builder
     public AccidentFileEntity(Long userId, String originalFileName, String fileName, String fileContent, Long accidentIntakeId) {
         this.userId = userId;
@@ -41,5 +44,6 @@ public class AccidentFileEntity {
         this.fileName = fileName;
         this.fileContent = fileContent;
         this.accidentIntakeId = accidentIntakeId;
+        this.isUsed = false;
     }
 }

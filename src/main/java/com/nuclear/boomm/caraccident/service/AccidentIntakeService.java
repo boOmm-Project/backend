@@ -80,4 +80,6 @@ public class AccidentIntakeService {
         entity.changeStatus(InsuranceClaimStatus.WRITING_UPLOAD);
         accidentIntakeRepository.save(entity);
     }
+
+
 }
