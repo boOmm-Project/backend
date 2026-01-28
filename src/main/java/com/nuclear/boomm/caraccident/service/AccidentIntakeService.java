@@ -9,6 +9,7 @@ import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescription
 import com.nuclear.boomm.caraccident.dto.request.BrokenObjectDTO;
 import com.nuclear.boomm.caraccident.dto.request.InjuryPersonDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
+import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import com.nuclear.boomm.caraccident.exception.IntakeNotFoundException;
 import com.nuclear.boomm.caraccident.repository.AccidentIntakeRepository;
 import jakarta.validation.Valid;
@@ -51,6 +52,7 @@ public class AccidentIntakeService {
                 ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
 
         entity.updateDescription(dto);
+        entity.changeStatus(InsuranceClaimStatus.WRITING_DAMAGE);
 
         accidentIntakeRepository.save(entity);
     }
@@ -75,5 +77,7 @@ public class AccidentIntakeService {
                 entity.addInjuryPerson(InjuryPersonEntity.from(object));
             }
         }
+        entity.changeStatus(InsuranceClaimStatus.WRITING_UPLOAD);
+        accidentIntakeRepository.save(entity);
     }
 }

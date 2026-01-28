@@ -146,4 +146,7 @@ public class AccidentIntakeEntity extends BaseEntity {
         object.assignAccidentIntake(this); // 자식 엔티티에 있는 메서드 호출
     }
 
+    public void changeStatus(InsuranceClaimStatus status) {
+        this.intakeStatus = status;
+    }
 }

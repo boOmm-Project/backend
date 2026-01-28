@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum InsuranceClaimStatus {
     WRITING_ACCIDENT("사고 내역 입력"),
+    WRITING_DAMAGE("피해 사항 입력"),
     WRITING_UPLOAD("파일 업로드"),
     WRITING_SUBMIT("제출 완료"),
 
