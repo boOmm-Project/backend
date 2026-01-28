@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "인수심사", description = "인수심사 API")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/uw")
+@RequestMapping("/api/uw/normal")
 public class UnderWritingController {
 
     @Operation(summary = "인수심사 대시보드", description = "인수심사 진행/완료/거절 등 현황 집계")
@@ -57,33 +58,12 @@ public class UnderWritingController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @Operation(summary = "인수심사 시작", description = "케이스 상태를 진행중으로 변경")
-    @PostMapping("/cases/{id}/start")
-    public ResponseEntity<ApiResponse<Object>> startUnderwriting(
-            @PathVariable Long id
-    ) {
-        Long userId = 100L; // 권한: 인수심사 담당자 (임시)
-        return ResponseEntity.ok(ApiResponse.success(null));
-    }
-
-    @Operation(summary = "인수심사 승인", description = "케이스를 승인 처리하고 완료 상태로 변경")
-    @PostMapping("/cases/{id}/approve")
-    public ResponseEntity<ApiResponse<Object>> approve(
+    @PatchMapping("/cases/{id}/status")
+    public ResponseEntity<?> changeStatus(
             @PathVariable Long id,
             @RequestBody(required = false) Object body
     ) {
-        Long userId = 100L;
-        return ResponseEntity.ok(ApiResponse.success(null));
-    }
-
-    @Operation(summary = "인수심사 거절", description = "케이스를 거절 처리하고 거절 사유를 저장")
-    @PostMapping("/cases/{id}/reject")
-    public ResponseEntity<ApiResponse<Object>> reject(
-            @PathVariable Long id,
-            @RequestBody(required = false) Object body
-    ) {
-        Long userId = 100L;
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(null);
     }
 
     @Operation(summary = "거절 사유 목록", description = "거절 사유 코드 목록 조회")
