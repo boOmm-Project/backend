@@ -5,6 +5,7 @@ import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeAccidentDescripti
 import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescriptionDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeFileDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
+import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeResponseDTO;
 import com.nuclear.boomm.caraccident.service.AccidentFileService;
 import com.nuclear.boomm.caraccident.service.AccidentIntakeService;
 import com.nuclear.boomm.common.ApiResponse;
@@ -110,5 +111,14 @@ public class AccidentIntakeController {
         String username = "홍길동";
         intakeService.submitIntake(id,userId,username);
         return ResponseEntity.ok(ApiResponse.success("제출완료되었습니다."));
+    }
+
+    @Operation(summary = "자동차 사고 접수 목록 조회")
+    @GetMapping("/lists")
+    public ResponseEntity<ApiResponse<List<AccidentIntakeResponseDTO>>> getIntakeList(){
+        Long userId = 1L;
+        String username = "홍길동";
+
+        return ResponseEntity.ok(ApiResponse.success(intakeService.getUserAccidentIntakes(userId, username)));
     }
 }

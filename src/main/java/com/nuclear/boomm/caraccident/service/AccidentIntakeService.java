@@ -9,6 +9,7 @@ import com.nuclear.boomm.caraccident.dto.request.AccidentIntakeDamageDescription
 import com.nuclear.boomm.caraccident.dto.request.BrokenObjectDTO;
 import com.nuclear.boomm.caraccident.dto.request.InjuryPersonDTO;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeIdDTO;
+import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeResponseDTO;
 import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import com.nuclear.boomm.caraccident.exception.IntakeNotFoundException;
 import com.nuclear.boomm.caraccident.repository.AccidentIntakeRepository;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -32,14 +35,13 @@ public class AccidentIntakeService {
             throw new RuntimeException("사고 일자가 미래일 수는 없습니다.");
         }
         LocalDateTime interval = dto.incidentDate().minusMinutes(5);
-        boolean isDuplicated = accidentIntakeRepository.existsByInsuredPersonIdAndIncidentDateBetween(userId,interval,dto.incidentDate());
+        boolean isDuplicated = accidentIntakeRepository.existsByInsuredPersonIdAndIncidentDateBetween(userId, interval, dto.incidentDate());
 
-        if(isDuplicated) {
+        if (isDuplicated) {
             throw new RuntimeException("5분 이내의 접수한 건이 존재합니다.");
         }
 
         AccidentIntakeEntity entity = AccidentIntakeEntity.from(dto, userId, username);
-
 
 
         return AccidentIntakeIdDTO.from(accidentIntakeRepository.save(entity).getId());
@@ -48,8 +50,8 @@ public class AccidentIntakeService {
     // TODO: 내용 입력
     @Transactional
     public void updateDescription(AccidentIntakeAccidentDescriptionDTO dto, Long intakeId, Long userId, String username) {
-        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId,userId,username).orElseThrow(
-                ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId, userId, username).orElseThrow(
+                () -> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
 
         entity.updateDescription(dto);
         entity.changeStatus(InsuranceClaimStatus.WRITING_DAMAGE);
@@ -59,8 +61,8 @@ public class AccidentIntakeService {
 
     @Transactional
     public void updateDamageDescription(@Valid AccidentIntakeDamageDescriptionDTO dto, Long intakeId, Long userId, String username) {
-        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId,userId,username).orElseThrow(
-                ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId, userId, username).orElseThrow(
+                () -> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
 
         entity.getBrokenObjects().clear();
 
@@ -83,10 +85,21 @@ public class AccidentIntakeService {
 
     @Transactional
     public void submitIntake(Long intakeId, Long userId, String username) {
-        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId,userId,username).orElseThrow(
-                ()-> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndInsuredPersonIdAndInsuranceClaimPersonName(intakeId, userId, username).orElseThrow(
+                () -> new IntakeNotFoundException("사고 접수건을 찾을 수 없습니다."));
 
         entity.changeStatus(InsuranceClaimStatus.WRITING_SUBMIT);
         accidentIntakeRepository.save(entity);
+    }
+
+    public List<AccidentIntakeResponseDTO> getUserAccidentIntakes(Long userId, String username) {
+        List<AccidentIntakeEntity> entities = accidentIntakeRepository.findByInsuredPersonIdAndInsuranceClaimPersonName(userId, username);
+
+        List<AccidentIntakeResponseDTO> dtos = new ArrayList<>();
+
+        for (AccidentIntakeEntity entity : entities) {
+            dtos.add(AccidentIntakeResponseDTO.fromEntity(entity));
+        }
+        return dtos;
     }
 }
