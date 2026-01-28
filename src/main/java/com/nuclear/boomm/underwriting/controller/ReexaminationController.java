@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/reex")
 public class ReexaminationController {
 
+    // 재심사 대시보드
+    @Operation(summary = "재심사 대시보드", description = "재심사 현황 요약")
+    @GetMapping("/dashboard")
+    public ResponseEntity<ApiResponse<Object>> getReexDashboard(
+            @RequestParam(required = false) String from,
+            @RequestParam(required = false) String to
+    ) {
+        return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
     @Operation(summary = "재심사 케이스 목록", description = "재심사 진행중 케이스 목록 조회")
     @GetMapping("/cases")
     public ResponseEntity<ApiResponse<Object>> getReexaminationCases(
@@ -29,33 +40,12 @@ public class ReexaminationController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    @Operation(summary = "재심사 시작", description = "재심사 케이스 상태를 진행중으로 변경")
-    @PostMapping("/cases/{id}/start")
-    public ResponseEntity<ApiResponse<Object>> startReexamination(
-            @PathVariable Long id
-    ) {
-        Long userId = 100L;
-        return ResponseEntity.ok(ApiResponse.success(null));
-    }
-
-    @Operation(summary = "재심사 완료", description = "재심사 완료 처리")
-    @PostMapping("/cases/{id}/complete")
-    public ResponseEntity<ApiResponse<Object>> completeReexamination(
+    @PatchMapping("/cases/{id}/status")
+    public ResponseEntity<?> changeReexStatus(
             @PathVariable Long id,
             @RequestBody(required = false) Object body
     ) {
-        Long userId = 100L;
-        return ResponseEntity.ok(ApiResponse.success(null));
-    }
-
-    @Operation(summary = "재심사 거절", description = "재심사 거절 처리")
-    @PostMapping("/cases/{id}/reject")
-    public ResponseEntity<ApiResponse<Object>> rejectReexamination(
-            @PathVariable Long id,
-            @RequestBody(required = false) Object body
-    ) {
-        Long userId = 100L;
-        return ResponseEntity.ok(ApiResponse.success(null));
+        return ResponseEntity.ok(null);
     }
 
     @Operation(summary = "재심사 거절 사유 목록", description = "재심사 거절 사유 코드 목록 조회")
@@ -64,13 +54,4 @@ public class ReexaminationController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
-    // 재심사 대시보드
-    @Operation(summary = "재심사 대시보드", description = "재심사 현황 요약")
-    @GetMapping("/dashboard")
-    public ResponseEntity<ApiResponse<Object>> getReexDashboard(
-            @RequestParam(required = false) String from,
-            @RequestParam(required = false) String to
-    ) {
-        return ResponseEntity.ok(ApiResponse.success(null));
-    }
 }
