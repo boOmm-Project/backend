@@ -21,7 +21,7 @@ public class AccidentIntakeAdminController {
     private final AccidentIntakeAdminService intakeAdminService;
 
     @Operation(summary = "제출완료된 접수 목록을 가져옵니다.")
-    @GetMapping()
+    @GetMapping("/lists")
     public ResponseEntity<ApiResponse<?>> getAllLists(){
         Long userId = 2L;
 
