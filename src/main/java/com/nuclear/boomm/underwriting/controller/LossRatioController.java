@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/loss-ratio")
 public class LossRatioController {
 
-    // private final LossRatioService lossRatioService;
+
 
     @Operation(summary = "손해율 분석 초기 화면", description = "손해율 분석 입력 폼에 필요한 기본 항목 제공")
     @GetMapping("/form")
@@ -26,6 +26,7 @@ public class LossRatioController {
         return ResponseEntity.ok(ApiResponse.success(null));
     }
 
+    // 손해율 분석 전에 필요한 기본 데이터를 한 번에 가져오는 api
     @Operation(summary = "손해율 분석 컨텍스트 조회", description = "손해율 분석에 필요한 고객/보험 정보 기본 데이터 묶음 조회")
     @GetMapping("/context")
     public ResponseEntity<ApiResponse<Object>> getAnalysisContext(
