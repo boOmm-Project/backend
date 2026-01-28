@@ -2,8 +2,8 @@ package com.nuclear.boomm.caraccident.exception;
 
 import com.nuclear.boomm.common.error.NotFoundException;
 
-public class IntakeNotFoundException extends NotFoundException{
-    public IntakeNotFoundException(String message){
+public class IntakeFileNotFoundException extends NotFoundException {
+    public IntakeFileNotFoundException(String message) {
         super(message);
     }
 }
