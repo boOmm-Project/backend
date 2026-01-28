@@ -1,7 +1,9 @@
 package com.nuclear.boomm.caraccident.service;
 
+import com.nuclear.boomm.caraccident.domain.AccidentFileEntity;
 import com.nuclear.boomm.caraccident.domain.AccidentIntakeEntity;
 import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeResponseDTO;
+import com.nuclear.boomm.caraccident.dto.response.AccidentIntakeSpecificDTO;
 import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import com.nuclear.boomm.caraccident.exception.DuplicateAssignException;
 import com.nuclear.boomm.caraccident.exception.IntakeNotFoundException;
@@ -48,6 +50,11 @@ public class AccidentIntakeAdminService {
     }
 
 
+    public AccidentIntakeSpecificDTO getSpecificIntake(Long intakeId, Long userId) {
+        AccidentIntakeEntity entity = accidentIntakeRepository.findByIdAndIntakeManagerId(intakeId,userId).orElseThrow(()-> new IntakeNotFoundException("해당 아이디의 접수 내역이 존재하지 않거나 접근할 수 없습니다."));
+        List<AccidentFileEntity> entities = accidentFileRepository.findAllByAccidentIntakeId(intakeId);
 
+        return AccidentIntakeSpecificDTO.fromEntity(entity,entities);
 
+    }
 }

@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface AccidentFileRepository extends JpaRepository<AccidentFileEntity,Long> {
     List<AccidentFileEntity> findAllByUserIdAndAccidentIntakeId(Long userId, Long intakeId);
+
+    List<AccidentFileEntity> findAllByAccidentIntakeId(Long accidentIntakeId);
 }

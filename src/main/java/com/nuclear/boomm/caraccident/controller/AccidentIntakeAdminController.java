@@ -35,4 +35,13 @@ public class AccidentIntakeAdminController {
         intakeAdminService.assignIntake(userId, id);
         return ResponseEntity.ok(ApiResponse.success(null));
     }
+
+    @Operation(summary = "담당자가 해당 접수 내역을 상세히 조회")
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<?>> getSpecificIntake(@PathVariable Long id){
+        Long userId = 2L;
+
+        return ResponseEntity.ok(ApiResponse.success(intakeAdminService.getSpecificIntake(id,userId)));
+
+    }
 }

@@ -16,4 +16,6 @@ public interface AccidentIntakeRepository extends JpaRepository<AccidentIntakeEn
     List<AccidentIntakeEntity> findByInsuredPersonIdAndInsuranceClaimPersonName(Long userId, String username);
 
     List<AccidentIntakeEntity> findAllByIntakeStatusAndIntakeManagerIdIsNull(InsuranceClaimStatus status);
+
+    Optional<AccidentIntakeEntity> findByIdAndIntakeManagerId(Long id, Long intakeManagerId);
 }
