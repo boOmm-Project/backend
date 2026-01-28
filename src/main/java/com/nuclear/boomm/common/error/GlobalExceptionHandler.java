@@ -3,6 +3,7 @@ package com.nuclear.boomm.common.error;
 import com.nuclear.boomm.common.ApiResponse;
 import com.nuclear.boomm.product.error.CustomException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,6 +18,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(e.getErrorCode().getStatus())
                 .body(ApiResponse.error(e.getErrorCode().getMessage()));
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<Void>> handleNotFoundException(NotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(ApiResponse.error(e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
