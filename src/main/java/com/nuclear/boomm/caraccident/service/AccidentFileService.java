@@ -53,7 +53,7 @@ public class AccidentFileService {
                     .userId(userId)
                     .originalFileName(file.getOriginalFilename())
                     .fileName(uuidName)
-                    .fileContent(url+uuidName)
+                    .fileContent(url + "/" + uuidName)
                     .accidentIntakeId(intakeId)
                     .build();
             return accidentFileRepository.save(accidentFileEntity).getId();
