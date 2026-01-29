@@ -2,6 +2,7 @@ package com.nuclear.boomm.underwriting.domain;
 
 import com.nuclear.boomm.common.BaseEntity;
 
+import com.nuclear.boomm.underwriting.enums.RejectReason;
 import com.nuclear.boomm.underwriting.enums.UnderWritingStatus;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -64,13 +65,14 @@ public class UnderWriting extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UnderWritingStatus status;
+    private UnderWritingStatus status = UnderWritingStatus.PENDING;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private RejectReason rejectreason;
 
-
+    @Column(columnDefinition = "TEXT")
+    private String resultMessage;
 
 }
 
