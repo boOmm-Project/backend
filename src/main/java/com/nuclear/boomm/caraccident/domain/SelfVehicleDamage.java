@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -20,6 +21,7 @@ public class SelfVehicleDamage extends GeneralAccidentAssessmentEntity {
     @Column
     private Long remarkFileId; // 그 밖에 보험회사가 꼭 필요하여 요청하는 서류 id
 
+    @Builder
     public SelfVehicleDamage(Long intakeManagerId, Long accidentIntakeId, Long insureClaimFileId, Long proofFileId, String competentPoliceStation, Long vehicleCancellationProofFileId, Long remarkFileId) {
         super(intakeManagerId, accidentIntakeId, insureClaimFileId, proofFileId);
         this.competentPoliceStation = competentPoliceStation;

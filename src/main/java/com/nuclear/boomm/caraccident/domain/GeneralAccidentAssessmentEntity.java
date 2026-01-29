@@ -1,9 +1,12 @@
 package com.nuclear.boomm.caraccident.domain;
 
+import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import com.nuclear.boomm.common.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,6 +43,13 @@ public abstract class GeneralAccidentAssessmentEntity extends BaseEntity {
     @Column
     private Long proofFileId; // 손해액을 증명하는 서류
 
+    @Column(columnDefinition = "TEXT")
+    private String suppliment;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private InsuranceClaimStatus status;
+
     public GeneralAccidentAssessmentEntity(Long intakeManagerId, Long accidentIntakeId, Long insureClaimFileId, Long proofFileId) {
         this.intakeManagerId = intakeManagerId;
         this.accidentIntakeId = accidentIntakeId;
@@ -52,4 +62,7 @@ public abstract class GeneralAccidentAssessmentEntity extends BaseEntity {
         this.assessmentManagerId = assessmentManagerId;
     }
 
+    public void updateSuppliment(String suppliment) {
+        this.suppliment = suppliment;
+    }
 }
