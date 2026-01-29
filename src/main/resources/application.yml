@@ -1,3 +1,5 @@
 spring:
+  application:
+    name: BoOmm Backend
   profiles:
-    active: local  # ???? dev ??
+    active: local
