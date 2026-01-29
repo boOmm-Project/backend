@@ -39,7 +39,7 @@ public class UnderWritingReviewEntity extends BaseEntity {
     @Column(nullable = false)
     private Long contractManagerId; //계약담당자
 
-    @Column(nullable = false)
+    @Column(name = "fss_admission", nullable = false)
     private boolean fssAdmission; //금감원담당자
 
     @Builder
