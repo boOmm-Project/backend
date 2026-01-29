@@ -35,7 +35,7 @@ public class UnderWriting extends BaseEntity {
     private Long fileId;
 
     @Column(nullable = false)
-    private Long userId; //고객
+    private Long customerId; //고객
 
     @Column(nullable = false)
     private Long productId; //계약상품아이디
@@ -49,9 +49,9 @@ public class UnderWriting extends BaseEntity {
     private boolean fssAdmission; //금감원담당자
 
     @Builder
-    public UnderWriting(Long fileId, Long userId, Long productId, Long contractManagerId) {
+    public UnderWriting(Long fileId, Long customerId, Long productId, Long contractManagerId) {
         this.fileId = fileId;
-        this.userId = userId;
+        this.customerId = customerId;
         this.productId = productId;
         this.contractManagerId = contractManagerId;
         this.fssAdmission = false;
