@@ -17,6 +17,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -44,35 +46,53 @@ public class UnderWriting extends BaseEntity {
     private Long contractManagerId; //계약담당자
 
     @Column(nullable = false)
-    private boolean fssadmission; //금감원담당자
+    private boolean fssAdmission; //금감원담당자
 
     @Builder
-    public UnderWriting(Long fileId, Long userId, Long productId, Long contractmanagerId) {
+    public UnderWriting(Long fileId, Long userId, Long productId, Long contractManagerId) {
         this.fileId = fileId;
         this.userId = userId;
         this.productId = productId;
         this.contractManagerId = contractManagerId;
+        this.fssAdmission = false;
+        this.status = UnderWritingStatus.PENDING;
     }
 
     public void assignUnderwriter(Long underwriterId) {
         this.underwriterId = underwriterId;
+        this.status = UnderWritingStatus.IN_PROGRESS;
 
     }
 
-    public void fssadmission(boolean FSSadmission) {
-        this.fssadmission = fssadmission;
+    public void markFssAdmission(boolean fssAdmission) {
+        this.fssAdmission = fssAdmission;
     }
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UnderWritingStatus status = UnderWritingStatus.PENDING;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private RejectReason rejectreason;
+    @Enumerated(EnumType.STRING) //rejected 일때만 값이 존재
+    private RejectReason rejectReason;
 
     @Column(columnDefinition = "TEXT")
     private String resultMessage;
 
+    private LocalDateTime reviewedAt;
+
+    public void complete(String message) {
+        this.status = UnderWritingStatus.COMPLETED;
+        this.resultMessage = message;
+        this.reviewedAt = LocalDateTime.now();
+        this.rejectReason = null;
+    }
+
+    // 거절 처리
+    public void reject(RejectReason reason, String message) {
+        this.status = UnderWritingStatus.REJECTED;
+        this.rejectReason = reason;
+        this.resultMessage = message;
+        this.reviewedAt = LocalDateTime.now();
+    }
 }
 
