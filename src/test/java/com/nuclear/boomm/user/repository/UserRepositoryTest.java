@@ -35,6 +35,7 @@ public class UserRepositoryTest {
                 .role(Role.USER)
                 .provider("naver")
                 .providerId("testId_1")
+                .phone("010-1234-5678")
                 .build();
 
         given(userRepository.save(any(User.class))).willReturn(testUser);
@@ -66,6 +67,7 @@ public class UserRepositoryTest {
                 .role(Role.USER)
                 .provider("naver")
                 .providerId("testId_1")
+                .phone("010-1234-5678")
                 .build();
 
         given(userRepository.save(any(User.class))).willReturn(testUser);

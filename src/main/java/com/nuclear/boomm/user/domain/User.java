@@ -99,9 +99,9 @@ public class User extends BaseEntity {      // user는 DB예약어일 수 있어
         this.idNum = idNum;
     }
 
-    public User update(String name, String phone){
+    public User update(String name, String email){
         this.name = name;
-        this.phone = phone;
+        this.email = email;
         return this;
     }
 

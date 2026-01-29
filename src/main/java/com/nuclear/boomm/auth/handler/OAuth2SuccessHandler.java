@@ -2,6 +2,7 @@ package com.nuclear.boomm.auth.handler;
 
 import com.nuclear.boomm.auth.oauth.jwt.JwtTokenProvider;
 import com.nuclear.boomm.auth.oauth.security.UserPrincipal;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -40,11 +41,18 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                 userPrincipal.getUser().getRoleKey()
         );
 
-        log.info("생성된 토큰 : {}", accessToken);
+        // HttpOnly 쿠키 생성(보안 강화)
+        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
+        accessTokenCookie.setHttpOnly(true);    // JS 접근 차단(XSS 방지)
+        accessTokenCookie.setSecure(false);     // 지금은 HTTPS가 아니라 false로 해놨음 배포 시 true로 바꿔라.
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(60 * 60);   // 쿠키 유효시간(1시간)
+
+        // 응답에 쿠키 추가
+        response.addCookie(accessTokenCookie);
 
         // 토큰에 쿼리 파라미터를 붙여 FE로 Redirect
         String targetUrl = UriComponentsBuilder.fromUriString(FRONTEND_URL + REDIRECT_PATH) // UriComponentsBuilder은 URL을 안전하게 조립해주고, 파라미터를 알아서 처리해주는 도구.
-                .queryParam("token", accessToken)                                    // 그냥 문자열 더하기(+)로 URL을 만들면 위험함.
                 .build()
                 .encode(StandardCharsets.UTF_8)
                 .toUriString();

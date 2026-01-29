@@ -1,7 +1,6 @@
 package com.nuclear.boomm.auth.oauth.security;
 
 import com.nuclear.boomm.user.domain.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -13,11 +12,18 @@ import java.util.Collections;
 import java.util.Map;
 
 @Getter
-@AllArgsConstructor
 public class UserPrincipal implements OAuth2User, UserDetails {
 
     private User user;
     private Map<String, Object> attributes;
+
+    public UserPrincipal(User user, Map<String, Object> attributes) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+        this.user = user;
+        this.attributes = attributes;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

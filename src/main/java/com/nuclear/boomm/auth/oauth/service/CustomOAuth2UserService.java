@@ -24,12 +24,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest)
             throws OAuth2AuthenticationException{
 
-        // 네이버에서 유저 정보 가져오기.
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        log.info("Social Login Info : {}" , oAuth2User.getAttributes());
-
         // 어떤 소셜이지 확인.
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
+        // 네이버에서 유저 정보 가져오기.
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+        log.debug("Social Login Provider : {}", registrationId);
 
         // 팩토리로 정보 가공(OCP)
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(registrationId, oAuth2User.getAttributes());

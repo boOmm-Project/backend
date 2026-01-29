@@ -5,10 +5,16 @@ import java.util.Map;
 
 public class NaverOAuth2UserInfo implements OAuth2UserInfo {
 
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes;
 
     public NaverOAuth2UserInfo(Map<String, Object> attributes) {
-        this.attributes = (Map<String, Object>) attributes.get("response");
+        Object response = attributes.get("response");
+        if (!(response instanceof Map)) {
+            throw new IllegalArgumentException("Naver OAuth2 응답에 response가 없습니다. ");
+        }
+        @SuppressWarnings("unchecked")
+        Map<String, Object> casted = (Map<String, Object>) response;        // response 누락시 처리
+        this.attributes = casted;
     }
 
     @Override
