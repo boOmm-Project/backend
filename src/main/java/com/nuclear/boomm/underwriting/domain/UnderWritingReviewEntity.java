@@ -39,11 +39,11 @@ public class UnderWritingReviewEntity extends BaseEntity {
     @Column(nullable = false)
     private Long contractManagerId; //계약담당자
 
-    @Column(nullable = false)
-    private boolean fssadmission; //금감원담당자
+    @Column(name = "fss_admission", nullable = false)
+    private boolean fssAdmission; //금감원담당자
 
     @Builder
-    public UnderWritingReviewEntity(Long fileId, Long userId, Long productId, Long contractmanagerId) {
+    public UnderWritingReviewEntity(Long fileId, Long userId, Long productId, Long contractManagerId) {
         this.fileId = fileId;
         this.userId = userId;
         this.productId = productId;
@@ -55,8 +55,9 @@ public class UnderWritingReviewEntity extends BaseEntity {
 
     }
 
-    public void fssadmission(boolean FSSadmission) {
-        this.fssadmission = fssadmission;
+    public void fssAdmission(boolean fssAdmission) {
+
+        this.fssAdmission = fssAdmission;
     }
 
 }
