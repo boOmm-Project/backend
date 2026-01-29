@@ -1,5 +1,6 @@
 package com.nuclear.boomm.caraccident.controller;
 
+import com.nuclear.boomm.caraccident.enums.InsuranceClaimStatus;
 import com.nuclear.boomm.caraccident.service.AccidentIntakeAdminService;
 import com.nuclear.boomm.common.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,5 +45,13 @@ public class AccidentIntakeAdminController {
 
         return ResponseEntity.ok(ApiResponse.success(intakeAdminService.getSpecificIntake(id,userId)));
 
+    }
+
+    @Operation(summary = "접수 상태 변경 API")
+    @PatchMapping("/status/{id}")
+    public ResponseEntity<ApiResponse<?>> changeIntakeStatus(@PathVariable Long id, @RequestParam InsuranceClaimStatus status){
+        Long userId = 2L;intakeAdminService.changeStatus(id,userId,status);
+
+        return ResponseEntity.ok(ApiResponse.success("변경되었습니다."));
     }
 }
