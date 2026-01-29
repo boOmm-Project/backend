@@ -59,11 +59,11 @@ public class UnderWritingController {
     }
 
     @PatchMapping("/cases/{id}/status")
-    public ResponseEntity<?> changeStatus(
+    public ResponseEntity<ApiResponse<Object>> changeStatus(
             @PathVariable Long id,
             @RequestBody(required = false) Object body
     ) {
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(ApiResponse.success(null));
     }
 
     @Operation(summary = "거절 사유 목록", description = "거절 사유 코드 목록 조회")
