@@ -65,4 +65,17 @@ public class AccidentIntakeAdminService {
         entity.changeStatus(status);
         accidentIntakeRepository.save(entity);
     }
+
+    public List<AccidentIntakeSpecificDTO> getAllMyList(Long userId) {
+        List<AccidentIntakeEntity> entities = accidentIntakeRepository.findAllByIntakeManagerId(userId);
+
+        List<AccidentIntakeSpecificDTO> dtos = new ArrayList<>();
+
+        for (AccidentIntakeEntity entity : entities) {
+            List<AccidentFileEntity> files = accidentFileRepository.findAllByAccidentIntakeId(entity.getId());
+            dtos.add(AccidentIntakeSpecificDTO.fromEntity(entity,files));
+        }
+        
+        return dtos;
+    }
 }

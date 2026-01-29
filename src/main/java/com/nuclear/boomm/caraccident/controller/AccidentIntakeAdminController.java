@@ -54,4 +54,12 @@ public class AccidentIntakeAdminController {
 
         return ResponseEntity.ok(ApiResponse.success("변경되었습니다."));
     }
+
+    @Operation(summary = "본인에게 할당된 모든 내역 조회")
+    @GetMapping("/lists/my")
+    public ResponseEntity<ApiResponse<?>> getMyLists(){
+        Long userId = 2L;
+
+        return ResponseEntity.ok(ApiResponse.success(intakeAdminService.getAllMyList(userId)));
+    }
 }

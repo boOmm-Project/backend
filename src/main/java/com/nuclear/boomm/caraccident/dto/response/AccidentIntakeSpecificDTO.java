@@ -8,6 +8,7 @@ import java.util.List;
 
 public record AccidentIntakeSpecificDTO(
         Long intakeId,
+        String Inclaimstatus,
         Long insuredPersonId,
         String insuranceClaimPersonName,
         LocalDateTime incidentDate,
@@ -39,6 +40,7 @@ public record AccidentIntakeSpecificDTO(
 
         return new AccidentIntakeSpecificDTO(
                 entity.getId(),
+                entity.getIntakeStatus().getDescription(),
                 entity.getInsuredPersonId(),
                 entity.getInsuranceClaimPersonName(),
                 entity.getIncidentDate(),
