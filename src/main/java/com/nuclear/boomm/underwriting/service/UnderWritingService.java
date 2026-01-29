@@ -1,4 +1,4 @@
-package com.nuclear.boomm.contract.service;
+package com.nuclear.boomm.underwriting.service;
 
 import com.nuclear.boomm.contract.domain.DraftContract;
 import com.nuclear.boomm.contract.repository.DraftContractRepository;
@@ -184,4 +184,5 @@ public class UnderWritingService {
                 it.getResultMessage(),
                 it.getReviewedAt()
         );
+    }
 }
